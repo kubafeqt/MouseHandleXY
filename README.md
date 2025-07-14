@@ -19,9 +19,9 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 This app was created because my laptop's touchpad stopped working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
 
-## Planned Features
+## Planned Features and Innovations
 
 - Middle mouse button simulation  
-- Save/load cursor positions  
+- Save/load cursor positions with configurable hotkeys
 - Configurable hotkeys and delays  
 - Custom user-defined sounds  
