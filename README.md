@@ -7,6 +7,8 @@ Keyboard Cursor Control - Use arrows or W, S, A, D keys to control the mouse cur
 Mouse Click Simulation - Use key E to Left Mouse Button Down/Up (hold and release) and Q to right mouse click . 
 
 Use case:
-My touchpad not working on Windows 10 due to a driver incompability. This app lets me control the mouse entirely with the keyboard.
+My touchpad not working on Windows 10 due to a driver incompability. 
+
+This app lets me control the mouse entirely with the keyboard.
 
 innovations in future - for example middle mouse button keydown, positions keybinds, setupable delays, user defined sounds, etc.
