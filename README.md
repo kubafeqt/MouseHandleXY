@@ -1,14 +1,27 @@
-Mouse handling by keyboard when opened by double left control click in 250 miliseconds.
+# 🖱️ Keyboard Mouse Control
 
-Use double left shift click in 250 miliseconds to precise mouse cursor control. - Cursor step size: normal (10px), precise (2px)
+Control your mouse entirely using your keyboard — helpful when your touchpad isn't working (e.g., due to driver incompatibility on Windows 10).
 
-Keyboard Cursor Control - Use arrows or W, S, A, D keys to control the mouse cursor when opened mouse cursor control.
+## 🔑 Activation
 
-Mouse Click Simulation - Use key E to Left Mouse Button Down/Up (hold and release) and Q to right mouse click . 
+- Press **Left Control twice within 250 milliseconds** to toggle keyboard mouse control.
+- Press **Left Shift twice within 250 milliseconds** to enable precise cursor control.
 
-Use case:
-My touchpad not working on Windows 10 due to a driver incompability. 
+> **Cursor step size**: Normal = 10px, Precise = 2px
 
-This app lets me control the mouse entirely with the keyboard.
+## 🎮 Controls
 
-innovations in future - for example middle mouse button keydown, positions keybinds, setupable delays, user defined sounds, etc.
+- **Move cursor**: Arrow keys or **W / A / S / D**
+- **Left click**: Hold and release **E** (simulates press and release)
+- **Right click**: Press **Q**
+
+## 💡 Use Case
+
+This app was created because my laptop's touchpad stopped working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
+
+## 🛠️ Planned Features
+
+- Middle mouse button simulation  
+- Save/load cursor positions  
+- Configurable hotkeys and delays  
+- Custom user-defined sounds  
