@@ -6,6 +6,6 @@ Use arrows or W, S, A, D keys to control the mouse cursor when opened mouse curs
 
 Use key E to left mouse keydown and Q to right mouse click . 
 
+used when my touchpad on Windows 10 doesn't work, because of driver incompability
 
-
-innovations in future, for example middle mouse button keydown, positions keybinds, etc.
+innovations in future - for example middle mouse button keydown, positions keybinds, etc.
