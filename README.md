@@ -1,4 +1,5 @@
-Mouse handling by keyboard when opened by double left control click in 250 miliseconds. 
+Mouse handling by keyboard when opened by double left control click in 250 miliseconds.
+
 Use double left shift click in 250 miliseconds to precise mouse cursor control. - Cursor step size: normal (10px), precise (2px)
 
 Keyboard Cursor Control - Use arrows or W, S, A, D keys to control the mouse cursor when opened mouse cursor control.
