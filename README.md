@@ -1,4 +1,4 @@
-# 🖱️ Keyboard Mouse Control
+# Keyboard Mouse Control
 
 Control your mouse entirely using your keyboard — helpful when your touchpad isn't working (e.g., due to driver incompatibility on Windows 10).
 
