@@ -15,29 +15,7 @@ namespace MouseXY
         private static IntPtr _hookID = IntPtr.Zero;
 
         [DllImport("user32.dll")]
-        public static extern int ShowCursor(bool bShow);
-
-        public static void ForceShowCursor()
-        {
-            while (ShowCursor(true) < 0) { } // Opakuje, dokud kurzor není viditelný
-
-            // Mírně pohnout kurzorem
-            Point pos = Cursor.Position;
-            SetCursorPos(pos.X + 1, pos.Y); // posun o 1 pixel
-            SetCursorPos(pos.X, pos.Y);     // vrátit zpět
-        }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern bool SystemParametersInfo(int uAction, int uParam, IntPtr lpvParam, int fuWinIni);
-
-        const int SPI_SETCURSORS = 0x0057;
-        const int SPIF_SENDWININICHANGE = 0x02;
-        const int SPIF_UPDATEINIFILE = 0x01;
-
-        public static void ResetCursors()
-        {
-            SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE | SPIF_UPDATEINIFILE);
-        }
+        public static extern bool ShowCursor(bool bShow);
 
         [DllImport("user32.dll")]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
