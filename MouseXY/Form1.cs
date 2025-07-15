@@ -40,7 +40,8 @@ namespace MouseXY
         {
             // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
             cboxOnStartup.Checked = StartupManager.IsInStartup(appName);
-            MouseHandle.ShowCursor(true);
+            MouseHandle.ForceShowCursor();
+            MouseHandle.ResetCursors();
         }
 
         private void OnResize(object sender, EventArgs e)
