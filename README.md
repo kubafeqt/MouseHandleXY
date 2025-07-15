@@ -1,4 +1,4 @@
-Doesn't work when mouse is disconnected . : - ( , Need to simulate HID driver .
+Doesn't work when mouse is disconnected . : - ( , Probably need to simulate HID driver .
 
 
 # Keyboard Mouse Control
