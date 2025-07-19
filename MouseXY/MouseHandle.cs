@@ -11,8 +11,8 @@ namespace MouseXY
 
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
-        private static LowLevelKeyboardProc _proc = HookCallback;
-        private static IntPtr _hookID = IntPtr.Zero;
+        public static LowLevelKeyboardProc _proc = HookCallback;
+        public static IntPtr _hookID = IntPtr.Zero;
 
         [DllImport("user32.dll")]
         public static extern bool ShowCursor(bool bShow);
@@ -21,7 +21,7 @@ namespace MouseXY
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
         [DllImport("user32.dll")]
-        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         [DllImport("user32.dll")]
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
@@ -32,18 +32,33 @@ namespace MouseXY
         [DllImport("user32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
-        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+        public delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-        static void Main()
-        {
-            Application.EnableVisualStyles();
-            _hookID = SetHook(_proc);
-            //ApplicationConfiguration.Initialize();
-            Application.Run(new Form1()); // Nevyžaduje WinForm, ale drží aplikaci naživu
-            UnhookWindowsHookEx(_hookID);
-        }
+      //static void Main()
+      //{
+      //   const string mutexName = "MyUniqueAppNameMutex";
+      //   bool createdNew;
 
-        private static IntPtr SetHook(LowLevelKeyboardProc proc)
+      //   using (Mutex mutex = new Mutex(true, mutexName, out createdNew))
+      //   {
+      //      if (!createdNew)
+      //      {
+      //         //StartupManager.BringOtherInstanceToFront();
+      //         return; // Exit the new instance
+      //      }
+
+
+      //      Application.EnableVisualStyles();
+      //      Application.SetCompatibleTextRenderingDefault(false);
+      //      _hookID = SetHook(_proc);
+      //      //ApplicationConfiguration.Initialize();
+      //      Application.Run(new Form1()); // Nevyžaduje WinForm, ale drží aplikaci naživu
+      //      UnhookWindowsHookEx(_hookID);
+      //   }
+
+      //}
+
+      public static IntPtr SetHook(LowLevelKeyboardProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
