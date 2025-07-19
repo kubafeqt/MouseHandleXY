@@ -21,6 +21,7 @@ namespace MouseXY
             if (!createdNew)
             {
                //StartupManager.BringOtherInstanceToFront();
+               MessageBox.Show("Process is already running.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                return; // Exit the new instance
             }
 
