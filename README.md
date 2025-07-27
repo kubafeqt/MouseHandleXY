@@ -25,7 +25,6 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 
 ## Planned Features and Innovations
 
-- Middle mouse button simulation  
 - Save/load cursor positions with configurable hotkeys
-- Configurable hotkeys and delays  
+- Configurable hotkeys and opening/closing controls delays
 - Custom user-defined sounds  
