@@ -53,7 +53,7 @@ namespace MouseXY
         private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
         private const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
         private const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
-
+        
 
         private const int WM_KEYUP = 0x0101;
 
@@ -77,10 +77,18 @@ namespace MouseXY
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
         }
 
-        private static void MiddleMouseClick()
+        static bool middleMouseHeld = false;
+        private static void MiddleMouseHeld(IntPtr wParam)
         {
-            mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
-            mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
+            if (wParam == (IntPtr)WM_KEYDOWN)
+            {
+                middleMouseHeld = !middleMouseHeld;
+
+                if (middleMouseHeld)
+                    mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
+                else
+                    mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
+            }
         }
 
         static int step = 10;
@@ -135,7 +143,7 @@ namespace MouseXY
                             }
                         case Keys.R or Keys.F:
                             {
-                                MiddleMouseClick();
+                                MiddleMouseHeld(wParam);
                                 return (IntPtr)1;
                             }
                     }
