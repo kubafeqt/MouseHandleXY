@@ -17,6 +17,7 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - **Move cursor**: Arrow keys or **W / A / S / D**
 - **Left click**: Hold and release **E** (simulates press and release)
 - **Right click**: Press **Q**
+- **Middle mouse held**: Press **R** or **F**
 
 ## Use Case
 
