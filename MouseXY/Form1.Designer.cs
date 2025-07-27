@@ -46,7 +46,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(422, 294);
+            ClientSize = new Size(446, 299);
             Controls.Add(cboxOnStartup);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;

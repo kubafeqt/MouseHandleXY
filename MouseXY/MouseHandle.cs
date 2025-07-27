@@ -21,7 +21,7 @@ namespace MouseXY
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
         [DllImport("user32.dll")]
-         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         [DllImport("user32.dll")]
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
@@ -34,31 +34,7 @@ namespace MouseXY
 
         public delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-      //static void Main()
-      //{
-      //   const string mutexName = "MyUniqueAppNameMutex";
-      //   bool createdNew;
-
-      //   using (Mutex mutex = new Mutex(true, mutexName, out createdNew))
-      //   {
-      //      if (!createdNew)
-      //      {
-      //         //StartupManager.BringOtherInstanceToFront();
-      //         return; // Exit the new instance
-      //      }
-
-
-      //      Application.EnableVisualStyles();
-      //      Application.SetCompatibleTextRenderingDefault(false);
-      //      _hookID = SetHook(_proc);
-      //      //ApplicationConfiguration.Initialize();
-      //      Application.Run(new Form1()); // Nevyžaduje WinForm, ale drží aplikaci naživu
-      //      UnhookWindowsHookEx(_hookID);
-      //   }
-
-      //}
-
-      public static IntPtr SetHook(LowLevelKeyboardProc proc)
+        public static IntPtr SetHook(LowLevelKeyboardProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
@@ -75,6 +51,8 @@ namespace MouseXY
         private const uint MOUSEEVENTF_LEFTUP = 0x0004;
         private const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
         private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+        private const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
+        private const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
 
 
         private const int WM_KEYUP = 0x0101;
@@ -97,6 +75,12 @@ namespace MouseXY
         {
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+        }
+
+        private static void MiddleMouseClick()
+        {
+            mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
+            mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
         }
 
         static int step = 10;
@@ -147,6 +131,11 @@ namespace MouseXY
                         case Keys.Q:
                             {
                                 RightMouseClick();
+                                return (IntPtr)1;
+                            }
+                        case Keys.R or Keys.F:
+                            {
+                                MiddleMouseClick();
                                 return (IntPtr)1;
                             }
                     }
