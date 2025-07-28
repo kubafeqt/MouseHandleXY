@@ -161,11 +161,11 @@ namespace MouseXY
       static bool mouseCursor = false;
       static Stopwatch stopwatch = Stopwatch.StartNew();
       static bool firstPress = false;
-      private static void ControlMethod(IntPtr wParam)
+      private static void ControlMethod(IntPtr wParam) //open/close mouse control by keyboard
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
-         if (stopwatch.ElapsedMilliseconds < 250)
+         if (stopwatch.ElapsedMilliseconds < Settings.delayMs)
          {
             mouseCursor = !mouseCursor;
             Sounds.PlaySound(mouseCursor);
@@ -174,11 +174,11 @@ namespace MouseXY
       }
 
       static DateTime dateTime = DateTime.Now;
-      private static void ShiftMethod(IntPtr wParam)
+      private static void ShiftMethod(IntPtr wParam) //change mouse step speed
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
-         if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < 250)
+         if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
          {
             step = step == 10 ? 2 : 10;
          }
