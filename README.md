@@ -11,6 +11,8 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - Press **Left Shift twice within 250 milliseconds** to enable or disable precise cursor control.
 
 > **Cursor step size**: Normal = 10px, Precise = 2px
+>
+> **Version 1.01** - Configurable hotkeys and opening/closing controls delays
 
 ## Controls
 
@@ -26,5 +28,4 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 ## Planned Features and Innovations
 
 - Save/load cursor positions with configurable hotkeys
-- Configurable hotkeys and opening/closing controls delays
 - Custom user-defined sounds  
