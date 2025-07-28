@@ -8,7 +8,7 @@ namespace MouseXY
 {
    class MouseHandle
    {
-
+      #region Imports from user32.dll and kernel32.dll
       private const int WH_KEYBOARD_LL = 13;
       private const int WM_KEYDOWN = 0x0100;
       public static LowLevelKeyboardProc _proc = HookCallback;
@@ -54,9 +54,11 @@ namespace MouseXY
       private const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
       private const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
 
-
       private const int WM_KEYUP = 0x0101;
 
+      #endregion
+
+      #region Mouse Control
       private static void LeftMouseClick(IntPtr wParam)
       {
          if (wParam == (IntPtr)WM_KEYDOWN)
@@ -95,23 +97,35 @@ namespace MouseXY
          }
       }
 
+      #endregion
+
+      #region Mouse Cursor Control and Key Positioning setup
+      public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
+      static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
+      {
+         Keys.Up, Keys.Down, Keys.Left, Keys.Right,
+         Keys.W, Keys.A, Keys.S, Keys.D,
+         Keys.E, Keys.Q, Keys.R, Keys.F,
+         Keys.LControlKey, Keys.LShiftKey
+      };
+      static Dictionary<Keys, Point> keysPosition = new(); //stores the position of the mouse for each key
       static int step = 10;
-      private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+      private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) //captures key presses
       {
          if (nCode >= 0)
          {
             int vkCode = Marshal.ReadInt32(lParam);
             Point pos = Cursor.Position;
 
-
             switch ((Keys)vkCode)
             {
+               //open/close mouse control by keyboard
                case Keys.LControlKey:
                   {
                      ControlMethod(wParam);
                      break;
                   }
-
+               //double shift for change speed of mouse step
                case Keys.LShiftKey:
                   {
                      ShiftMethod(wParam);
@@ -119,7 +133,7 @@ namespace MouseXY
                   }
             }
 
-            if (mouseCursor)
+            if (mouseCursor) //when mouse control by keyboard is enabled
             {
                switch ((Keys)vkCode)
                {
@@ -137,19 +151,36 @@ namespace MouseXY
                      return (IntPtr)1;
                   case Keys.E:
                      {
-                        LeftMouseClick(wParam);
+                        LeftMouseClick(wParam); //držení levého tlačítka myši
                         return (IntPtr)1;
                      }
                   case Keys.Q:
                      {
-                        RightMouseClick();
+                        RightMouseClick(); //kliknutí pravým tlačítkem myši
                         return (IntPtr)1;
                      }
                   case Keys.R or Keys.F:
                      {
-                        MiddleMouseHeld(wParam);
+                        MiddleMouseHeld(wParam); //přepíná držení prostředního tlačítka myši
                         return (IntPtr)1;
                      }
+               }
+
+               if (keysPosition.Count > 0 && keysPosition.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
+               {
+                  Point keyPos = keysPosition[(Keys)vkCode];
+                  SetCursorPos(keyPos.X, keyPos.Y);
+                  return (IntPtr)1; // Blokuje klávesu
+               }
+            }
+            else //save position of key to mouse cursor
+            {
+               if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains((Keys)vkCode))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány
+               {
+                  keysPosition[(Keys)vkCode] = pos; // uložit pozici myši pro tuto klávesu
+                  setKeyToPos = false; // resetovat příznak, aby se další stisk neukládal
+                  Sounds.PlaySound(); // potvrzení pro uživatele
+                  return (IntPtr)1; // Blokuje klávesu
                }
             }
          }
@@ -158,9 +189,24 @@ namespace MouseXY
          return CallNextHookEx(_hookID, nCode, wParam, lParam);
       }
 
-      static bool mouseCursor = false;
+      #endregion
+
+      #region Open/Close Mouse Control by Keyboard
+      public static event Action<bool> OnMouseCursorChanged; // event when change mouseCursor property for enable/disable button to set key position
+      private static bool _mouseCursor = false;
+      public static bool mouseCursor // property for enable/disable mouse control by keyboard
+      {
+         get => _mouseCursor;
+         set
+         {
+            if (_mouseCursor != value)
+            {
+               _mouseCursor = value;
+               OnMouseCursorChanged?.Invoke(value);
+            }
+         }
+      }
       static Stopwatch stopwatch = Stopwatch.StartNew();
-      static bool firstPress = false;
       private static void ControlMethod(IntPtr wParam) //open/close mouse control by keyboard
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
@@ -184,6 +230,8 @@ namespace MouseXY
          }
          dateTime = DateTime.Now;
       }
+
+      #endregion
 
    }
 }

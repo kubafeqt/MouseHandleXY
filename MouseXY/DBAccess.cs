@@ -42,6 +42,7 @@ namespace MouseXY
          }
       }
 
+      #region DelayMs
       public static (int, bool) GetDelayMsExists()
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -112,5 +113,14 @@ namespace MouseXY
             }
          }
       }
+
+      #endregion
+
+      #region KeysPosition
+
+
+
+      #endregion
+
    }
 }

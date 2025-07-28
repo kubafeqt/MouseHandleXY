@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -15,6 +16,8 @@ namespace MouseXY
       public Form1()
       {
          InitializeComponent();
+
+         Size = Settings.defaultFormSize; //this.Size
 
          // Vytvoření tray menu
          trayMenu = new ContextMenuStrip();
@@ -35,13 +38,23 @@ namespace MouseXY
          // Skryj okno po startu
          this.Load += (s, e) => this.Hide();
          this.FormClosing += OnFormClosing;
+
+         // event for change button enabled state
+         MouseHandle.OnMouseCursorChanged += (val) =>
+         {
+            btnSetKeyPos.Enabled = !val;
+            if (val)
+            {
+               MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is shown
+            }
+         };
       }
 
       private void Form1_Load(object sender, EventArgs e)
       {
          // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
          cboxOnStartup.Checked = StartupManager.IsInStartup(appName);
-         MouseHandle.ShowCursor(true);
+         //MouseHandle.ShowCursor(true);
          lbDelayMsDescription.Text = "for double control (open/close mouse control by keyboard)\nand double shift (change speed of mouse step) methods";
          //DBAccess.ConnectionTest();
          Settings.delayMs = DBAccess.GetDelayMsExists().Item1;
@@ -80,7 +93,6 @@ namespace MouseXY
          trayIcon.Visible = false;
       }
 
-
       private void cboxOnStartup_CheckedChanged(object sender, EventArgs e)
       {
          string appPath = Application.ExecutablePath;
@@ -91,6 +103,30 @@ namespace MouseXY
       {
          Settings.delayMs = (int)nmDelayMs.Value;
          DBAccess.SaveDelayMs(Settings.delayMs);
+      }
+
+      private void btnSetKeyPos_Click(object sender, EventArgs e)
+      {
+         MouseHandle.setKeyToPos = !MouseHandle.setKeyToPos; //then play sound when disabled
+      }
+
+      public static bool showKeysPositions = false;
+      private void btnShowKeysPositions_Click(object sender, EventArgs e)
+      {
+         showKeysPositions = !showKeysPositions;
+         dgvShowKeysPositions.Visible = showKeysPositions;
+         if (showKeysPositions)
+         {
+            Size = new Size(870, 695);
+            btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Show", "hide", StringComparison.OrdinalIgnoreCase);
+
+         }
+         else
+         {
+            Size = Settings.defaultFormSize;
+            btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Hide", "show", StringComparison.OrdinalIgnoreCase);
+
+         }
       }
    }
 }
