@@ -84,6 +84,23 @@ namespace MouseXY
             try
             {
                connection.Open();
+
+               //   // Zjisti, jestli tabulka už má nějaký řádek
+               //   string checkSql = "SELECT COUNT(*) FROM DelayTable";
+               //   using (SqlCommand checkCmd = new SqlCommand(checkSql, connection))
+               //   {
+               //      int count = (int)checkCmd.ExecuteScalar();
+               //      if (count > 0)
+               //      {
+               //         // UPDATE
+               //      }
+               //      else
+               //      {
+               //         // INSERT
+               //      }
+               //   }
+               //}
+
                if (DelayMsExist)
                {
                   // UPDATE
@@ -109,42 +126,6 @@ namespace MouseXY
             {
                MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
-            //try
-            //{
-            //   connection.Open();
-
-            //   // Zjisti, jestli tabulka už má nějaký řádek
-            //   string checkSql = "SELECT COUNT(*) FROM DelayTable";
-            //   using (SqlCommand checkCmd = new SqlCommand(checkSql, connection))
-            //   {
-            //      int count = (int)checkCmd.ExecuteScalar();
-
-            //      if (count > 0)
-            //      {
-            //         // UPDATE
-            //         string updateSql = "UPDATE DelayTable SET DelayMs = @delay";
-            //         using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
-            //         {
-            //            updateCmd.Parameters.AddWithValue("@delay", delayMs);
-            //            updateCmd.ExecuteNonQuery();
-            //         }
-            //      }
-            //      else
-            //      {
-            //         // INSERT
-            //         string insertSql = "INSERT INTO DelayTable (DelayMs) VALUES (@delay)";
-            //         using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
-            //         {
-            //            insertCmd.Parameters.AddWithValue("@delay", delayMs);
-            //            insertCmd.ExecuteNonQuery();
-            //         }
-            //      }
-            //   }
-            //}
-            //catch (SqlException ex)
-            //{
-            //   MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-            //}
          }
       }
    }
