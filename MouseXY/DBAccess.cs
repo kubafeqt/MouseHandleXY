@@ -85,22 +85,6 @@ namespace MouseXY
             {
                connection.Open();
 
-               //   // Zjisti, jestli tabulka už má nějaký řádek
-               //   string checkSql = "SELECT COUNT(*) FROM DelayTable";
-               //   using (SqlCommand checkCmd = new SqlCommand(checkSql, connection))
-               //   {
-               //      int count = (int)checkCmd.ExecuteScalar();
-               //      if (count > 0)
-               //      {
-               //         // UPDATE
-               //      }
-               //      else
-               //      {
-               //         // INSERT
-               //      }
-               //   }
-               //}
-
                if (DelayMsExist)
                {
                   // UPDATE
