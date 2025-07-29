@@ -99,7 +99,7 @@ namespace MouseXY
 
       #endregion
 
-      #region Mouse Cursor Control and Key Positioning setup
+      #region Mouse Cursor Control and Key Positioning set
       public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
       static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
       {
@@ -108,7 +108,7 @@ namespace MouseXY
          Keys.E, Keys.Q, Keys.R, Keys.F,
          Keys.LControlKey, Keys.LShiftKey
       };
-      static Dictionary<Keys, Point> keysPosition = new(); //stores the position of the mouse for each key
+      public static Dictionary<Keys, Point> keysPosition = new(); //stores the position of the mouse for each key
       static int step = 10;
       private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) //captures key presses
       {
@@ -175,11 +175,14 @@ namespace MouseXY
             }
             else //save position of key to mouse cursor
             {
-               if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains((Keys)vkCode))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány
+               Keys key = (Keys)vkCode;
+               if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains(key))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány
                {
-                  keysPosition[(Keys)vkCode] = pos; // uložit pozici myši pro tuto klávesu
-                  setKeyToPos = false; // resetovat příznak, aby se další stisk neukládal
-                  Sounds.PlaySound(); // potvrzení pro uživatele
+                  keysPosition[key] = pos; // uložit pozici myši pro tuto klávesu
+                  //setKeyToPos = false; // resetovat příznak, aby se další stisk neukládal
+                  //Sounds.PlaySound(); // potvrzení pro uživatele
+                  DBAccess.SaveOrUpdateKeyPos(key, pos); // uložit pozici do databáze
+                  OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and btnSetKeyPos.PerformClick();
                   return (IntPtr)1; // Blokuje klávesu
                }
             }
@@ -189,10 +192,13 @@ namespace MouseXY
          return CallNextHookEx(_hookID, nCode, wParam, lParam);
       }
 
+      public static Action OnSetKeyToPos; // event for set key to position of mouse cursor
+
+
       #endregion
 
       #region Open/Close Mouse Control by Keyboard
-      public static event Action<bool> OnMouseCursorChanged; // event when change mouseCursor property for enable/disable button to set key position
+      public static event Action<bool> OnMouseCursorOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
       private static bool _mouseCursor = false;
       public static bool mouseCursor // property for enable/disable mouse control by keyboard
       {
@@ -202,7 +208,7 @@ namespace MouseXY
             if (_mouseCursor != value)
             {
                _mouseCursor = value;
-               OnMouseCursorChanged?.Invoke(value);
+               OnMouseCursorOpenChanged?.Invoke(value);
             }
          }
       }

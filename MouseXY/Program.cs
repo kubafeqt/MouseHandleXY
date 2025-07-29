@@ -28,7 +28,7 @@ namespace MouseXY
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            MouseHandle._hookID = MouseHandle.SetHook(MouseHandle._proc);
+            MouseHandle._hookID = MouseHandle.SetHook(MouseHandle._proc); // Nastaví hook pro sledování klávesnice
             //ApplicationConfiguration.Initialize();
             Application.Run(new Form1()); // Nevyžaduje WinForm, ale drží aplikaci naživu
             MouseHandle.UnhookWindowsHookEx(MouseHandle._hookID);

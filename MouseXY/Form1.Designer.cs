@@ -36,6 +36,9 @@
          btnSetKeyPos = new Button();
          btnShowKeysPositions = new Button();
          dgvShowKeysPositions = new DataGridView();
+         lbSetKeyPos = new Label();
+         cboxShowSetKeyPos = new CheckBox();
+         btnDeleteKeyPosition = new Button();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          SuspendLayout();
@@ -117,15 +120,54 @@
          dgvShowKeysPositions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          dgvShowKeysPositions.Location = new Point(32, 190);
          dgvShowKeysPositions.Name = "dgvShowKeysPositions";
+         dgvShowKeysPositions.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
          dgvShowKeysPositions.Size = new Size(791, 441);
          dgvShowKeysPositions.TabIndex = 7;
          dgvShowKeysPositions.Visible = false;
+         // 
+         // lbSetKeyPos
+         // 
+         lbSetKeyPos.AutoSize = true;
+         lbSetKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbSetKeyPos.Location = new Point(270, 152);
+         lbSetKeyPos.Name = "lbSetKeyPos";
+         lbSetKeyPos.Size = new Size(213, 17);
+         lbSetKeyPos.TabIndex = 8;
+         lbSetKeyPos.Text = "setKeyPos open - location: X: , Y:";
+         lbSetKeyPos.Visible = false;
+         // 
+         // cboxShowSetKeyPos
+         // 
+         cboxShowSetKeyPos.AutoSize = true;
+         cboxShowSetKeyPos.Checked = true;
+         cboxShowSetKeyPos.CheckState = CheckState.Checked;
+         cboxShowSetKeyPos.Location = new Point(161, 25);
+         cboxShowSetKeyPos.Name = "cboxShowSetKeyPos";
+         cboxShowSetKeyPos.Size = new Size(214, 19);
+         cboxShowSetKeyPos.TabIndex = 9;
+         cboxShowSetKeyPos.Text = "show keys positions after setKeyPos";
+         cboxShowSetKeyPos.UseVisualStyleBackColor = true;
+         // 
+         // btnDeleteKeyPosition
+         // 
+         btnDeleteKeyPosition.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnDeleteKeyPosition.Location = new Point(489, 149);
+         btnDeleteKeyPosition.Name = "btnDeleteKeyPosition";
+         btnDeleteKeyPosition.Size = new Size(143, 24);
+         btnDeleteKeyPosition.TabIndex = 10;
+         btnDeleteKeyPosition.Text = "delete key position";
+         btnDeleteKeyPosition.UseVisualStyleBackColor = true;
+         btnDeleteKeyPosition.Visible = false;
+         btnDeleteKeyPosition.Click += btnDeleteKeyPosition_Click;
          // 
          // Form1
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
          ClientSize = new Size(854, 656);
+         Controls.Add(btnDeleteKeyPosition);
+         Controls.Add(cboxShowSetKeyPos);
+         Controls.Add(lbSetKeyPos);
          Controls.Add(dgvShowKeysPositions);
          Controls.Add(btnShowKeysPositions);
          Controls.Add(btnSetKeyPos);
@@ -155,5 +197,8 @@
       private Button btnSetKeyPos;
       private Button btnShowKeysPositions;
       private DataGridView dgvShowKeysPositions;
+      private Label lbSetKeyPos;
+      private CheckBox cboxShowSetKeyPos;
+      private Button btnDeleteKeyPosition;
    }
 }
