@@ -123,6 +123,9 @@
          // 
          // dgvShowKeysPositions
          // 
+         dgvShowKeysPositions.AllowUserToAddRows = false;
+         dgvShowKeysPositions.AllowUserToDeleteRows = false;
+         dgvShowKeysPositions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
          dgvShowKeysPositions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          dgvShowKeysPositions.Location = new Point(32, 190);
          dgvShowKeysPositions.MultiSelect = false;
@@ -131,6 +134,8 @@
          dgvShowKeysPositions.Size = new Size(791, 441);
          dgvShowKeysPositions.TabIndex = 7;
          dgvShowKeysPositions.Visible = false;
+         dgvShowKeysPositions.CellValueChanged += dgvShowKeysPositions_CellValueChanged;
+         dgvShowKeysPositions.CurrentCellDirtyStateChanged += dgvShowKeysPositions_CurrentCellDirtyStateChanged;
          dgvShowKeysPositions.SelectionChanged += dgvShowKeysPositions_SelectionChanged;
          // 
          // lbSetKeyPos

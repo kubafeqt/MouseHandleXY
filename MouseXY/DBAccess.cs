@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Data.SqlClient;
 
 namespace MouseXY
@@ -188,8 +189,7 @@ namespace MouseXY
 
       #region KeysPosition
       //ALTER: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?) -> (zatím?) db SettingsTable, ShowDgvAfterSetKeyPos
-      //TODO: přidat do datagridview sloupec s datumem CreatedAt a IsActive, SetName //advanced
-      //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced
+      //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced pro SetName, SetID
       //kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
       //udělat sety pro KeysPosition, ... ; //advanced
       public static bool SavedKeyExist(Keys k)
@@ -217,7 +217,7 @@ namespace MouseXY
          }
       }
 
-      public static void SaveOrUpdateKeyPos(Keys key, Point position)
+      public static void SaveOrUpdateKeyPos(Keys key, Point position, bool isActive = true)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
@@ -228,11 +228,12 @@ namespace MouseXY
                if (SavedKeyExist(key))
                {
                   // UPDATE
-                  string updateSql = "UPDATE KeyPosTable SET Position = @Position WHERE [Key] = @Key";
+                  string updateSql = "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key";
                   using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
                   {
                      updateCmd.Parameters.AddWithValue("@Key", key.ToString());
                      updateCmd.Parameters.AddWithValue("@Position", $"{position.X},{position.Y}");
+                     updateCmd.Parameters.AddWithValue("@IsActive", isActive);
                      updateCmd.ExecuteNonQuery();
                   }
                }
@@ -290,6 +291,46 @@ namespace MouseXY
             }
          }
          return keysPosition;
+      }
+
+      public static void LoadKeysPositions()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT * FROM KeyPosTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  using (SqlDataReader reader = command.ExecuteReader())
+                  {
+                     while (reader.Read())
+                     {
+                        string keyStr = reader["Key"].ToString();
+                        string positionStr = reader["Position"].ToString();
+                        Point pos = new();
+                        if (Enum.TryParse(keyStr, out Keys key) && !string.IsNullOrEmpty(positionStr))
+                        {
+                           string[] posParts = positionStr.Split(',');
+                           if (posParts.Length == 2 && int.TryParse(posParts[0], out int x) && int.TryParse(posParts[1], out int y))
+                           {
+                               pos = new Point(x, y);
+                           }
+                        }
+                        string setName = reader["SetName"]?.ToString() ?? "none";
+                        DateTime createdAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
+                        bool isActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
+                        new KeyPos(keyStr, pos, setName, createdAt, isActive); // Přidá novou KeyPos do seznamu, pokud ještě neexistuje
+                     }
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+            }
+         }
       }
 
       public static void DeleteKey(Keys key)
