@@ -28,3 +28,4 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 
 - Save/load cursor positions with configurable hotkeys
 - Custom user-defined sounds  
+- Additional innovative features are currently in development and will be announced in future updates.
