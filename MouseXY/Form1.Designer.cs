@@ -155,11 +155,12 @@
          cboxShowSetKeyPos.TabIndex = 9;
          cboxShowSetKeyPos.Text = "show keys positions after setKeyPos";
          cboxShowSetKeyPos.UseVisualStyleBackColor = true;
+         cboxShowSetKeyPos.CheckedChanged += cboxShowSetKeyPos_CheckedChanged;
          // 
          // btnDeleteKeyPosition
          // 
          btnDeleteKeyPosition.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnDeleteKeyPosition.Location = new Point(431, 149);
+         btnDeleteKeyPosition.Location = new Point(428, 149);
          btnDeleteKeyPosition.Name = "btnDeleteKeyPosition";
          btnDeleteKeyPosition.Size = new Size(143, 24);
          btnDeleteKeyPosition.TabIndex = 10;
@@ -172,9 +173,9 @@
          // btnEditPosition
          // 
          btnEditPosition.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnEditPosition.Location = new Point(748, 150);
+         btnEditPosition.Location = new Point(749, 148);
          btnEditPosition.Name = "btnEditPosition";
-         btnEditPosition.Size = new Size(75, 23);
+         btnEditPosition.Size = new Size(75, 25);
          btnEditPosition.TabIndex = 11;
          btnEditPosition.Tag = "EditPos";
          btnEditPosition.Text = "Edit";
@@ -185,7 +186,7 @@
          // 
          lbKeyPos.AutoSize = true;
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbKeyPos.Location = new Point(590, 152);
+         lbKeyPos.Location = new Point(591, 152);
          lbKeyPos.Name = "lbKeyPos";
          lbKeyPos.Size = new Size(34, 17);
          lbKeyPos.TabIndex = 12;
@@ -194,7 +195,7 @@
          // 
          // tbPosX
          // 
-         tbPosX.Location = new Point(649, 149);
+         tbPosX.Location = new Point(650, 149);
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
@@ -202,7 +203,7 @@
          // 
          // tbPosY
          // 
-         tbPosY.Location = new Point(697, 149);
+         tbPosY.Location = new Point(698, 149);
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
@@ -212,7 +213,7 @@
          // 
          lbPosX.AutoSize = true;
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosX.Location = new Point(661, 129);
+         lbPosX.Location = new Point(662, 129);
          lbPosX.Name = "lbPosX";
          lbPosX.Size = new Size(21, 17);
          lbPosX.TabIndex = 15;
@@ -223,7 +224,7 @@
          // 
          lbPosY.AutoSize = true;
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosY.Location = new Point(706, 129);
+         lbPosY.Location = new Point(707, 129);
          lbPosY.Name = "lbPosY";
          lbPosY.Size = new Size(20, 17);
          lbPosY.TabIndex = 16;

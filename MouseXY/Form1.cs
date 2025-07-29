@@ -80,6 +80,7 @@ namespace MouseXY
          MouseHandle.keysPosition = DBAccess.GetKeysPositions(); // načtení pozic kláves z databáze
          //DBAccess.ConnectionTest();
          Settings.delayMs = DBAccess.GetDelayMsExists().Item1;
+         cboxShowSetKeyPos.Checked = DBAccess.GetShowDgvAfterSetKeyPos();
          nmDelayMs.Value = Settings.delayMs;
 
          #endregion
@@ -160,7 +161,7 @@ namespace MouseXY
       private void btnAcceptDelayMs_Click(object sender, EventArgs e)
       {
          Settings.delayMs = (int)nmDelayMs.Value;
-         DBAccess.SaveDelayMs(Settings.delayMs);
+         DBAccess.SaveDelayMs(Settings.delayMs, cboxShowSetKeyPos.Checked);
       }
 
       private void btnSetKeyPos_Click(object sender, EventArgs e)
@@ -217,7 +218,7 @@ namespace MouseXY
             // Předpokládáme, že máš sloupec "Id" jako primární klíč
             Keys key = (Keys)Convert.ToInt32(dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value);
 
-            var confirm = MessageBox.Show("Opravdu chcete tento záznam smazat?", "Potvrzení", MessageBoxButtons.YesNo);
+            var confirm = MessageBox.Show("Opravdu chcete smazat tento záznam?", "Potvrzení", MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes)
             {
                MouseHandle.keysPosition.Remove(key); // Odstranění klávesy z mapy pozic
@@ -283,6 +284,11 @@ namespace MouseXY
                tbPosY.Text = matches[1].Value;
             }
          }
+      }
+
+      private void cboxShowSetKeyPos_CheckedChanged(object sender, EventArgs e)
+      {
+         DBAccess.SaveShowDgvAfterSetKeyPos(cboxShowSetKeyPos.Checked);
       }
    }
 }

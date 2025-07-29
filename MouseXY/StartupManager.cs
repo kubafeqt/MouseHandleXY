@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace MouseXY
 {
-    class StartupManager
-    {
+   class StartupManager
+   {
       //// Import necessary Windows API functions
       //[DllImport("user32.dll")]
       //private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
@@ -38,29 +38,28 @@ namespace MouseXY
       //   }
       //}
 
-
-
       public static void SetStartup(bool enable, string appName, string appPath)
-        {
-            using (RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+      {
+         using (RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+         {
+            if (enable)
             {
-                if (enable)
-                {
-                    rk.SetValue(appName, $"\"{appPath}\"");
-                }
-                else
-                {
-                    rk.DeleteValue(appName, false); // `false` zabrání výjimce, pokud hodnota neexistuje
-                }
+               rk.SetValue(appName, $"\"{appPath}\"");
             }
-        }
+            else
+            {
+               rk.DeleteValue(appName, false); // `false` zabrání výjimce, pokud hodnota neexistuje
+            }
+         }
+      }
 
-        public static bool IsInStartup(string appName)
-        {
-            using (RegistryKey rk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", false))
-            {
-                return rk.GetValue(appName) != null;
-            }
-        }
-    }
+      public static bool IsInStartup(string appName)
+      {
+         using (RegistryKey rk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", false))
+         {
+            return rk.GetValue(appName) != null;
+         }
+      }
+
+   }
 }

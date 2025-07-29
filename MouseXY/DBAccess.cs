@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 
 namespace MouseXY
@@ -42,7 +41,7 @@ namespace MouseXY
          }
       }
 
-      #region DelayMs
+      #region SettingsTable
       public static (int, bool) GetDelayMsExists()
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -54,7 +53,7 @@ namespace MouseXY
                connection.Open();
 
                // Vytvoří SQL příkaz
-               string sql = "SELECT DelayMs FROM DelayTable";
+               string sql = "SELECT DelayMs FROM SettingsTable";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                  object result = command.ExecuteScalar();
@@ -77,19 +76,51 @@ namespace MouseXY
          }
       }
 
-      public static void SaveDelayMs(int delayMs)
+      public static bool GetShowDgvAfterSetKeyPos()
       {
-         bool DelayMsExist = GetDelayMsExists().Item2;
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               bool resultShowDgvAfterSetKeyPos;
+               // Otevře spojení
+               connection.Open();
+               // Vytvoří SQL příkaz
+               string sql = "SELECT ShowDgvAfterSetKeyPos FROM SettingsTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  object result = command.ExecuteScalar();
+                  if (result != null && bool.TryParse(result.ToString(), out resultShowDgvAfterSetKeyPos))
+                  {
+                     return resultShowDgvAfterSetKeyPos;
+                  }
+                  else
+                  {
+                     return true;
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               return true;
+            }
+         }
+      }
+
+      public static void SaveDelayMs(int delayMs, bool showDgvAfterSetKeyPos)
+      {
+         bool delayMsExist = GetDelayMsExists().Item2;
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
             try
             {
                connection.Open();
 
-               if (DelayMsExist)
+               if (delayMsExist)
                {
                   // UPDATE
-                  string updateSql = "UPDATE DelayTable SET DelayMs = @delay";
+                  string updateSql = "UPDATE SettingsTable SET DelayMs = @delay";
                   using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
                   {
                      updateCmd.Parameters.AddWithValue("@delay", delayMs);
@@ -99,10 +130,49 @@ namespace MouseXY
                else
                {
                   // INSERT
-                  string insertSql = "INSERT INTO DelayTable (DelayMs) VALUES (@delay)";
+                  string insertSql = "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos) VALUES (@delay, @showDgv)";
                   using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
                   {
                      insertCmd.Parameters.AddWithValue("@delay", delayMs);
+                     insertCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     insertCmd.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void SaveShowDgvAfterSetKeyPos(bool showDgvAfterSetKeyPos)
+      {
+         bool rowExist = GetDelayMsExists().Item2;
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+
+               if (rowExist)
+               {
+                  // UPDATE
+                  string updateSql = "UPDATE SettingsTable SET ShowDgvAfterSetKeyPos = @showDgv";
+                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
+                  {
+                     updateCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     updateCmd.ExecuteNonQuery();
+                  }
+               }
+               else
+               {
+                  // INSERT
+                  string insertSql = "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos) VALUES (@delay, @showDgv)";
+                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
+                  {
+                     insertCmd.Parameters.AddWithValue("@delay", Settings.delayMs);
+                     insertCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
                      insertCmd.ExecuteNonQuery();
                   }
                }
@@ -117,12 +187,11 @@ namespace MouseXY
       #endregion
 
       #region KeysPosition
-      //TODO: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?)
+      //ALTER: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?) -> (zatím?) db SettingsTable, ShowDgvAfterSetKeyPos
       //TODO: přidat do datagridview sloupec s datumem CreatedAt a IsActive, SetName //advanced
       //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced
-      //TODO: kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
+      //kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
       //udělat sety pro KeysPosition, ... ; //advanced
-      //TODO: upravit hodnoty Position pomocí textboxu - vybraný z datagridview
       public static bool SavedKeyExist(Keys k)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
