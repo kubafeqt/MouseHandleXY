@@ -51,7 +51,7 @@ namespace MouseXY
             btnSetKeyPos.Enabled = !val;
             if (val)
             {
-               MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is shown
+               MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
             }
          };
          // event for set key to position of mouse cursor
@@ -105,10 +105,9 @@ namespace MouseXY
          }
          else
          {
-            dgvShowKeysPositions.DataSource = bs;
-            btnDeleteKeyPosition.Visible = showKeysPositions;\
+            dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
+            btnDeleteKeyPosition.Visible = showKeysPositions;
          }
-         //dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
       }
 
       private void OnResize(object sender, EventArgs e)

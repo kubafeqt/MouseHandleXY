@@ -119,8 +119,10 @@ namespace MouseXY
       #region KeysPosition
       //TODO: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?)
       //TODO: přidat do datagridview sloupec s datumem CreatedAt a IsActive, SetName //advanced
+      //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced
       //TODO: kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
       //udělat sety pro KeysPosition, ... ; //advanced
+      //TODO: upravit hodnoty Position pomocí textboxu - vybraný z datagridview
       public static bool SavedKeyExist(Keys k)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
