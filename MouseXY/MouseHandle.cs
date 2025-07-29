@@ -182,7 +182,7 @@ namespace MouseXY
                   //setKeyToPos = false; // resetovat příznak, aby se další stisk neukládal
                   //Sounds.PlaySound(); // potvrzení pro uživatele
                   DBAccess.SaveOrUpdateKeyPos(key, pos); // uložit pozici do databáze
-                  OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and btnSetKeyPos.PerformClick();
+                  OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and SetKeyPos()
                   return (IntPtr)1; // Blokuje klávesu
                }
             }

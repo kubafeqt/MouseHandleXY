@@ -2,9 +2,9 @@
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace MouseXY
 {
@@ -45,7 +45,7 @@ namespace MouseXY
          timer.Tick += timer_tick;
 
          #region events
-         // event for change button enabled state
+         // event for change button enabled state when mouse cursor is controlled by keyboard or not
          MouseHandle.OnMouseCursorOpenChanged += (val) =>
          {
             btnSetKeyPos.Enabled = !val;
@@ -57,11 +57,11 @@ namespace MouseXY
          // event for set key to position of mouse cursor
          MouseHandle.OnSetKeyToPos += () =>
          {
-            btnSetKeyPos.PerformClick();
+            SetKeyPos();
             UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
             if (cboxShowSetKeyPos.Checked && !showKeysPositions)
             {
-               btnShowKeysPositions.PerformClick();
+               ShowKeysPositions();
             }
          };
 
@@ -96,17 +96,26 @@ namespace MouseXY
          bs.DataSource = MouseHandle.keysPosition; // Přiřazení dat z klávesových pozic do BindingSource
          var items = bs.List.Cast<object>().ToList();
          isFirstItemEmptyDict = items.Count == 1 &&
-       items[0] is System.Collections.IDictionary dict &&
-       dict.Count == 0;
+         items[0] is System.Collections.IDictionary dict &&
+         dict.Count == 0;
          if (isFirstItemEmptyDict)
          {
             dgvShowKeysPositions.DataSource = null;   // žádné sloupce ani prázdný řádek
-            btnDeleteKeyPosition.Visible = false;
+            ShowControlsOfTag("EditPos", false);
          }
          else
          {
             dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
-            btnDeleteKeyPosition.Visible = showKeysPositions;
+            ShowControlsOfTag("EditPos");
+         }
+      }
+
+      private void ShowControlsOfTag(string tag, bool show = true)
+      {
+         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString() == tag);
+         foreach (var control in matchingControls)
+         {
+            control.Visible = !show ? show : showKeysPositions && !isFirstItemEmptyDict;
          }
       }
 
@@ -156,6 +165,11 @@ namespace MouseXY
 
       private void btnSetKeyPos_Click(object sender, EventArgs e)
       {
+         SetKeyPos();
+      }
+
+      private void SetKeyPos()
+      {
          MouseHandle.setKeyToPos = !MouseHandle.setKeyToPos; //then play sound when disabled
          timer.Enabled = MouseHandle.setKeyToPos; // start or stop timer
          lbSetKeyPos.Visible = MouseHandle.setKeyToPos;
@@ -171,11 +185,16 @@ namespace MouseXY
       }
 
       public static bool showKeysPositions = false;
-      public void btnShowKeysPositions_Click(object sender, EventArgs e)
+      private void btnShowKeysPositions_Click(object sender, EventArgs e)
+      {
+         ShowKeysPositions();
+      }
+
+      private void ShowKeysPositions()
       {
          showKeysPositions = !showKeysPositions;
          dgvShowKeysPositions.Visible = showKeysPositions;
-         btnDeleteKeyPosition.Visible = showKeysPositions && !isFirstItemEmptyDict;
+         ShowControlsOfTag("EditPos");
          if (showKeysPositions)
          {
             Size = new Size(870, 695);
@@ -205,14 +224,65 @@ namespace MouseXY
                DBAccess.DeleteKey(key);
             }
             // Odstranění řádku z DataGridView
-            //dgvShowKeysPositions.Rows.RemoveAt(dgvShowKeysPositions.SelectedRows[0].Index);
             UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
          }
          else
          {
             MessageBox.Show("Nejprve vyberte řádek ke smazání.");
          }
+      }
 
+      private void btnEditPosition_Click(object sender, EventArgs e)
+      {
+         int maxX, maxY;
+         MaxScreenSize(out maxX, out maxY);
+         if (int.TryParse(tbPosX.Text, out int posX) && int.TryParse(tbPosY.Text, out int posY) && posX >= 0 && posY >= 0 && posX <= maxX && posY <= maxY)
+         {
+            if (dgvShowKeysPositions.SelectedRows.Count > 0)
+            {
+               Keys key = (Keys)Convert.ToInt32(dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value);
+               Point newPosition = new Point(posX, posY);
+               MouseHandle.keysPosition[key] = newPosition; // Aktualizace pozice klávesy
+               DBAccess.SaveOrUpdateKeyPos(key, newPosition);
+               UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
+            }
+            else
+            {
+               MessageBox.Show("Nejprve vyberte řádek k úpravě.");
+            }
+         }
+         else
+         {
+            MessageBox.Show($"Zadejte platné nezáporné hodnotny pro souřadnice X a Y, které nejsou větší, než maximální rozsah displejů. - X: {maxX}, Y: {maxY}");
+         }
+      }
+
+      private void MaxScreenSize(out int maxX, out int maxY)
+      {
+         maxX = 0;
+         maxY = 0;
+         foreach (var screen in Screen.AllScreens)
+         {
+            if (screen.Bounds.Right > maxX)
+               maxX = screen.Bounds.Right;
+            if (screen.Bounds.Bottom > maxY)
+               maxY = screen.Bounds.Bottom;
+         }
+      }
+
+      private void dgvShowKeysPositions_SelectionChanged(object sender, EventArgs e)
+      {
+         if (dgvShowKeysPositions.SelectedRows.Count > 0)
+         {
+            lbKeyPos.Text = $"Key: {dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value} - ";
+            string rawValue = dgvShowKeysPositions.SelectedRows[0].Cells["Value"].Value.ToString();
+            var matches = Regex.Matches(rawValue, @"\d+");
+            if (matches.Count == 2)
+            {
+               tbPosX.Text = matches[0].Value;
+               tbPosY.Text = matches[1].Value;
+            }
+         }
       }
    }
 }
