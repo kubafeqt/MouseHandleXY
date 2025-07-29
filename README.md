@@ -20,12 +20,12 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - **Right click**: Press **Q**
 - **Middle mouse held**: Press **R** or **F** , then again press **R** or **F** to unheld middle mouse button
 
+**Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
+
 ## Use Case
 
 This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
 
 ## Planned Features and Innovations
-
-- Save/load cursor positions with configurable hotkeys
-- Custom user-defined sounds  
 - Additional innovative features are currently in development and will be announced in future updates.
+- Custom user-defined sounds  
