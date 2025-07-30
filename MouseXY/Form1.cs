@@ -99,20 +99,22 @@ namespace MouseXY
          dgvShowKeysPositions.AllowUserToDeleteRows = false;
          UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
          //dgvShowKeysPositions.ReadOnly = true; // celý grid readonly - nefunguje pak .ReadOnly = false na sloupec IsActive
-         dgvShowKeysPositions.Columns["Key"].ReadOnly = true; // sloupec Key je readonly
-         dgvShowKeysPositions.Columns["Position"].ReadOnly = true; // sloupec Position je readonly
-         dgvShowKeysPositions.Columns["SetName"].ReadOnly = true; // sloupec SetName je readonly
-         dgvShowKeysPositions.Columns["CreatedAt"].ReadOnly = true; // sloupec CreatedAt je readonly
-         //dgvShowKeysPositions.Columns["IsActive"].ReadOnly = false; // výjimka pro checkbox
-
+         foreach (DataGridViewColumn column in dgvShowKeysPositions.Columns)
+         {
+            if (column.Name != "IsActive")
+            {
+               column.ReadOnly = true; //nastaví všechny sloupce který se nejmenujou IsActive na readonly
+            }
+         }
       }
 
+      BindingSource bs;
       bool isFirstItemEmptyDict;
       private void UpdateDataGridView()
       {
          //TODO: naučit se pracovat s BindingSource a DataGridView a vylepšit zobrazení dat v DataGridView pomocí BindingSource
          //DONE: udělat objekt pro BindingSource, který bude ukazovat hodnoty co jsou v KeyPosTable -> vylepšení SetName popsaný v TODO v DBAccess.cs
-         BindingSource bs = new BindingSource();
+         bs = new BindingSource();
          //bs.DataSource = KeyPos.keysPosition; // Přiřazení dat z klávesových pozic do BindingSource
          bs.DataSource = KeyPos.KeyPositions;
          var items = bs.List.Cast<object>().ToList();
