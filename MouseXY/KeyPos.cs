@@ -21,7 +21,7 @@ namespace MouseXY
       public static int PossibleFreeIdForSetname()
       {
          var usedIds = setNames.Keys.OrderBy(id => id).ToList();
-         int expectedId = 0;
+         int expectedId = 1;
          foreach (var id in usedIds)
          {
             if (id == expectedId)
