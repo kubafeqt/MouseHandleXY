@@ -402,13 +402,14 @@ namespace MouseXY
 
       private void cmbSelectSetname_SelectedIndexChanged(object sender, EventArgs e)
       {
-         if (string.IsNullOrWhiteSpace(tbSetname.Text) && cmbSelectSetname.SelectedItem.ToString() != "default")//|| cmbSelectSetname.Items.Contains(tbSetname.Text.Trim()))
+         if (string.IsNullOrWhiteSpace(tbSetname.Text) || cmbSelectSetname.Items.Contains(tbSetname.Text.Trim()))
          {
-            tbSetname.Text = cmbSelectSetname.SelectedItem?.ToString() ?? string.Empty;
+            tbSetname.Text = cmbSelectSetname.SelectedItem?.ToString() != "default" ? cmbSelectSetname.SelectedItem?.ToString() : string.Empty ?? string.Empty;
             // Nastaví text v TextBoxu na vybraný název z ComboBoxu
          }
       }
 
+      string? latestSelecedItem = null;
       private void tbSetname_TextChanged(object sender, EventArgs e)
       {
          string setName = tbSetname.Text.Trim().ToLower();
@@ -416,10 +417,12 @@ namespace MouseXY
          {
             btnAddSetname.Enabled = true;
             btnAddSetname.Text = "Edit"; // Pokud je název již v ComboBoxu, změní text tlačítka na "Edit"
+            latestSelecedItem = cmbSelectSetname.SelectedItem?.ToString() ?? "default";
             cmbSelectSetname.SelectedItem = setName;
          }
          else if (setName != "default")
          {
+            cmbSelectSetname.SelectedItem = latestSelecedItem ?? cmbSelectSetname.SelectedItem;
             btnAddSetname.Enabled = true;
             btnAddSetname.Text = "Add"; // Pokud název není v ComboBoxu, změní text tlačítka na "Add"
          }
@@ -445,7 +448,7 @@ namespace MouseXY
 
       private void btnSelectSetname_Click(object sender, EventArgs e)
       {
-         lbShowedSetname.Text = cmbSelectSetname.SelectedItem.ToString() ?? "default";
+         lbSelectedSetname.Text = $"SelectedSetname: {cmbSelectSetname.SelectedItem}";
       }
 
       private void btnAddKeyToSetname_Click(object sender, EventArgs e)
