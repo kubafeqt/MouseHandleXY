@@ -11,6 +11,26 @@ namespace MouseXY
 
       public static List<KeyPos> KeyPositions = new();
       public static Dictionary<Keys, Point> keysPosition = new(); //stores the position of the mouse for each key
+      public static Dictionary<int, string> setNames = new();
+
+      //Setname: TODO ->
+      // uložit/načíst z db
+      //  
+      // 
+      // 
+      public static int PossibleFreeIdForSetname()
+      {
+         var usedIds = setNames.Keys.OrderBy(id => id).ToList();
+         int expectedId = 0;
+         foreach (var id in usedIds)
+         {
+            if (id == expectedId)
+               expectedId++;
+            else if (id > expectedId)
+               break; // expectedId je volné
+         }
+         return expectedId;
+      }
 
       public string Key { get; set; }
       public Point Position { get; set; }

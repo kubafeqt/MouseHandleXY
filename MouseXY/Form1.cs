@@ -339,5 +339,111 @@ namespace MouseXY
          }
       }
 
+      private void btnAddSetname_Click(object sender, EventArgs e)
+      {
+         if (!btnAddSetname.Text.Equals("Edit", StringComparison.OrdinalIgnoreCase))
+         {
+            int newId = KeyPos.PossibleFreeIdForSetname(); // Získání nového ID pro SetName
+            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower() : Interaction.InputBox("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
+            if (!string.IsNullOrWhiteSpace(setName))
+            {
+               KeyPos.setNames[newId] = setName; // Přidání nového názvu do slovníku setNames
+               // Aktualizace ComboBoxu s názvy nastavení:
+               cmbSelectSetname.Items.Add(setName);
+               cmbSelectSetname.SelectedItem = setName; // Nastaví právě přidaný název jako vybraný
+               tbSetname.Text = string.Empty;
+               //DBAccess.SaveSetName(newId, newSetName); // Uložení nového názvu do databáze
+            }
+            else
+            {
+               MessageBox.Show("Název setName nesmí být prázdný.");
+            }
+         }
+         else //edit SetName
+         {
+            string setName = tbSetname.Text.Trim().ToLower();
+            string newSetName = Interaction.InputBox($"Zadejte nový název pro {setName}:", "Přidat nový SetName", $"").Trim().ToLower();
+            //interaction.inputbox with possibility to remove setName by remove button
+            if (!string.IsNullOrWhiteSpace(newSetName))
+            {
+               KeyPos.setNames[KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key] = newSetName;
+               int index = cmbSelectSetname.Items.IndexOf(setName);
+               cmbSelectSetname.Items[index] = newSetName; // Aktualizace položky v ComboBoxu
+               tbSetname.Text = string.Empty; // Vyprázdní TextBox
+               //DBAccess.UpdateSetName(setName, newSetName); // Aktualizace názvu setName v databázi
+            }
+            else
+            {
+               DialogResult result = MessageBox.Show(
+                   $"Chceš smazat setname: {setName}?",       // text zprávy
+                   $"Potvrzení smazání {setName}",           // titulek okna
+                   MessageBoxButtons.YesNo,       // tlačítka Ano / Ne
+                   MessageBoxIcon.Question        // ikona s otazníkem
+               );
+
+               if (result == DialogResult.Yes)
+               {
+                  // Odstranění setName z mapy dictionary:
+                  KeyPos.setNames.Remove(KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key);
+                  cmbSelectSetname.Items.Remove(setName); // Odstranění položky z ComboBoxu
+                  tbSetname.Text = string.Empty; // Vyprázdní TextBox
+                  //DBAccess.DeleteSetName(setName); // Smazání setName z databáze
+                  MessageBox.Show($"Setname: {setName} byl smazán.");
+               }
+            }
+         }
+      }
+
+      private void cmbSelectSetname_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         if (string.IsNullOrWhiteSpace(tbSetname.Text) || cmbSelectSetname.Items.Contains(tbSetname.Text.Trim()))
+         {
+            tbSetname.Text = cmbSelectSetname.SelectedItem?.ToString() ?? string.Empty;
+            // Nastaví text v TextBoxu na vybraný název z ComboBoxu
+         }
+      }
+
+      private void tbSetname_TextChanged(object sender, EventArgs e)
+      {
+         string setName = tbSetname.Text.Trim().ToLower();
+         if (cmbSelectSetname.Items.Contains(setName))
+         {
+            btnAddSetname.Text = "Edit"; // Pokud je název již v ComboBoxu, změní text tlačítka na "Edit"
+            cmbSelectSetname.SelectedItem = setName;
+         }
+         else
+         {
+            btnAddSetname.Text = "Add"; // Pokud název není v ComboBoxu, změní text tlačítka na "Add"
+         }
+      }
+
+      private void tbSetname_KeyDown(object sender, KeyEventArgs e)
+      {
+         if (e.KeyValue == (int)Keys.Enter)
+         {
+            e.SuppressKeyPress = true; // Zabráníme zvuku Enteru
+            btnAddSetname.PerformClick(); // Simulujeme kliknutí na tlačítko pro přidání/úpravu setName
+         }
+      }
+
+      private void btnShowSetname_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void btnSelectSetname_Click(object sender, EventArgs e)
+      {
+         lbSelectedSetname.Text = cmbSelectSetname.SelectedItem.ToString() ?? "default";
+      }
+
+      private void btnAddKeyToSetname_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void btnRemoveKeyFromSetname_Click(object sender, EventArgs e)
+      {
+
+      }
    }
 }
