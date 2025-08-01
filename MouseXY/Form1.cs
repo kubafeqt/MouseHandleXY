@@ -51,6 +51,9 @@ namespace MouseXY
          MouseHandle.OnMouseCursorOpenChanged += (val) =>
          {
             btnSetKeyPos.Enabled = !val;
+            EnableDisableControlsOfTag("EditPos", !val); // Enable/disable controls for editing positions of keys
+            lbMouseControl.Visible = val; // Zobrazí nebo skryje popisek pro ovládání myši
+            lbMouseControl.Text = val ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
             if (val)
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
@@ -105,25 +108,11 @@ namespace MouseXY
       }
 
       BindingSource bs;
-      bool isFirstItemEmptyDict;
       private void UpdateDataGridView()
       {
          bs = new BindingSource();
          bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositions.Where(k => k.SetName == KeyPos.showedSetName).ToList());
-         var items = bs.List.Cast<object>().ToList();
-         isFirstItemEmptyDict = items.Count == 1 &&
-         items[0] is System.Collections.IDictionary dict &&
-         dict.Count == 0;
-         if (isFirstItemEmptyDict)
-         {
-            dgvShowKeysPositions.DataSource = null;   // žádné sloupce ani prázdný řádek
-            ShowControlsOfTag("EditPos", false);
-         }
-         else
-         {
-            dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
-            ShowControlsOfTag("EditPos");
-         }
+         dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
       }
 
       private void ShowControlsOfTag(string tag, bool show = true)
@@ -131,7 +120,16 @@ namespace MouseXY
          var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString() == tag);
          foreach (var control in matchingControls)
          {
-            control.Visible = !show ? show : showKeysPositions && !isFirstItemEmptyDict;
+            control.Visible = !show ? show : showKeysPositions;
+         }
+      }
+
+      private void EnableDisableControlsOfTag(string tag, bool enable = true)
+      {
+         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString() == tag);
+         foreach (var control in matchingControls)
+         {
+            control.Enabled = enable;
          }
       }
 

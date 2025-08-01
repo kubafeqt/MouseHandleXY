@@ -54,6 +54,7 @@
          btnShowSetname = new Button();
          lbShowedSetname = new Label();
          lbSelectedSetname = new Label();
+         lbMouseControl = new Label();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          SuspendLayout();
@@ -355,11 +356,24 @@
          lbSelectedSetname.Tag = "EditPos";
          lbSelectedSetname.Text = "SelectedSetname: ";
          // 
+         // lbMouseControl
+         // 
+         lbMouseControl.AutoSize = true;
+         lbMouseControl.Font = new Font("Segoe UI Semibold", 10.181818F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbMouseControl.ForeColor = Color.DarkGreen;
+         lbMouseControl.Location = new Point(253, 67);
+         lbMouseControl.Name = "lbMouseControl";
+         lbMouseControl.Size = new Size(99, 19);
+         lbMouseControl.TabIndex = 27;
+         lbMouseControl.Text = "mouse control";
+         lbMouseControl.Visible = false;
+         // 
          // Form1
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
          ClientSize = new Size(856, 656);
+         Controls.Add(lbMouseControl);
          Controls.Add(lbSelectedSetname);
          Controls.Add(lbShowedSetname);
          Controls.Add(btnShowSetname);
@@ -425,5 +439,6 @@
       private Button btnShowSetname;
       private Label lbShowedSetname;
       private Label lbSelectedSetname;
+      private Label lbMouseControl;
    }
 }
