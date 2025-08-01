@@ -50,9 +50,8 @@
          btnAddSetname = new Button();
          cmbSelectSetname = new ComboBox();
          btnSelectSetname = new Button();
-         btnAddKeyToSetname = new Button();
+         btnAddKeyToSelectedSetname = new Button();
          btnShowSetname = new Button();
-         btnRemoveKeyFromSetname = new Button();
          lbShowedSetname = new Label();
          lbSelectedSetname = new Label();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
@@ -251,7 +250,7 @@
          // 
          lbSetname.AutoSize = true;
          lbSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSetname.Location = new Point(498, 12);
+         lbSetname.Location = new Point(505, 15);
          lbSetname.Name = "lbSetname";
          lbSetname.Size = new Size(67, 17);
          lbSetname.TabIndex = 17;
@@ -288,7 +287,7 @@
          // 
          cmbSelectSetname.DropDownStyle = ComboBoxStyle.DropDownList;
          cmbSelectSetname.FormattingEnabled = true;
-         cmbSelectSetname.Location = new Point(578, 43);
+         cmbSelectSetname.Location = new Point(492, 43);
          cmbSelectSetname.Name = "cmbSelectSetname";
          cmbSelectSetname.Size = new Size(162, 23);
          cmbSelectSetname.TabIndex = 20;
@@ -308,44 +307,31 @@
          btnSelectSetname.Visible = false;
          btnSelectSetname.Click += btnSelectSetname_Click;
          // 
-         // btnAddKeyToSetname
+         // btnAddKeyToSelectedSetname
          // 
-         btnAddKeyToSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnAddKeyToSetname.Location = new Point(492, 71);
-         btnAddKeyToSetname.Name = "btnAddKeyToSetname";
-         btnAddKeyToSetname.Size = new Size(148, 24);
-         btnAddKeyToSetname.TabIndex = 22;
-         btnAddKeyToSetname.Tag = "EditPos";
-         btnAddKeyToSetname.Text = "add key to setname";
-         btnAddKeyToSetname.UseVisualStyleBackColor = true;
-         btnAddKeyToSetname.Visible = false;
-         btnAddKeyToSetname.Click += btnAddKeyToSetname_Click;
+         btnAddKeyToSelectedSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnAddKeyToSelectedSetname.Location = new Point(492, 71);
+         btnAddKeyToSelectedSetname.Name = "btnAddKeyToSelectedSetname";
+         btnAddKeyToSelectedSetname.Size = new Size(334, 25);
+         btnAddKeyToSelectedSetname.TabIndex = 22;
+         btnAddKeyToSelectedSetname.Tag = "EditPos";
+         btnAddKeyToSelectedSetname.Text = "add selected key to selected setname";
+         btnAddKeyToSelectedSetname.UseVisualStyleBackColor = true;
+         btnAddKeyToSelectedSetname.Visible = false;
+         btnAddKeyToSelectedSetname.Click += btnAddKeyToSelectedSetname_Click;
          // 
          // btnShowSetname
          // 
          btnShowSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnShowSetname.Location = new Point(492, 41);
+         btnShowSetname.Location = new Point(660, 43);
          btnShowSetname.Name = "btnShowSetname";
          btnShowSetname.Size = new Size(80, 24);
          btnShowSetname.TabIndex = 23;
          btnShowSetname.Tag = "EditPos";
-         btnShowSetname.Text = "show :";
+         btnShowSetname.Text = "show";
          btnShowSetname.UseVisualStyleBackColor = true;
          btnShowSetname.Visible = false;
          btnShowSetname.Click += btnShowSetname_Click;
-         // 
-         // btnRemoveKeyFromSetname
-         // 
-         btnRemoveKeyFromSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnRemoveKeyFromSetname.Location = new Point(646, 71);
-         btnRemoveKeyFromSetname.Name = "btnRemoveKeyFromSetname";
-         btnRemoveKeyFromSetname.Size = new Size(180, 24);
-         btnRemoveKeyFromSetname.TabIndex = 24;
-         btnRemoveKeyFromSetname.Tag = "EditPos";
-         btnRemoveKeyFromSetname.Text = "remove key from setname";
-         btnRemoveKeyFromSetname.UseVisualStyleBackColor = true;
-         btnRemoveKeyFromSetname.Visible = false;
-         btnRemoveKeyFromSetname.Click += btnRemoveKeyFromSetname_Click;
          // 
          // lbShowedSetname
          // 
@@ -376,9 +362,8 @@
          ClientSize = new Size(856, 656);
          Controls.Add(lbSelectedSetname);
          Controls.Add(lbShowedSetname);
-         Controls.Add(btnRemoveKeyFromSetname);
          Controls.Add(btnShowSetname);
-         Controls.Add(btnAddKeyToSetname);
+         Controls.Add(btnAddKeyToSelectedSetname);
          Controls.Add(btnSelectSetname);
          Controls.Add(cmbSelectSetname);
          Controls.Add(btnAddSetname);
@@ -436,9 +421,8 @@
       private Button btnAddSetname;
       private ComboBox cmbSelectSetname;
       private Button btnSelectSetname;
-      private Button btnAddKeyToSetname;
+      private Button btnAddKeyToSelectedSetname;
       private Button btnShowSetname;
-      private Button btnRemoveKeyFromSetname;
       private Label lbShowedSetname;
       private Label lbSelectedSetname;
    }
