@@ -24,8 +24,6 @@ namespace MouseXY
             {
                // Otevře spojení
                connection.Open();
-               //MessageBox.Show("Spojení s databází bylo úspěšně navázáno.");
-
                // Vytvoří SQL příkaz
                string sql = "SELECT 1";
                using (SqlCommand command = new SqlCommand(sql, connection))
@@ -37,7 +35,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               MessageBox.Show("Error when working with database: " + ex.Message);
             }
          }
       }
@@ -71,7 +69,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               MessageBox.Show("Error when working with database:  " + ex.Message);
                return (Settings.delayMs, false);
             }
          }
@@ -103,7 +101,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               MessageBox.Show("Error when working with database:  " + ex.Message);
                return true;
             }
          }
@@ -142,7 +140,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+               MessageBox.Show("Error when saving to database: " + ex.Message);
             }
          }
       }
@@ -180,29 +178,96 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+               MessageBox.Show("Error when saving to database: " + ex.Message);
             }
          }
       }
 
-      #endregion
+      public static void SaveLatesSelectedSetName(bool showDgvAfterSetKeyPos)
+      {
+         bool rowExist = GetDelayMsExists().Item2;
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               if (rowExist)
+               {
+                  // UPDATE
+                  string sql = "UPDATE SettingsTable SET LatestSelectedSetName = @LatestSelectedSetName";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
+                     command.ExecuteNonQuery();
+                  }
+               }
+               else
+               {
+                  // INSERT
+                  string sql = "INSERT INTO SettingsTable (DelayMs, LatestSelectedSetName, ShowDgvAfterSetKeyPos) VALUES (@Delay, @LatestSelectedSetName, @showDgv)";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@Delay", Settings.delayMs);
+                     command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
+                     command.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     command.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Error when saving to database: " + ex.Message);
+            }
+         }
+      }
 
-      #region KeysPosition
-      //ALTER: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?) -> (zatím?) db SettingsTable, ShowDgvAfterSetKeyPos
-      //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced pro SetName, SetID
-      //kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
-      //udělat sety pro KeysPosition, ... ; //advanced
-      public static bool SavedKeyExist(Keys k)
+      public static void LoadLatestSelectedSetName()
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
             try
             {
                connection.Open();
-               string sql = "SELECT 1 FROM KeyPosTable WHERE [Key] = @Key";
+               string sql = "SELECT LatestSelectedSetName FROM SettingsTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  object result = command.ExecuteScalar();
+                  if (result != null && !string.IsNullOrEmpty(result.ToString()))
+                  {
+                     KeyPos.selectedSetName = result.ToString();
+                     KeyPos.showedSetName = KeyPos.selectedSetName; // pro zobrazení v UI, aby se neukazoval default setName
+                  }
+                  else
+                  {
+                     KeyPos.selectedSetName = "default"; // pokud není nastaveno, použije se default
+                     KeyPos.showedSetName = "default";
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Error when loading from database: " + ex.Message);
+            }
+         }
+      }  
+
+      #endregion
+
+      #region KeysPosition
+      //ALTER: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?) -> (zatím?) db SettingsTable, ShowDgvAfterSetKeyPos
+      //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced pro SetName, SetID
+      public static bool SavedKeyExist(Keys k, string setName)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT 1 FROM KeyPosTable WHERE [Key] = @Key and SetName = @SetName";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@Key", k.ToString());
+                  command.Parameters.AddWithValue("@SetName", setName);
                   using (SqlDataReader reader = command.ExecuteReader())
                   {
                      return reader.HasRows;
@@ -211,13 +276,13 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               MessageBox.Show("Error when working with database: " + ex.Message);
                return false;
             }
          }
       }
 
-      public static void SaveOrUpdateKeyPos(Keys key, Point position, bool isActive = true)
+      public static void SaveOrUpdateKeyPos(Keys key, Point position, string setname = "default", bool isActive = true)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
@@ -225,13 +290,14 @@ namespace MouseXY
             {
                connection.Open();
 
-               if (SavedKeyExist(key))
+               if (SavedKeyExist(key, setname))
                {
                   // UPDATE
-                  string updateSql = "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key";
+                  string updateSql = "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key AND SetName = @SetName";
                   using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
                   {
                      updateCmd.Parameters.AddWithValue("@Key", key.ToString());
+                     updateCmd.Parameters.AddWithValue("@SetName", setname);
                      updateCmd.Parameters.AddWithValue("@Position", $"{position.X},{position.Y}");
                      updateCmd.Parameters.AddWithValue("@IsActive", isActive);
                      updateCmd.ExecuteNonQuery();
@@ -240,18 +306,19 @@ namespace MouseXY
                else
                {
                   // INSERT
-                  string insertSql = "INSERT INTO KeyPosTable ([Key], Position) VALUES (@Key, @Position)";
+                  string insertSql = "INSERT INTO KeyPosTable ([Key], Position, SetName) VALUES (@Key, @Position, @SetName)";
                   using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
                   {
                      insertCmd.Parameters.AddWithValue("@Key", key.ToString());
                      insertCmd.Parameters.AddWithValue("@Position", $"{position.X},{position.Y}");
+                     insertCmd.Parameters.AddWithValue("@SetName", setname);
                      insertCmd.ExecuteNonQuery();
                   }
                }
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+               MessageBox.Show("Error when saving to database: " + ex.Message);
             }
          }
       }
@@ -287,22 +354,23 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+               MessageBox.Show("Error when loading from database: " + ex.Message);
             }
          }
          return keysPosition;
       }
 
-      public static void LoadKeysPositions()
+      public static void LoadKeysPositions()//(string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
             try
             {
                connection.Open();
-               string sql = "SELECT * FROM KeyPosTable";
+               string sql = "SELECT * FROM KeyPosTable";// WHERE @SetName = SetName";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
+                  //command.Parameters.AddWithValue("@SetName", setName);
                   using (SqlDataReader reader = command.ExecuteReader())
                   {
                      while (reader.Read())
@@ -318,17 +386,17 @@ namespace MouseXY
                                pos = new Point(x, y);
                            }
                         }
-                        string setName = reader["SetName"]?.ToString() ?? "none";
+                        string setname = reader["SetName"]?.ToString() ?? "default";
                         DateTime createdAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
                         bool isActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
-                        new KeyPos(keyStr, pos, setName, createdAt, isActive); // Přidá novou KeyPos do seznamu, pokud ještě neexistuje
+                        new KeyPos(keyStr, pos, setname, createdAt, isActive); // Přidá novou KeyPos do seznamu, pokud ještě neexistuje
                      }
                   }
                }
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+               MessageBox.Show("Error when loading from database: " + ex.Message);
             }
          }
       }
@@ -340,19 +408,187 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = "DELETE FROM KeyPosTable WHERE [Key] = @Key";
+               string sql = "DELETE FROM KeyPosTable WHERE [Key] = @Key AND SetName = @SetName";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
+                  command.Parameters.AddWithValue("@SetName", KeyPos.showedSetName);
                   command.Parameters.AddWithValue("@Key", key.ToString());
                   command.ExecuteNonQuery();
                }
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Chyba při mazání z databáze: " + ex.Message);
+               MessageBox.Show("Error when deleting from database: " + ex.Message);
             }
          }
       }
+
+      #endregion
+
+      #region SetNames
+      public static void SaveOrUpdateSetName(int setId, string setName)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               if (DbContainsSetNameId(setId))
+               {
+                  // UPDATE
+                  string updateSql = "UPDATE SetNamesTable SET Name = @Name WHERE Id = @Id";
+                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
+                  {
+                     updateCmd.Parameters.AddWithValue("@Id", setId);
+                     updateCmd.Parameters.AddWithValue("@Name", setName);
+                     updateCmd.ExecuteNonQuery();
+                  }
+               }
+               else
+               {
+                  // INSERT
+                  string insertSql = "INSERT INTO SetNamesTable (Id, Name) VALUES (@SetID, @SetName)";
+                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
+                  {
+                     insertCmd.Parameters.AddWithValue("@SetID", setId);
+                     insertCmd.Parameters.AddWithValue("@SetName", setName);
+                     insertCmd.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Error when saving to database: " + ex.Message);
+            }
+         }
+      }
+
+      public static bool DbContainsSetNameId(int id)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT Id, Name FROM SetNamesTable WHERE Id = @id";
+
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@id", id);
+                  using (SqlDataReader reader = command.ExecuteReader())
+                  {
+                     while (reader.Read())
+                     {
+                        int setId = reader.GetInt32(reader.GetOrdinal("Id"));
+                        string setName = reader["Name"].ToString();
+                        return true;
+                     }
+                     return false;
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Error when loading from database: " + ex.Message);
+               return false;
+            }
+         }
+      }
+
+      public static void DeleteSetName(int setId)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "DELETE FROM SetNamesTable WHERE Id = @Id";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@Id", setId);
+                  command.ExecuteNonQuery();
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Error when deleting from database: " + ex.Message);
+            }
+         }
+      }
+
+      public static void LoadSetNames()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT Id, Name FROM SetNamesTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  using (SqlDataReader reader = command.ExecuteReader())
+                  {
+                     while (reader.Read())
+                     {
+                        int setId = reader.GetInt32(reader.GetOrdinal("Id"));
+                        string setName = reader["Name"].ToString();
+                        KeyPos.setNames[setId] = setName; // Přidá nebo aktualizuje setName v dictionary
+                     }
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Error when loading from database: " + ex.Message);
+            }
+         }
+      }
+
+      #endregion
+
+      #region SetNamesKeys
+      //public static void LoadKeysOfSelectedSetname(string setName)
+      //{
+      //   using (SqlConnection connection = new SqlConnection(connectionString))
+      //   {
+      //      try
+      //      {
+      //         connection.Open();
+      //         KeyPos.ClearKeyPositions(); // Vymaže aktuální KeyPositions před načtením nových
+      //         string sql = "SELECT * FROM KeyPosTable WHERE SetName = @Setname";
+      //         using (SqlCommand command = new SqlCommand(sql, connection))
+      //         {
+      //            command.Parameters.AddWithValue("@Setname", setName);
+      //            using (SqlDataReader reader = command.ExecuteReader())
+      //            {
+      //               while (reader.Read())
+      //               {
+      //                  string keyStr = reader["Key"].ToString();
+      //                  string positionStr = reader["Position"].ToString();
+      //                  Point pos = new();
+      //                  if (Enum.TryParse(keyStr, out Keys key) && !string.IsNullOrEmpty(positionStr))
+      //                  {
+      //                     string[] posParts = positionStr.Split(',');
+      //                     if (posParts.Length == 2 && int.TryParse(posParts[0], out int x) && int.TryParse(posParts[1], out int y))
+      //                     {
+      //                        pos = new Point(x, y);
+      //                     }
+      //                  }
+      //                  string setname = reader["SetName"]?.ToString() ?? "default";
+      //                  DateTime createdAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
+      //                  bool isActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
+      //                  new KeyPos(keyStr, pos, setName, createdAt, isActive); // Přidá novou KeyPos do seznamu, pokud ještě neexistuje
+      //               }
+      //            }
+      //         }
+      //      }
+      //      catch (SqlException ex)
+      //      {
+      //         MessageBox.Show("Error when working with database:  " + ex.Message);
+      //      }
+      //   }
+      //}
+
 
       #endregion
 
