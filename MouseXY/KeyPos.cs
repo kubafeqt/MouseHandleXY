@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace MouseXY
 {
@@ -42,26 +44,31 @@ namespace MouseXY
          SetName = setName;
          CreatedAt = createdAt;
          IsActive = isActive;
-         if (!KeyPositions.Any(k => k.Key == key && k.SetName == setName)) //key in setame does not exist - add new
+         InitializeKeyPositions();
+      }
+
+      private void InitializeKeyPositions()
+      {
+         if (!KeyPositions.Any(k => k.Key == Key && k.SetName == SetName)) //key in setame does not exist - add new
          {
             KeyPositions.Add(this);
-            if (setName == selectedSetName)
+            if (SetName == selectedSetName)
             {
-               keysPositionDict.Add((Keys)Enum.Parse(typeof(Keys), key), position);
+               keysPositionDict.Add((Keys)Enum.Parse(typeof(Keys), Key), Position);
             }
          }
          else //key in setName exists - edit
          {
-            var existingKeyPos = KeyPositions.Find(k => k.Key == key && k.SetName == setName);
+            var existingKeyPos = KeyPositions.Find(k => k.Key == Key && k.SetName == SetName);
             if (existingKeyPos != null)
             {
-               existingKeyPos.Position = position;
-               existingKeyPos.SetName = setName;
-               existingKeyPos.CreatedAt = createdAt;
-               existingKeyPos.IsActive = isActive;
-               if (setName == selectedSetName)
+               existingKeyPos.Position = Position;
+               existingKeyPos.SetName = SetName;
+               existingKeyPos.CreatedAt = CreatedAt;
+               existingKeyPos.IsActive = IsActive;
+               if (SetName == selectedSetName)
                {
-                  keysPositionDict[(Keys)Enum.Parse(typeof(Keys), key)] = position; // update the position in the dictionary
+                  keysPositionDict[(Keys)Enum.Parse(typeof(Keys), Key)] = Position; // update the position in the dictionary
                }
             }
          }
@@ -116,7 +123,7 @@ namespace MouseXY
                    MessageBoxButtons.OK,
                    MessageBoxIcon.Information
                );
-               return; // Klíč již existuje s těmito souřadnicemi, nic nedělej
+               return; // Klíč již existuje s těmito souřadnicemi
             }
             DialogResult result = MessageBox.Show(
                  $"Key '{key}' already exists in the set '{selectedSetName}' with coordinates {existing.Position}.\nDo you want to overwrite it with coordinates {position}?",
@@ -139,6 +146,7 @@ namespace MouseXY
             }
          }
       }
+
       public static void DeleteKeysBySetName(string setname)
       {
          KeyPositions.Where(k => k.SetName == setname).ToList().ForEach(k =>
