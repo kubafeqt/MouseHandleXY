@@ -16,12 +16,6 @@ namespace MouseXY
       public static string selectedSetName = "default"; // pro manipulaci s klávesy - stores the name of the set of keys
       public static string showedSetName = "default"; // pro zobrazení v UI, aby se neukazoval default setName
 
-      //Setname: TODO ->
-      // uložit/načíst z db
-      // - load selected setname  
-      // - save selected setname
-      // - delete selected setname and make it default
-      // - 
       public static int PossibleFreeIdForSetname()
       {
          var usedIds = setNames.Keys.OrderBy(id => id).ToList();
@@ -148,35 +142,42 @@ namespace MouseXY
             }
          }
       }
+      public static void DeleteKeysBySetName(string setname)
+      {
+         KeyPositions.Where(k => k.SetName == setname).ToList().ForEach(k =>
+         {
+            KeyPositions.Remove(k);
+         });
+      }
 
-      //public static void ClearKeyPositions()
-      //{
-      //   KeyPositions.Clear();
-      //   keysPositionDict.Clear();
-      //}
+         //public static void ClearKeyPositions()
+         //{
+         //   KeyPositions.Clear();
+         //   keysPositionDict.Clear();
+         //}
 
-      //public static void GetKeyPositions(string setName = "load")
-      //{
-      //   if (setName == "load")
-      //   {
-      //      keysPositionDict.Clear();
-      //      foreach (var keyPos in KeyPositions)
-      //      {
-      //         if (keyPos.IsActive)
-      //         {
-      //            keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
-      //         }
-      //      }
-      //   }
-      //   else
-      //   {
-      //      keysPositionDict.Clear();
-      //      foreach (var keyPos in KeyPositions.Where(k => k.SetName == setName && k.IsActive))
-      //      {
-      //         keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
-      //      }
-      //   }
-      //}
+         //public static void GetKeyPositions(string setName = "load")
+         //{
+         //   if (setName == "load")
+         //   {
+         //      keysPositionDict.Clear();
+         //      foreach (var keyPos in KeyPositions)
+         //      {
+         //         if (keyPos.IsActive)
+         //         {
+         //            keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
+         //         }
+         //      }
+         //   }
+         //   else
+         //   {
+         //      keysPositionDict.Clear();
+         //      foreach (var keyPos in KeyPositions.Where(k => k.SetName == setName && k.IsActive))
+         //      {
+         //         keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
+         //      }
+         //   }
+         //}
 
-   }
+      }
 }

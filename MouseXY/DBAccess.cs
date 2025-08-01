@@ -427,6 +427,28 @@ namespace MouseXY
          }
       }
 
+
+      public static void DeleteKeysBySetName(string setname)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "DELETE FROM KeyPosTable WHERE SetName = @SetName";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@SetName", setname);
+                  command.ExecuteNonQuery();
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při mazání z databáze: " + ex.Message);
+            }
+         }
+      }
+
       #endregion
 
       #region SetNames

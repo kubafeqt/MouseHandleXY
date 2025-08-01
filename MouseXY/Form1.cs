@@ -398,7 +398,7 @@ namespace MouseXY
             else // pokud je nový název prázdný zobrazí se dialog pro potvrzení smazání
             {
                DialogResult result = MessageBox.Show(
-                   $"Chceš smazat setname: {setName}?",       // text zprávy
+                   $"Chcete smazat setname: {setName} se všemi jeho hotkeys?",       // text zprávy
                    $"Potvrzení smazání {setName}",           // titulek okna
                    MessageBoxButtons.YesNo,       // tlačítka Ano / Ne
                    MessageBoxIcon.Question        // ikona s otazníkem
@@ -412,7 +412,9 @@ namespace MouseXY
                   cmbSelectSetname.Items.Remove(setName); // Odstranění položky z ComboBoxu
                   tbSetname.Text = string.Empty; // Vyprázdní TextBox
                   DBAccess.DeleteSetName(id); // Smazání setName z databáze
-                  MessageBox.Show($"Setname: {setName} byl smazán.");
+                  DBAccess.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z databáze
+                  KeyPos.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z objektu KeyPos v listu KeyPositions
+                  MessageBox.Show($"Setname: {setName} byl smazán se všemi jeho uloženými hotkeys.");
                   cmbSelectSetname.SelectedIndex = cmbSelectSetname.Items.Count - 1;
                   if (KeyPos.selectedSetName == setName)
                   {
