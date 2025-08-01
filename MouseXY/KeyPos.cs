@@ -127,7 +127,7 @@ namespace MouseXY
                return; // Klíč již existuje s těmito souřadnicemi, nic nedělej
             }
             DialogResult result = MessageBox.Show(
-                 $"Key '{key}' already exists in the set '{selectedSetName}' with coordinates {existing.Position}.\nDo you want to overwrite it with coordinates {position}?",
+                 $"Key '{key}' already exists in the set '{selectedSetName}' with coordinates {position}.\nDo you want to overwrite it with coordinates {position}?",
                  "Duplicate Key",
                  MessageBoxButtons.YesNo,
                  MessageBoxIcon.Question

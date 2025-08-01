@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace MouseXY
 {
@@ -58,7 +59,7 @@ namespace MouseXY
 
       #endregion
 
-      #region Mouse Control
+      #region Mouse Control Methods
       private static void LeftMouseClick(IntPtr wParam)
       {
          if (wParam == (IntPtr)WM_KEYDOWN)
@@ -99,7 +100,7 @@ namespace MouseXY
 
       #endregion
 
-      #region Mouse Cursor Control and Key Positioning set
+      #region Mouse Cursor Control by keyboard and Key Positioning set
       public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
       static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
       {
@@ -175,13 +176,13 @@ namespace MouseXY
                      }
                }
 
-               if (KeyPos.keysPosition.Count > 0 && KeyPos.keysPosition.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
+               if (KeyPos.keysPositionDict.Count > 0 && KeyPos.keysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
                {
                   KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == ((Keys)vkCode).ToString());
                   if (k != null && k.IsActive) // pokud je klávesa aktivní
                   {
                      //Point position = k.Position; //získá pozici z objektu KeyPos a nastaví kurzor myši na tuto pozici
-                     Point keyPos = KeyPos.keysPosition[(Keys)vkCode];
+                     Point keyPos = KeyPos.keysPositionDict[(Keys)vkCode];
                      SetCursorPos(keyPos.X, keyPos.Y);
                      return (IntPtr)1; // Blokuje klávesu
                   }
@@ -192,11 +193,12 @@ namespace MouseXY
                Keys key = (Keys)vkCode;
                if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains(key))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány
                {
-                  KeyPos.keysPosition[key] = pos; // uložit pozici myši pro tuto klávesu
+                  //KeyPos.keysPositionDict[key] = pos; // uložit pozici myši pro tuto klávesu
                   //setKeyToPos = false; // resetovat příznak, aby se další stisk neukládal
                   //Sounds.PlaySound(); // potvrzení pro uživatele
 
-                  DBAccess.SaveOrUpdateKeyPos(key, pos); // uložit pozici do databáze
+                  DBAccess.SaveOrUpdateKeyPos(key, pos, KeyPos.showedSetName); // uložit pozici do databáze
+                  KeyPos.UpdateKeyPosition(key.ToString(), pos); // aktualizovat pozici v objektu KeyPos a seznamu KeyPosList
                   DBAccess.LoadKeysPositions(); // načíst pozice kláves z databáze do objektu KeyPos a seznamu KeyPosList
                   OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and SetKeyPos()
                   return (IntPtr)1; // Blokuje klávesu

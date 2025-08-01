@@ -24,6 +24,8 @@ namespace MouseXY
             {
                // Otevře spojení
                connection.Open();
+               //MessageBox.Show("Spojení s databází bylo úspěšně navázáno.");
+
                // Vytvoří SQL příkaz
                string sql = "SELECT 1";
                using (SqlCommand command = new SqlCommand(sql, connection))
@@ -35,7 +37,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when working with database: " + ex.Message);
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
             }
          }
       }
@@ -69,7 +71,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when working with database:  " + ex.Message);
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
                return (Settings.delayMs, false);
             }
          }
@@ -101,7 +103,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when working with database:  " + ex.Message);
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
                return true;
             }
          }
@@ -140,7 +142,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when saving to database: " + ex.Message);
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
          }
       }
@@ -178,7 +180,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when saving to database: " + ex.Message);
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
          }
       }
@@ -216,7 +218,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when saving to database: " + ex.Message);
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
          }
       }
@@ -246,7 +248,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when loading from database: " + ex.Message);
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
             }
          }
       }  
@@ -256,6 +258,8 @@ namespace MouseXY
       #region KeysPosition
       //ALTER: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?) -> (zatím?) db SettingsTable, ShowDgvAfterSetKeyPos
       //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced pro SetName, SetID
+      //kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
+      //udělat sety pro KeysPosition, ... ; //advanced
       public static bool SavedKeyExist(Keys k, string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -276,7 +280,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when working with database: " + ex.Message);
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
                return false;
             }
          }
@@ -318,7 +322,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when saving to database: " + ex.Message);
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
          }
       }
@@ -354,7 +358,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when loading from database: " + ex.Message);
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
             }
          }
          return keysPosition;
@@ -396,7 +400,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when loading from database: " + ex.Message);
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
             }
          }
       }
@@ -418,7 +422,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when deleting from database: " + ex.Message);
+               MessageBox.Show("Chyba při mazání z databáze: " + ex.Message);
             }
          }
       }
@@ -458,7 +462,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when saving to database: " + ex.Message);
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
          }
       }
@@ -489,7 +493,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when loading from database: " + ex.Message);
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
                return false;
             }
          }
@@ -511,7 +515,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when deleting from database: " + ex.Message);
+               MessageBox.Show("Chyba při mazání z databáze: " + ex.Message);
             }
          }
       }
@@ -539,7 +543,7 @@ namespace MouseXY
             }
             catch (SqlException ex)
             {
-               MessageBox.Show("Error when loading from database: " + ex.Message);
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
             }
          }
       }
@@ -584,7 +588,7 @@ namespace MouseXY
       //      }
       //      catch (SqlException ex)
       //      {
-      //         MessageBox.Show("Error when working with database:  " + ex.Message);
+      //         MessageBox.Show("Chyba při práci s databází: " + ex.Message);
       //      }
       //   }
       //}
