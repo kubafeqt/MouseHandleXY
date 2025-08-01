@@ -572,51 +572,5 @@ namespace MouseXY
 
       #endregion
 
-      #region SetNamesKeys
-      //public static void LoadKeysOfSelectedSetname(string setName)
-      //{
-      //   using (SqlConnection connection = new SqlConnection(connectionString))
-      //   {
-      //      try
-      //      {
-      //         connection.Open();
-      //         KeyPos.ClearKeyPositions(); // Vymaže aktuální KeyPositions před načtením nových
-      //         string sql = "SELECT * FROM KeyPosTable WHERE SetName = @Setname";
-      //         using (SqlCommand command = new SqlCommand(sql, connection))
-      //         {
-      //            command.Parameters.AddWithValue("@Setname", setName);
-      //            using (SqlDataReader reader = command.ExecuteReader())
-      //            {
-      //               while (reader.Read())
-      //               {
-      //                  string keyStr = reader["Key"].ToString();
-      //                  string positionStr = reader["Position"].ToString();
-      //                  Point pos = new();
-      //                  if (Enum.TryParse(keyStr, out Keys key) && !string.IsNullOrEmpty(positionStr))
-      //                  {
-      //                     string[] posParts = positionStr.Split(',');
-      //                     if (posParts.Length == 2 && int.TryParse(posParts[0], out int x) && int.TryParse(posParts[1], out int y))
-      //                     {
-      //                        pos = new Point(x, y);
-      //                     }
-      //                  }
-      //                  string setname = reader["SetName"]?.ToString() ?? "default";
-      //                  DateTime createdAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
-      //                  bool isActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
-      //                  new KeyPos(keyStr, pos, setName, createdAt, isActive); // Přidá novou KeyPos do seznamu, pokud ještě neexistuje
-      //               }
-      //            }
-      //         }
-      //      }
-      //      catch (SqlException ex)
-      //      {
-      //         MessageBox.Show("Chyba při práci s databází: " + ex.Message);
-      //      }
-      //   }
-      //}
-
-
-      #endregion
-
    }
 }

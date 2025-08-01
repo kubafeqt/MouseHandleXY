@@ -10,8 +10,7 @@ namespace MouseXY
    {
       
       public static List<KeyPos> KeyPositions = new(); //pro zobrazování dat
-      public static Dictionary<Keys, Point> keysPositionDict { get; private set; } = new();
-      //pro manipulaci s klávesy - stores the position of the mouse for each key
+      public static Dictionary<Keys, Point> keysPositionDict { get; private set; } = new(); //pro manipulaci s klávesy - stores the position of the mouse for each key
       public static Dictionary<int, string> setNames = new();
       public static string selectedSetName = "default"; // pro manipulaci s klávesy - stores the name of the set of keys
       public static string showedSetName = "default"; // pro zobrazení v UI, aby se neukazoval default setName
@@ -99,7 +98,6 @@ namespace MouseXY
             new KeyPos(key, position, selectedSetName, DateTime.Now, true);
             DBAccess.SaveOrUpdateKeyPos(Key, position, selectedSetName); // save to database
             UpdateKeyPosDict();
-            //keysPositionDict[(Keys)Enum.Parse(typeof(Keys), key)] = position; // add to the dictionary
             MessageBox.Show(
                 $"Key '{key}' added to the set '{selectedSetName}' with coordinates {position}.",
                 "Key Added",
@@ -136,7 +134,6 @@ namespace MouseXY
                   existing.CreatedAt = DateTime.Now;
                   existing.IsActive = true;
                }
-               //keysPositionDict[Key] = position;
                UpdateKeyPosDict();
                DBAccess.SaveOrUpdateKeyPos(Key, position, selectedSetName);
             }
@@ -150,34 +147,11 @@ namespace MouseXY
          });
       }
 
-         //public static void ClearKeyPositions()
-         //{
-         //   KeyPositions.Clear();
-         //   keysPositionDict.Clear();
-         //}
+      //public static void ClearKeyPositions()
+      //{
+      //   KeyPositions.Clear();
+      //   keysPositionDict.Clear();
+      //}
 
-         //public static void GetKeyPositions(string setName = "load")
-         //{
-         //   if (setName == "load")
-         //   {
-         //      keysPositionDict.Clear();
-         //      foreach (var keyPos in KeyPositions)
-         //      {
-         //         if (keyPos.IsActive)
-         //         {
-         //            keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
-         //         }
-         //      }
-         //   }
-         //   else
-         //   {
-         //      keysPositionDict.Clear();
-         //      foreach (var keyPos in KeyPositions.Where(k => k.SetName == setName && k.IsActive))
-         //      {
-         //         keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
-         //      }
-         //   }
-         //}
-
-      }
+   }
 }

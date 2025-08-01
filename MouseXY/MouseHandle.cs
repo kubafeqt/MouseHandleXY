@@ -62,14 +62,12 @@ namespace MouseXY
       #region Mouse Control Methods
       private static void LeftMouseClick(IntPtr wParam)
       {
-         if (wParam == (IntPtr)WM_KEYDOWN)
+         if (wParam == (IntPtr)WM_KEYDOWN) // Levé tlačítko myši dolů
          {
-            // Levé tlačítko myši dolů
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
          }
-         else if (wParam == (IntPtr)WM_KEYUP)
+         else if (wParam == (IntPtr)WM_KEYUP) // Levé tlačítko myši nahoru
          {
-            // Levé tlačítko myši nahoru
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
          }
       }
@@ -181,7 +179,6 @@ namespace MouseXY
                   KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == ((Keys)vkCode).ToString());
                   if (k != null && k.IsActive) // pokud je klávesa aktivní
                   {
-                     //Point position = k.Position; //získá pozici z objektu KeyPos a nastaví kurzor myši na tuto pozici
                      Point keyPos = KeyPos.keysPositionDict[(Keys)vkCode];
                      SetCursorPos(keyPos.X, keyPos.Y);
                      return (IntPtr)1; // Blokuje klávesu
@@ -193,10 +190,6 @@ namespace MouseXY
                Keys key = (Keys)vkCode;
                if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains(key))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány
                {
-                  //KeyPos.keysPositionDict[key] = pos; // uložit pozici myši pro tuto klávesu
-                  //setKeyToPos = false; // resetovat příznak, aby se další stisk neukládal
-                  //Sounds.PlaySound(); // potvrzení pro uživatele
-
                   DBAccess.SaveOrUpdateKeyPos(key, pos, KeyPos.showedSetName); // uložit pozici do databáze
                   KeyPos.UpdateKeyPosition(key.ToString(), pos); // aktualizovat pozici v objektu KeyPos a seznamu KeyPosList
                   DBAccess.LoadKeysPositions(); // načíst pozice kláves z databáze do objektu KeyPos a seznamu KeyPosList

@@ -81,14 +81,10 @@ namespace MouseXY
 
          #region DB_loading
          //DBAccess.ConnectionTest();
-         //KeyPos.keysPositionDict = DBAccess.GetKeysPositions(); // načtení pozic kláves z databáze
          DBAccess.LoadSetNames(); // načtení názvů setNames z databáze do slovníku setNames
-         //string selectedSetname = cmbSelectSetname.Text;
          DBAccess.LoadKeysPositions(); // načtení pozic kláves z databáze do objektu KeyPos a seznamu KeyPosList
          DBAccess.LoadLatestSelectedSetName(); // načtení posledního vybraného setName z databáze
          KeyPos.UpdateKeyPosDict(); // Aktualizace slovníku pozic kláves z KeyPosList
-         //KeyPos.GetKeyPositions();
-         //KeyPos.KeyPositions = KeyPos.GetKeyPositions();
          Settings.delayMs = DBAccess.GetDelayMsExists().Item1;
          cboxShowSetKeyPos.Checked = DBAccess.GetShowDgvAfterSetKeyPos();
          nmDelayMs.Value = Settings.delayMs;
@@ -99,7 +95,6 @@ namespace MouseXY
          dgvShowKeysPositions.AllowUserToAddRows = false;
          dgvShowKeysPositions.AllowUserToDeleteRows = false;
          UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
-         //dgvShowKeysPositions.ReadOnly = true; // celý grid readonly - nefunguje pak .ReadOnly = false na sloupec IsActive
          foreach (DataGridViewColumn column in dgvShowKeysPositions.Columns)
          {
             if (column.Name != "IsActive")
@@ -113,9 +108,7 @@ namespace MouseXY
       bool isFirstItemEmptyDict;
       private void UpdateDataGridView()
       {
-         //DONE: udělat objekt pro BindingSource, který bude ukazovat hodnoty co jsou v KeyPosTable -> vylepšení SetName popsaný v TODO v DBAccess.cs
          bs = new BindingSource();
-         //bs.DataSource = KeyPos.keysPosition; // Přiřazení dat z klávesových pozic do BindingSource
          bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositions.Where(k => k.SetName == KeyPos.showedSetName).ToList());
          var items = bs.List.Cast<object>().ToList();
          isFirstItemEmptyDict = items.Count == 1 &&
@@ -154,7 +147,6 @@ namespace MouseXY
          int index = cmbSelectSetname.Items.IndexOf(KeyPos.showedSetName);
          cmbSelectSetname.SelectedIndex = index;
          EnableDisableAddKeyToSdSetnameButton();
-         //cmbSelectSetname.SelectedIndex = 0; // Nastaví výchozí položku
       }
 
       private void OnResize(object sender, EventArgs e)
@@ -255,7 +247,7 @@ namespace MouseXY
             Keys key = (Keys)Enum.Parse(typeof(Keys), dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value.ToString());
 
             var confirm = MessageBox.Show("Opravdu chcete smazat tento záznam?", "Potvrzení", MessageBoxButtons.YesNo);
-            if (confirm == DialogResult.Yes)
+            if (confirm == DialogResult.Yes) // Odstranění řádku z DataGridView
             {
                if (KeyPos.showedSetName == KeyPos.selectedSetName)
                {
@@ -264,7 +256,6 @@ namespace MouseXY
                KeyPos.KeyPositions.RemoveAll(k => k.Key == key.ToString() && k.SetName == KeyPos.showedSetName); // Odstranění záznamu z listu KeyPositions
                DBAccess.DeleteKey(key);
             }
-            // Odstranění řádku z DataGridView
             UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
          }
          else
@@ -287,7 +278,6 @@ namespace MouseXY
                KeyPos.UpdateKeyPosition(keyString, newPosition, false); // Aktualizace pozice v KeyPos
                DBAccess.SaveOrUpdateKeyPos(key, newPosition, KeyPos.showedSetName); // Uložení změn do databáze
                KeyPos.UpdateKeyPosDict();
-               //DBAccess.LoadKeysPositions(); // Načtení aktualizovaných pozic kláves z databáze
                UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
             }
             else
@@ -337,11 +327,9 @@ namespace MouseXY
       private void dgvShowKeysPositions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
       {
          if (dgvShowKeysPositions.Columns[e.ColumnIndex].Name == "IsActive")
-         {
-            // Získání hodnoty buňky IsActive
-            bool isActive = (bool)dgvShowKeysPositions.Rows[e.RowIndex].Cells["IsActive"].Value;
-            // Získání klávesy z buňky Key
-            Keys key = (Keys)Enum.Parse(typeof(Keys), dgvShowKeysPositions.Rows[e.RowIndex].Cells["Key"].Value.ToString());
+         {          
+            bool isActive = (bool)dgvShowKeysPositions.Rows[e.RowIndex].Cells["IsActive"].Value; // Získání hodnoty buňky IsActive
+            Keys key = (Keys)Enum.Parse(typeof(Keys), dgvShowKeysPositions.Rows[e.RowIndex].Cells["Key"].Value.ToString()); // Získání klávesy z buňky Key
             KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == key.ToString());
             if (k != null)
             {
@@ -478,7 +466,6 @@ namespace MouseXY
 
       private void btnShowSetname_Click(object sender, EventArgs e)
       {
-         //DBAccess.LoadKeysOfSelectedSetname(cmbSelectSetname.SelectedItem?.ToString() ?? "default");
          ShowSetname();
       }
 
@@ -497,7 +484,6 @@ namespace MouseXY
          EnableDisableAddKeyToSdSetnameButton();
          KeyPos.UpdateKeyPosDict();
          DBAccess.SaveLatesSelectedSetName(cboxShowSetKeyPos.Checked); // Uložení vybraného setName do databáze
-         //UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves pro vybraný setName
       }
 
       private void EnableDisableAddKeyToSdSetnameButton() => btnAddKeyToSelectedSetname.Enabled = KeyPos.selectedSetName != KeyPos.showedSetName ? true : false;
@@ -508,8 +494,7 @@ namespace MouseXY
          {
             string key = dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value.ToString();
             Point position = (Point)dgvShowKeysPositions.SelectedRows[0].Cells["Position"].Value;
-            //převést to do seletectedSetName
-            KeyPos.AddKeyToSelectedSetname(key, position);
+            KeyPos.AddKeyToSelectedSetname(key, position); //převést to do seletectedSetName
          }
       }
 
