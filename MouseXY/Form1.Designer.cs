@@ -116,7 +116,8 @@
          btnSetKeyPos.Name = "btnSetKeyPos";
          btnSetKeyPos.Size = new Size(79, 24);
          btnSetKeyPos.TabIndex = 5;
-         btnSetKeyPos.Text = "setKeyPos";
+         btnSetKeyPos.Tag = "MouseControlDisable";
+         btnSetKeyPos.Text = "SetKeyPos";
          btnSetKeyPos.UseVisualStyleBackColor = true;
          btnSetKeyPos.Click += btnSetKeyPos_Click;
          // 
@@ -215,7 +216,7 @@
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
-         tbPosX.Tag = "EditPosTb";
+         tbPosX.Tag = "EditPos";
          // 
          // tbPosY
          // 
@@ -223,7 +224,7 @@
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
-         tbPosY.Tag = "EditPosTb";
+         tbPosY.Tag = "EditPos";
          // 
          // lbPosX
          // 
@@ -266,7 +267,7 @@
          tbSetname.Name = "tbSetname";
          tbSetname.Size = new Size(162, 26);
          tbSetname.TabIndex = 18;
-         tbSetname.Tag = "EditPosTb";
+         tbSetname.Tag = "MouseControlDisable";
          tbSetname.TextAlign = HorizontalAlignment.Center;
          tbSetname.TextChanged += tbSetname_TextChanged;
          tbSetname.KeyDown += tbSetname_KeyDown;

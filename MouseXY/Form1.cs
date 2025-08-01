@@ -50,8 +50,8 @@ namespace MouseXY
          // event for change button enabled state when mouse cursor is controlled by keyboard or not
          MouseHandle.OnMouseCursorOpenChanged += (val) =>
          {
-            btnSetKeyPos.Enabled = !val;
-            EnableDisableControlsOfTag("EditPosTb", !val); // Enable/disable controls for editing positions of keys
+            //btnSetKeyPos.Enabled = !val;
+            EnableDisableControlsOfTag("MouseControlDisable", !val); // Enable/disable controls for editing positions of keys
             lbMouseControl.Visible = val; // Zobrazí nebo skryje popisek pro ovládání myši
             lbMouseControl.Text = val ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
             if (val)

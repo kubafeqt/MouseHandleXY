@@ -42,224 +42,9 @@ namespace MouseXY
          }
       }
 
-      #region SettingsTable
-      public static (int, bool) GetDelayMsExists()
-      {
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               int resultDelayMs;
-               // Otevře spojení
-               connection.Open();
-
-               // Vytvoří SQL příkaz
-               string sql = "SELECT DelayMs FROM SettingsTable";
-               using (SqlCommand command = new SqlCommand(sql, connection))
-               {
-                 object result = command.ExecuteScalar();
-
-                  if (result != null && int.TryParse(result.ToString(), out resultDelayMs))
-                  {
-                     return (resultDelayMs, true);
-                  }
-                  else
-                  {
-                     return (Settings.delayMs, false);
-                  }
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
-               return (Settings.delayMs, false);
-            }
-         }
-      }
-
-      public static bool GetShowDgvAfterSetKeyPos()
-      {
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               bool resultShowDgvAfterSetKeyPos;
-               // Otevře spojení
-               connection.Open();
-               // Vytvoří SQL příkaz
-               string sql = "SELECT ShowDgvAfterSetKeyPos FROM SettingsTable";
-               using (SqlCommand command = new SqlCommand(sql, connection))
-               {
-                  object result = command.ExecuteScalar();
-                  if (result != null && bool.TryParse(result.ToString(), out resultShowDgvAfterSetKeyPos))
-                  {
-                     return resultShowDgvAfterSetKeyPos;
-                  }
-                  else
-                  {
-                     return true;
-                  }
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
-               return true;
-            }
-         }
-      }
-
-      public static void SaveDelayMs(int delayMs, bool showDgvAfterSetKeyPos)
-      {
-         bool delayMsExist = GetDelayMsExists().Item2;
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               connection.Open();
-
-               if (delayMsExist)
-               {
-                  // UPDATE
-                  string updateSql = "UPDATE SettingsTable SET DelayMs = @delay";
-                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
-                  {
-                     updateCmd.Parameters.AddWithValue("@delay", delayMs);
-                     updateCmd.ExecuteNonQuery();
-                  }
-               }
-               else
-               {
-                  // INSERT
-                  string insertSql = "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos) VALUES (@delay, @showDgv)";
-                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
-                  {
-                     insertCmd.Parameters.AddWithValue("@delay", delayMs);
-                     insertCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
-                     insertCmd.ExecuteNonQuery();
-                  }
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-            }
-         }
-      }
-
-      public static void SaveShowDgvAfterSetKeyPos(bool showDgvAfterSetKeyPos)
-      {
-         bool rowExist = GetDelayMsExists().Item2;
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               connection.Open();
-
-               if (rowExist)
-               {
-                  // UPDATE
-                  string updateSql = "UPDATE SettingsTable SET ShowDgvAfterSetKeyPos = @showDgv";
-                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
-                  {
-                     updateCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
-                     updateCmd.ExecuteNonQuery();
-                  }
-               }
-               else
-               {
-                  // INSERT
-                  string insertSql = "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos) VALUES (@delay, @showDgv)";
-                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
-                  {
-                     insertCmd.Parameters.AddWithValue("@delay", Settings.delayMs);
-                     insertCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
-                     insertCmd.ExecuteNonQuery();
-                  }
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-            }
-         }
-      }
-
-      public static void SaveLatesSelectedSetName(bool showDgvAfterSetKeyPos)
-      {
-         bool rowExist = GetDelayMsExists().Item2;
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               connection.Open();
-               if (rowExist)
-               {
-                  // UPDATE
-                  string sql = "UPDATE SettingsTable SET LatestSelectedSetName = @LatestSelectedSetName";
-                  using (SqlCommand command = new SqlCommand(sql, connection))
-                  {
-                     command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
-                     command.ExecuteNonQuery();
-                  }
-               }
-               else
-               {
-                  // INSERT
-                  string sql = "INSERT INTO SettingsTable (DelayMs, LatestSelectedSetName, ShowDgvAfterSetKeyPos) VALUES (@Delay, @LatestSelectedSetName, @showDgv)";
-                  using (SqlCommand command = new SqlCommand(sql, connection))
-                  {
-                     command.Parameters.AddWithValue("@Delay", Settings.delayMs);
-                     command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
-                     command.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
-                     command.ExecuteNonQuery();
-                  }
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-            }
-         }
-      }
-
-      public static void LoadLatestSelectedSetName()
-      {
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               connection.Open();
-               string sql = "SELECT LatestSelectedSetName FROM SettingsTable";
-               using (SqlCommand command = new SqlCommand(sql, connection))
-               {
-                  object result = command.ExecuteScalar();
-                  if (result != null && !string.IsNullOrEmpty(result.ToString()))
-                  {
-                     KeyPos.selectedSetName = result.ToString();
-                     KeyPos.showedSetName = KeyPos.selectedSetName; // pro zobrazení v UI, aby se neukazoval default setName
-                  }
-                  else
-                  {
-                     KeyPos.selectedSetName = "default"; // pokud není nastaveno, použije se default
-                     KeyPos.showedSetName = "default";
-                  }
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
-            }
-         }
-      }  
-
-      #endregion
-
       #region KeysPosition
       //ALTER: zobrazit/nezobrazit datagridview po uložení pozice klávesy -> json file save settings (?) -> (zatím?) db SettingsTable, ShowDgvAfterSetKeyPos
-      //TODO: přidat do datagridview sloupec s SetName, SetID, CreatedAt, IsActive //advanced pro SetName, SetID
-      //kategorie SetName a změny -> UI/UX jak? -> add to setname, remove from setname, change setname -> db SetNameTable , SetID ??
-      //udělat sety pro KeysPosition, ... ; //advanced
+      //SetName ID ?
       public static bool SavedKeyExist(Keys k, string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -560,6 +345,219 @@ namespace MouseXY
                         string setName = reader["Name"].ToString();
                         KeyPos.setNames[setId] = setName; // Přidá nebo aktualizuje setName v dictionary
                      }
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+            }
+         }
+      }
+
+      #endregion
+
+      #region SettingsTable
+      public static (int, bool) GetDelayMsExists()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               int resultDelayMs;
+               // Otevře spojení
+               connection.Open();
+
+               // Vytvoří SQL příkaz
+               string sql = "SELECT DelayMs FROM SettingsTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  object result = command.ExecuteScalar();
+
+                  if (result != null && int.TryParse(result.ToString(), out resultDelayMs))
+                  {
+                     return (resultDelayMs, true);
+                  }
+                  else
+                  {
+                     return (Settings.delayMs, false);
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               return (Settings.delayMs, false);
+            }
+         }
+      }
+
+      public static bool GetShowDgvAfterSetKeyPos()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               bool resultShowDgvAfterSetKeyPos;
+               // Otevře spojení
+               connection.Open();
+               // Vytvoří SQL příkaz
+               string sql = "SELECT ShowDgvAfterSetKeyPos FROM SettingsTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  object result = command.ExecuteScalar();
+                  if (result != null && bool.TryParse(result.ToString(), out resultShowDgvAfterSetKeyPos))
+                  {
+                     return resultShowDgvAfterSetKeyPos;
+                  }
+                  else
+                  {
+                     return true;
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při práci s databází: " + ex.Message);
+               return true;
+            }
+         }
+      }
+
+      public static void SaveDelayMs(int delayMs, bool showDgvAfterSetKeyPos)
+      {
+         bool delayMsExist = GetDelayMsExists().Item2;
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+
+               if (delayMsExist)
+               {
+                  // UPDATE
+                  string updateSql = "UPDATE SettingsTable SET DelayMs = @delay";
+                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
+                  {
+                     updateCmd.Parameters.AddWithValue("@delay", delayMs);
+                     updateCmd.ExecuteNonQuery();
+                  }
+               }
+               else
+               {
+                  // INSERT
+                  string insertSql = "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos) VALUES (@delay, @showDgv)";
+                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
+                  {
+                     insertCmd.Parameters.AddWithValue("@delay", delayMs);
+                     insertCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     insertCmd.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void SaveShowDgvAfterSetKeyPos(bool showDgvAfterSetKeyPos)
+      {
+         bool rowExist = GetDelayMsExists().Item2;
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+
+               if (rowExist)
+               {
+                  // UPDATE
+                  string updateSql = "UPDATE SettingsTable SET ShowDgvAfterSetKeyPos = @showDgv";
+                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
+                  {
+                     updateCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     updateCmd.ExecuteNonQuery();
+                  }
+               }
+               else
+               {
+                  // INSERT
+                  string insertSql = "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos) VALUES (@delay, @showDgv)";
+                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
+                  {
+                     insertCmd.Parameters.AddWithValue("@delay", Settings.delayMs);
+                     insertCmd.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     insertCmd.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void SaveLatesSelectedSetName(bool showDgvAfterSetKeyPos)
+      {
+         bool rowExist = GetDelayMsExists().Item2;
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               if (rowExist)
+               {
+                  // UPDATE
+                  string sql = "UPDATE SettingsTable SET LatestSelectedSetName = @LatestSelectedSetName";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
+                     command.ExecuteNonQuery();
+                  }
+               }
+               else
+               {
+                  // INSERT
+                  string sql = "INSERT INTO SettingsTable (DelayMs, LatestSelectedSetName, ShowDgvAfterSetKeyPos) VALUES (@Delay, @LatestSelectedSetName, @showDgv)";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@Delay", Settings.delayMs);
+                     command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
+                     command.Parameters.AddWithValue("@showDgv", showDgvAfterSetKeyPos);
+                     command.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void LoadLatestSelectedSetName()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT LatestSelectedSetName FROM SettingsTable";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  object result = command.ExecuteScalar();
+                  if (result != null && !string.IsNullOrEmpty(result.ToString()))
+                  {
+                     KeyPos.selectedSetName = result.ToString();
+                     KeyPos.showedSetName = KeyPos.selectedSetName; // pro zobrazení v UI, aby se neukazoval default setName
+                  }
+                  else
+                  {
+                     KeyPos.selectedSetName = "default"; // pokud není nastaveno, použije se default
+                     KeyPos.showedSetName = "default";
                   }
                }
             }
