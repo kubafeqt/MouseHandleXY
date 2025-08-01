@@ -215,7 +215,7 @@
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
-         tbPosX.Tag = "EditPos";
+         tbPosX.Tag = "EditPosTb";
          // 
          // tbPosY
          // 
@@ -223,7 +223,7 @@
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
-         tbPosY.Tag = "EditPos";
+         tbPosY.Tag = "EditPosTb";
          // 
          // lbPosX
          // 
@@ -266,7 +266,7 @@
          tbSetname.Name = "tbSetname";
          tbSetname.Size = new Size(162, 26);
          tbSetname.TabIndex = 18;
-         tbSetname.Tag = "EditPos";
+         tbSetname.Tag = "EditPosTb";
          tbSetname.TextAlign = HorizontalAlignment.Center;
          tbSetname.TextChanged += tbSetname_TextChanged;
          tbSetname.KeyDown += tbSetname_KeyDown;
