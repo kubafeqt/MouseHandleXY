@@ -38,7 +38,7 @@
          dgvShowKeysPositions = new DataGridView();
          lbSetKeyPos = new Label();
          cboxShowSetKeyPos = new CheckBox();
-         btnDeleteKeyPosition = new Button();
+         btnDeleteKey = new Button();
          btnEditPosition = new Button();
          lbKeyPos = new Label();
          tbPosX = new TextBox();
@@ -175,18 +175,18 @@
          cboxShowSetKeyPos.UseVisualStyleBackColor = true;
          cboxShowSetKeyPos.CheckedChanged += cboxShowSetKeyPos_CheckedChanged;
          // 
-         // btnDeleteKeyPosition
+         // btnDeleteKey
          // 
-         btnDeleteKeyPosition.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnDeleteKeyPosition.Location = new Point(438, 153);
-         btnDeleteKeyPosition.Name = "btnDeleteKeyPosition";
-         btnDeleteKeyPosition.Size = new Size(143, 24);
-         btnDeleteKeyPosition.TabIndex = 10;
-         btnDeleteKeyPosition.Tag = "EditPos";
-         btnDeleteKeyPosition.Text = "delete key position";
-         btnDeleteKeyPosition.UseVisualStyleBackColor = true;
-         btnDeleteKeyPosition.Visible = false;
-         btnDeleteKeyPosition.Click += btnDeleteKeyPosition_Click;
+         btnDeleteKey.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnDeleteKey.Location = new Point(460, 152);
+         btnDeleteKey.Name = "btnDeleteKey";
+         btnDeleteKey.Size = new Size(152, 24);
+         btnDeleteKey.TabIndex = 10;
+         btnDeleteKey.Tag = "EditPos";
+         btnDeleteKey.Text = "delete key from setname";
+         btnDeleteKey.UseVisualStyleBackColor = true;
+         btnDeleteKey.Visible = false;
+         btnDeleteKey.Click += btnDeleteKey_Click;
          // 
          // btnEditPosition
          // 
@@ -204,7 +204,7 @@
          // 
          lbKeyPos.AutoSize = true;
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbKeyPos.Location = new Point(591, 156);
+         lbKeyPos.Location = new Point(617, 134);
          lbKeyPos.Name = "lbKeyPos";
          lbKeyPos.Size = new Size(34, 17);
          lbKeyPos.TabIndex = 12;
@@ -213,7 +213,7 @@
          // 
          // tbPosX
          // 
-         tbPosX.Location = new Point(650, 153);
+         tbPosX.Location = new Point(638, 153);
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
@@ -221,7 +221,7 @@
          // 
          // tbPosY
          // 
-         tbPosY.Location = new Point(698, 153);
+         tbPosY.Location = new Point(701, 153);
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
@@ -231,7 +231,7 @@
          // 
          lbPosX.AutoSize = true;
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosX.Location = new Point(662, 133);
+         lbPosX.Location = new Point(617, 156);
          lbPosX.Name = "lbPosX";
          lbPosX.Size = new Size(21, 17);
          lbPosX.TabIndex = 15;
@@ -242,7 +242,7 @@
          // 
          lbPosY.AutoSize = true;
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosY.Location = new Point(707, 133);
+         lbPosY.Location = new Point(681, 156);
          lbPosY.Name = "lbPosY";
          lbPosY.Size = new Size(20, 17);
          lbPosY.TabIndex = 16;
@@ -391,7 +391,7 @@
          Controls.Add(tbPosX);
          Controls.Add(lbKeyPos);
          Controls.Add(btnEditPosition);
-         Controls.Add(btnDeleteKeyPosition);
+         Controls.Add(btnDeleteKey);
          Controls.Add(cboxShowSetKeyPos);
          Controls.Add(lbSetKeyPos);
          Controls.Add(dgvShowKeysPositions);
@@ -425,7 +425,7 @@
       private DataGridView dgvShowKeysPositions;
       private Label lbSetKeyPos;
       private CheckBox cboxShowSetKeyPos;
-      private Button btnDeleteKeyPosition;
+      private Button btnDeleteKey;
       private Button btnEditPosition;
       private Label lbKeyPos;
       private TextBox tbPosX;

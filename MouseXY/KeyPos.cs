@@ -102,10 +102,6 @@ namespace MouseXY
          KeyPositions.Where(k => k.SetName == oldSetName).ToList().ForEach(k =>
          {
             k.SetName = newSetName;
-            //if (k.IsActive)
-            //{
-            //   keysPositionDict[(Keys)Enum.Parse(typeof(Keys), k.Key)] = k.Position; // update the position in the dictionary
-            //}
          });
       }
 
@@ -165,12 +161,6 @@ namespace MouseXY
             KeyPositions.Remove(k);
          });
       }
-
-      //public static void ClearKeyPositions()
-      //{
-      //   KeyPositions.Clear();
-      //   keysPositionDict.Clear();
-      //}
 
    }
 }

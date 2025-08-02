@@ -43,7 +43,6 @@ namespace MouseXY
       }
 
       #region KeysPosTable
-      //ALTER: SetName ID ?
       public static bool SavedKeyExist(Keys k, string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))

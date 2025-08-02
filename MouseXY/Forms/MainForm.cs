@@ -243,12 +243,12 @@ namespace MouseXY
          }
       }
 
-      private void btnDeleteKeyPosition_Click(object sender, EventArgs e)
+      private void btnDeleteKey_Click(object sender, EventArgs e)
       {
-         DeleteKeyPosition();
+         DeleteKeyFromSetname();
       }
 
-      private void DeleteKeyPosition()
+      private void DeleteKeyFromSetname()
       {
          if (dgvShowKeysPositions.SelectedRows.Count > 0) //selected row in DataGridView delete and update datagridview
          {
@@ -361,14 +361,12 @@ namespace MouseXY
       private void dgvShowKeysPositions_KeyDown(object sender, KeyEventArgs e)
       {
          Keys k = e.KeyCode;
-         if (k == Keys.Delete)
+         if (k == Keys.Delete) // Pokud je stisknuto Delete, smaž vybranou pozici
          {
-            // Pokud je stisknuto Delete nebo Backspace, smaž vybranou pozici
-            DeleteKeyPosition();
+            DeleteKeyFromSetname();
          }
-         else if (k == Keys.Escape)
+         else if (k == Keys.Escape) // Pokud je stisknuto Escape, zruš výběr
          {
-            // Pokud je stisknuto Escape, zruš výběr
             dgvShowKeysPositions.ClearSelection();
          }
       }
