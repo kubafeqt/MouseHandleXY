@@ -74,7 +74,7 @@ namespace MouseXY
 
       }
 
-      private void Form1_Load(object sender, EventArgs e)
+      private void MainForm_Load(object sender, EventArgs e)
       {
          //MouseHandle.ShowCursor(true);
 
@@ -109,11 +109,16 @@ namespace MouseXY
       }
 
       BindingSource bs;
-      private void UpdateDataGridView()
+      private void UpdateDataGridView(int selectedRowIndex = 0)
       {
          bs = new BindingSource();
          bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositions.Where(k => k.SetName == KeyPos.showedSetName).ToList());
          dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
+         selectedRowIndex--;
+         if (selectedRowIndex > 0 && selectedRowIndex < dgvShowKeysPositions.Rows.Count)
+         {
+            dgvShowKeysPositions.CurrentCell = dgvShowKeysPositions.Rows[selectedRowIndex].Cells[0]; // Nastaví aktuální buňku na vybraný řádek
+         }
       }
 
       private void ShowControlsOfTag(string tag, bool show = true)
@@ -254,8 +259,9 @@ namespace MouseXY
                }
                KeyPos.KeyPositions.RemoveAll(k => k.Key == key.ToString() && k.SetName == KeyPos.showedSetName); // Odstranění záznamu z listu KeyPositions
                DBAccess.DeleteKey(key);
+               int selectedRowIndex = dgvShowKeysPositions.CurrentCell.RowIndex;
+               UpdateDataGridView(selectedRowIndex); // Aktualizace DataGridView s pozicemi kláves
             }
-            UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
          }
          else
          {
@@ -309,6 +315,7 @@ namespace MouseXY
          DBAccess.SaveSettings();
       }
 
+      #region DataGridView events
       private void dgvShowKeysPositions_SelectionChanged(object sender, EventArgs e)
       {
          if (dgvShowKeysPositions.SelectedRows.Count > 0)
@@ -327,7 +334,7 @@ namespace MouseXY
       private void dgvShowKeysPositions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
       {
          if (dgvShowKeysPositions.Columns[e.ColumnIndex].Name == "IsActive")
-         {          
+         {
             bool isActive = (bool)dgvShowKeysPositions.Rows[e.RowIndex].Cells["IsActive"].Value; // Získání hodnoty buňky IsActive
             Keys key = (Keys)Enum.Parse(typeof(Keys), dgvShowKeysPositions.Rows[e.RowIndex].Cells["Key"].Value.ToString()); // Získání klávesy z buňky Key
             KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == key.ToString());
@@ -347,6 +354,23 @@ namespace MouseXY
          }
       }
 
+      private void dgvShowKeysPositions_KeyDown(object sender, KeyEventArgs e)
+      {
+         Keys k = e.KeyCode;
+         if (k == Keys.Delete)
+         {
+            // Pokud je stisknuto Delete nebo Backspace, smaž vybranou pozici
+            btnDeleteKeyPosition.PerformClick();
+         }
+         else if (k == Keys.Escape)
+         {
+            // Pokud je stisknuto Escape, zruš výběr
+            dgvShowKeysPositions.ClearSelection();
+         }
+      }
+
+      #endregion
+
       #region SetNames Controls
       private void btnAddSetname_Click(object sender, EventArgs e)
       {
@@ -356,6 +380,11 @@ namespace MouseXY
             string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower() : Interaction.InputBox("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(setName))
             {
+               if (cmbSelectSetname.Items.Contains(setName))
+               {
+                  MessageBox.Show($"Setname {setName} již existuje. Zvolte jiný název.");
+                  return;
+               }
                KeyPos.setNames[newId] = setName; // Přidání nového názvu do slovníku setNames
                // Aktualizace ComboBoxu s názvy nastavení:
                cmbSelectSetname.Items.Add(setName);
@@ -398,7 +427,7 @@ namespace MouseXY
                    $"Chcete smazat setname: {setName} se všemi jeho hotkeys?", // text zprávy
                    $"Potvrzení smazání {setName}", // titulek okna
                    MessageBoxButtons.YesNo,
-                   MessageBoxIcon.Question     
+                   MessageBoxIcon.Question
                );
 
                if (result == DialogResult.Yes) //delete set name se všemi hotkeys

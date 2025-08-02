@@ -149,6 +149,7 @@
          dgvShowKeysPositions.CellValueChanged += dgvShowKeysPositions_CellValueChanged;
          dgvShowKeysPositions.CurrentCellDirtyStateChanged += dgvShowKeysPositions_CurrentCellDirtyStateChanged;
          dgvShowKeysPositions.SelectionChanged += dgvShowKeysPositions_SelectionChanged;
+         dgvShowKeysPositions.KeyDown += dgvShowKeysPositions_KeyDown;
          // 
          // lbSetKeyPos
          // 
@@ -369,7 +370,7 @@
          lbMouseControl.Text = "mouse control";
          lbMouseControl.Visible = false;
          // 
-         // Form1
+         // MainForm
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
@@ -403,9 +404,9 @@
          Controls.Add(cboxOnStartup);
          FormBorderStyle = FormBorderStyle.FixedSingle;
          MaximizeBox = false;
-         Name = "Form1";
+         Name = "MainForm";
          Text = "MouseControl";
-         Load += Form1_Load;
+         Load += MainForm_Load;
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).EndInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).EndInit();
          ResumeLayout(false);
