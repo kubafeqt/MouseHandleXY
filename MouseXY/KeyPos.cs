@@ -97,6 +97,18 @@ namespace MouseXY
          }
       }
 
+      public static void UpdateKeysSetName(string newSetName, string oldSetName)
+      {
+         KeyPositions.Where(k => k.SetName == oldSetName).ToList().ForEach(k =>
+         {
+            k.SetName = newSetName;
+            //if (k.IsActive)
+            //{
+            //   keysPositionDict[(Keys)Enum.Parse(typeof(Keys), k.Key)] = k.Position; // update the position in the dictionary
+            //}
+         });
+      }
+
       public static void AddKeyToSelectedSetname(string key, Point position)
       {
          Keys Key = (Keys)Enum.Parse(typeof(Keys), key);
@@ -134,7 +146,6 @@ namespace MouseXY
 
             if (result == DialogResult.Yes) // Přepsat existující klíč
             {
-
                if (existing != null)
                {
                   existing.Position = position;

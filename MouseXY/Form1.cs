@@ -88,8 +88,9 @@ namespace MouseXY
          DBAccess.LoadKeysPositions(); // načtení pozic kláves z databáze do objektu KeyPos a seznamu KeyPosList
          DBAccess.LoadLatestSelectedSetName(); // načtení posledního vybraného setName z databáze
          KeyPos.UpdateKeyPosDict(); // Aktualizace slovníku pozic kláves z KeyPosList
-         Settings.delayMs = DBAccess.GetDelayMsExists().Item1;
-         cboxShowSetKeyPos.Checked = DBAccess.GetShowDgvAfterSetKeyPos();
+         Settings.delayMs = DBAccess.LoadDelayMsSettingsRowExists().Item1;
+         cboxShowSetKeyPos.Checked = DBAccess.LoadShowDgvAfterSetKeyPos();
+         Settings.showDgvAfterSetKeyPos = cboxShowSetKeyPos.Checked;
          nmDelayMs.Value = Settings.delayMs;
 
          #endregion
@@ -144,7 +145,7 @@ namespace MouseXY
          }
          int index = cmbSelectSetname.Items.IndexOf(KeyPos.showedSetName);
          cmbSelectSetname.SelectedIndex = index;
-         EnableDisableAddKeyToSdSetnameButton();
+         EnableDisableAddKeyToSetnameButton();
       }
 
       private void OnResize(object sender, EventArgs e)
@@ -188,7 +189,7 @@ namespace MouseXY
       private void btnAcceptDelayMs_Click(object sender, EventArgs e)
       {
          Settings.delayMs = (int)nmDelayMs.Value;
-         DBAccess.SaveDelayMs(Settings.delayMs, cboxShowSetKeyPos.Checked);
+         DBAccess.SaveSettings();
       }
 
       private void btnSetKeyPos_Click(object sender, EventArgs e)
@@ -304,7 +305,8 @@ namespace MouseXY
 
       private void cboxShowSetKeyPos_CheckedChanged(object sender, EventArgs e)
       {
-         DBAccess.SaveShowDgvAfterSetKeyPos(cboxShowSetKeyPos.Checked);
+         Settings.showDgvAfterSetKeyPos = cboxShowSetKeyPos.Checked;
+         DBAccess.SaveSettings();
       }
 
       private void dgvShowKeysPositions_SelectionChanged(object sender, EventArgs e)
@@ -370,33 +372,41 @@ namespace MouseXY
          else //edit SetName
          {
             string setName = tbSetname.Text.Trim().ToLower();
-            string newSetName = Interaction.InputBox($"Zadejte nový název pro {setName}:", "Přidat nový SetName", $"").Trim().ToLower();
+            string? newSetName = Interaction.InputBox($"Zadejte nový název pro {setName}:", "Přidat nový SetName", $"").Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(newSetName))
             {
+               if (cmbSelectSetname.Items.Contains(newSetName) && newSetName != setName)
+               {
+                  MessageBox.Show($"Setname {newSetName} již existuje. Zvolte jiný název.");
+                  return;
+               }
                int id = KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
                KeyPos.setNames[id] = newSetName;
                int index = cmbSelectSetname.Items.IndexOf(setName);
                cmbSelectSetname.Items[index] = newSetName; // Aktualizace položky v ComboBoxu
-               //cmbSelectSetname.SelectedItem = newSetName; // Nastaví právě upravený název jako vybraný
                tbSetname.Text = string.Empty; // Vyprázdní TextBox
-               DBAccess.SaveOrUpdateSetName(id, newSetName);
+               DBAccess.SaveOrUpdateSetName(id, newSetName, setName);
+               if (KeyPos.selectedSetName == setName)
+               {
+                  SelectSetname(newSetName);
+               }
+               ShowSetname(); // Nastaví aktuálně zobrazený setName
             }
             else // pokud je nový název prázdný zobrazí se dialog pro potvrzení smazání
             {
                DialogResult result = MessageBox.Show(
-                   $"Chcete smazat setname: {setName} se všemi jeho hotkeys?",       // text zprávy
-                   $"Potvrzení smazání {setName}",           // titulek okna
-                   MessageBoxButtons.YesNo,       // tlačítka Ano / Ne
-                   MessageBoxIcon.Question        // ikona s otazníkem
+                   $"Chcete smazat setname: {setName} se všemi jeho hotkeys?", // text zprávy
+                   $"Potvrzení smazání {setName}", // titulek okna
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Question     
                );
 
-               if (result == DialogResult.Yes)
+               if (result == DialogResult.Yes) //delete set name se všemi hotkeys
                {
-                  // Odstranění setName z mapy dictionary:
                   int id = KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
-                  KeyPos.setNames.Remove(id);
-                  cmbSelectSetname.Items.Remove(setName); // Odstranění položky z ComboBoxu
-                  tbSetname.Text = string.Empty; // Vyprázdní TextBox
+                  KeyPos.setNames.Remove(id); // Odstranění setName z mapy dictionary
+                  cmbSelectSetname.Items.Remove(setName);
+                  tbSetname.Text = string.Empty;
                   DBAccess.DeleteSetName(id); // Smazání setName z databáze
                   DBAccess.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z databáze
                   KeyPos.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z objektu KeyPos v listu KeyPositions
@@ -404,9 +414,7 @@ namespace MouseXY
                   cmbSelectSetname.SelectedIndex = cmbSelectSetname.Items.Count - 1;
                   if (KeyPos.selectedSetName == setName)
                   {
-                     KeyPos.selectedSetName = "default"; // Pokud byl smazán vybraný setName, nastaví se na default
-                     lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}";
-                     DBAccess.SaveLatesSelectedSetName(cboxShowSetKeyPos.Checked); // Uložení vybraného setName do databáze
+                     SelectSetname("default");
                   }
                   ShowSetname(); // Nastaví aktuálně zobrazený setName
                }
@@ -471,20 +479,32 @@ namespace MouseXY
       {
          KeyPos.showedSetName = cmbSelectSetname.SelectedItem?.ToString(); //nastaví aktuálně zobrazený setName
          lbShowedSetname.Text = $"ShowedSetname: {cmbSelectSetname.SelectedItem}";
-         EnableDisableAddKeyToSdSetnameButton();
+         EnableDisableAddKeyToSetnameButton();
          UpdateDataGridView();
       }
 
       private void btnSelectSetname_Click(object sender, EventArgs e)
       {
-         KeyPos.selectedSetName = cmbSelectSetname.SelectedItem.ToString();
-         lbSelectedSetname.Text = $"SelectedSetname: {cmbSelectSetname.SelectedItem}";
-         EnableDisableAddKeyToSdSetnameButton();
-         KeyPos.UpdateKeyPosDict();
-         DBAccess.SaveLatesSelectedSetName(cboxShowSetKeyPos.Checked); // Uložení vybraného setName do databáze
+         SelectSetname(cmbSelectSetname.SelectedItem.ToString());
       }
 
-      private void EnableDisableAddKeyToSdSetnameButton() => btnAddKeyToSelectedSetname.Enabled = KeyPos.selectedSetName != KeyPos.showedSetName ? true : false;
+      private void SelectSetname(string? selectedSetName)
+      {
+         if (selectedSetName != null)
+         {
+            KeyPos.selectedSetName = cmbSelectSetname.SelectedItem.ToString();
+            lbSelectedSetname.Text = $"SelectedSetname: {cmbSelectSetname.SelectedItem}";
+            EnableDisableAddKeyToSetnameButton();
+            KeyPos.UpdateKeyPosDict();
+            DBAccess.SaveSettings();
+         }
+         else
+         {
+            MessageBox.Show("Nejprve vyberte setName.");
+         }
+      }
+
+      private void EnableDisableAddKeyToSetnameButton() => btnAddKeyToSelectedSetname.Enabled = KeyPos.selectedSetName != KeyPos.showedSetName ? true : false;
 
       private void btnAddKeyToSelectedSetname_Click(object sender, EventArgs e)
       {
