@@ -245,8 +245,12 @@ namespace MouseXY
 
       private void btnDeleteKeyPosition_Click(object sender, EventArgs e)
       {
-         //selected row in DataGridView delete and update datagridview
-         if (dgvShowKeysPositions.SelectedRows.Count > 0)
+         DeleteKeyPosition();
+      }
+
+      private void DeleteKeyPosition()
+      {
+         if (dgvShowKeysPositions.SelectedRows.Count > 0) //selected row in DataGridView delete and update datagridview
          {
             Keys key = (Keys)Enum.Parse(typeof(Keys), dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value.ToString());
 
@@ -360,7 +364,7 @@ namespace MouseXY
          if (k == Keys.Delete)
          {
             // Pokud je stisknuto Delete nebo Backspace, smaž vybranou pozici
-            btnDeleteKeyPosition.PerformClick();
+            DeleteKeyPosition();
          }
          else if (k == Keys.Escape)
          {
@@ -373,6 +377,11 @@ namespace MouseXY
 
       #region SetNames Controls
       private void btnAddSetname_Click(object sender, EventArgs e)
+      {
+         AddSetName();
+      }
+
+      private void AddSetName()
       {
          if (!btnAddSetname.Text.Equals("Edit", StringComparison.OrdinalIgnoreCase))
          {
@@ -495,7 +504,7 @@ namespace MouseXY
          if (e.KeyValue == (int)Keys.Enter)
          {
             e.SuppressKeyPress = true; // Zabráníme zvuku Enteru
-            btnAddSetname.PerformClick(); // Simulujeme kliknutí na tlačítko pro přidání/úpravu setName
+            AddSetName(); // Simulujeme kliknutí na tlačítko pro přidání/úpravu setName
          }
       }
 
