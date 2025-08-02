@@ -9,14 +9,14 @@ using System.Windows.Forms;
 
 namespace MouseXY
 {
-   public partial class Form1 : Form
+   public partial class MainForm : Form
    {
       private NotifyIcon trayIcon;
       private ContextMenuStrip trayMenu;
       string appName = "MouseHandleXY";
       System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
-      public Form1()
+      public MainForm()
       {
          InitializeComponent();
 
@@ -30,7 +30,7 @@ namespace MouseXY
          // Vytvoření tray ikony
          trayIcon = new NotifyIcon();
          trayIcon.Text = "Myš ovládaná klávesnicí";
-         trayIcon.Icon = SystemIcons.Application; // lze nahradit vlastní ikonou
+         trayIcon.Icon = SystemIcons.Application; //lze nahradit vlastní ikonou
          trayIcon.ContextMenuStrip = trayMenu;
          trayIcon.Visible = true;
          trayIcon.DoubleClick += OnShow;
@@ -42,7 +42,7 @@ namespace MouseXY
          this.Load += (s, e) => this.Hide();
          this.FormClosing += OnFormClosing;
 
-         timer.Interval = 50; // Interval v milisekundách
+         timer.Interval = 50;
          timer.Tick += timer_tick;
 
 
