@@ -190,9 +190,8 @@ namespace MouseXY
                Keys key = (Keys)vkCode;
                if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains(key))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány
                {
-                  KeyPos.UpdateKeyPosition(key.ToString(), pos); // aktualizovat pozici v objektu KeyPos a seznamu KeyPosList
+                  KeyPos.CreateUpdateKeyPosition(key.ToString(), pos); // aktualizovat pozici v objektu KeyPos a seznamu KeyPosList
                   DBAccess.SaveOrUpdateKeyPos(key, pos, KeyPos.showedSetName); // uložit pozici do databáze
-                  DBAccess.LoadKeysPositions(); // načíst pozice kláves z databáze do objektu KeyPos a seznamu KeyPosList
                   OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and SetKeyPos()
                   return (IntPtr)1; // Blokuje klávesu
                }

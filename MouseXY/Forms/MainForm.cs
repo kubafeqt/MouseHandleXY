@@ -16,6 +16,7 @@ namespace MouseXY
       string appName = "MouseHandleXY";
       System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
+      #region Loading MainForm
       public MainForm()
       {
          InitializeComponent();
@@ -76,22 +77,20 @@ namespace MouseXY
 
       private void MainForm_Load(object sender, EventArgs e)
       {
-         //MouseHandle.ShowCursor(true);
-
          // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
          cboxOnStartup.Checked = StartupManager.IsInStartup(appName);
          lbDelayMsDescription.Text = "for double control (open/close mouse control by keyboard)\nand double shift (change speed of mouse step) methods";
 
          #region DB_loading
          //DBAccess.ConnectionTest();
-         DBAccess.LoadSetNames(); // načtení názvů setNames z databáze do slovníku setNames
-         DBAccess.LoadKeysPositions(); // načtení pozic kláves z databáze do objektu KeyPos a seznamu KeyPosList
+         DBAccess.LoadSetNames(); // načtení názvů setNames z databáze do dictionary setNames
+         DBAccess.LoadKeysPositions(); // načtení pozic kláves z databáze do objektů KeyPos a na seznam KeyPositions
          DBAccess.LoadLatestSelectedSetName(); // načtení posledního vybraného setName z databáze
-         KeyPos.UpdateKeyPosDict(); // Aktualizace slovníku pozic kláves z KeyPosList
+         KeyPos.UpdateKeyPosDict(); // aktualizuje/načte dictionary pozic kláves z KeyPositions
          Settings.delayMs = DBAccess.LoadDelayMsSettingsRowExists().Item1;
+         nmDelayMs.Value = Settings.delayMs;
          cboxShowSetKeyPos.Checked = DBAccess.LoadShowDgvAfterSetKeyPos();
          Settings.showDgvAfterSetKeyPos = cboxShowSetKeyPos.Checked;
-         nmDelayMs.Value = Settings.delayMs;
 
          #endregion
 
@@ -108,14 +107,31 @@ namespace MouseXY
          }
       }
 
+      private void LoadComboBoxSetNames()
+      {
+         cmbSelectSetname.Items.Add("default"); // Přidání výchozího SetName
+         lbShowedSetname.Text = $"ShowedSetname: {KeyPos.showedSetName}"; //then load from DB
+         lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}"; //then load from DB settings
+         foreach (var setName in KeyPos.setNames.Values)
+         {
+            cmbSelectSetname.Items.Add(setName);
+         }
+         int index = cmbSelectSetname.Items.IndexOf(KeyPos.showedSetName);
+         cmbSelectSetname.SelectedIndex = index;
+         EnableDisableAddKeyToSetnameButton();
+      }
+
+      #endregion
+
+      #region Updating Controls
       BindingSource bs;
       private void UpdateDataGridView(int selectedRowIndex = 0)
       {
          bs = new BindingSource();
          bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositions.Where(k => k.SetName == KeyPos.showedSetName).ToList());
          dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
-         selectedRowIndex--;
-         if (selectedRowIndex > 0 && selectedRowIndex < dgvShowKeysPositions.Rows.Count)
+         selectedRowIndex = selectedRowIndex > 0 && dgvShowKeysPositions.RowCount > selectedRowIndex ? selectedRowIndex : --selectedRowIndex;
+         if (selectedRowIndex > 0 && selectedRowIndex <= dgvShowKeysPositions.Rows.Count)
          {
             dgvShowKeysPositions.CurrentCell = dgvShowKeysPositions.Rows[selectedRowIndex].Cells[0]; // Nastaví aktuální buňku na vybraný řádek
          }
@@ -139,20 +155,9 @@ namespace MouseXY
          }
       }
 
-      private void LoadComboBoxSetNames()
-      {
-         cmbSelectSetname.Items.Add("default"); // Přidání výchozího SetName
-         lbShowedSetname.Text = $"ShowedSetname: {KeyPos.showedSetName}"; //then load from DB
-         lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}"; //then load from DB settings
-         foreach (var setName in KeyPos.setNames.Values)
-         {
-            cmbSelectSetname.Items.Add(setName);
-         }
-         int index = cmbSelectSetname.Items.IndexOf(KeyPos.showedSetName);
-         cmbSelectSetname.SelectedIndex = index;
-         EnableDisableAddKeyToSetnameButton();
-      }
+      #endregion
 
+      #region FormControl
       private void OnResize(object sender, EventArgs e)
       {
          if (this.WindowState == FormWindowState.Minimized)
@@ -185,6 +190,9 @@ namespace MouseXY
          trayIcon.Visible = false;
       }
 
+      #endregion
+
+      #region General Controls
       private void cboxOnStartup_CheckedChanged(object sender, EventArgs e)
       {
          string appPath = Application.ExecutablePath;
@@ -284,9 +292,9 @@ namespace MouseXY
                string keyString = dgvShowKeysPositions.SelectedRows[0].Cells["Key"].Value.ToString();
                Keys key = (Keys)Enum.Parse(typeof(Keys), keyString);
                Point newPosition = new Point(posX, posY);
-               KeyPos.UpdateKeyPosition(keyString, newPosition, false); // Aktualizace pozice v KeyPos
+               KeyPos.CreateUpdateKeyPosition(keyString, newPosition, false); // Aktualizace pozice v KeyPos
                DBAccess.SaveOrUpdateKeyPos(key, newPosition, KeyPos.showedSetName); // Uložení změn do databáze
-               KeyPos.UpdateKeyPosDict();
+               KeyPos.UpdateKeyPosDict(key);
                UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
             }
             else
@@ -318,6 +326,8 @@ namespace MouseXY
          Settings.showDgvAfterSetKeyPos = cboxShowSetKeyPos.Checked;
          DBAccess.SaveSettings();
       }
+
+      #endregion
 
       #region DataGridView events
       private void dgvShowKeysPositions_SelectionChanged(object sender, EventArgs e)
@@ -554,7 +564,6 @@ namespace MouseXY
 
 
       #endregion
-
 
    }
 }
