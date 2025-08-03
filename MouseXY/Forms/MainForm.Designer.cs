@@ -198,6 +198,7 @@
          btnEditPosition.Tag = "EditPos";
          btnEditPosition.Text = "Edit";
          btnEditPosition.UseVisualStyleBackColor = true;
+         btnEditPosition.Visible = false;
          btnEditPosition.Click += btnEditPosition_Click;
          // 
          // lbKeyPos
@@ -210,6 +211,7 @@
          lbKeyPos.TabIndex = 12;
          lbKeyPos.Tag = "EditPos";
          lbKeyPos.Text = "Key:";
+         lbKeyPos.Visible = false;
          // 
          // tbPosX
          // 
@@ -218,6 +220,7 @@
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
          tbPosX.Tag = "EditPos";
+         tbPosX.Visible = false;
          // 
          // tbPosY
          // 
@@ -226,6 +229,7 @@
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
          tbPosY.Tag = "EditPos";
+         tbPosY.Visible = false;
          // 
          // lbPosX
          // 
@@ -237,6 +241,7 @@
          lbPosX.TabIndex = 15;
          lbPosX.Tag = "EditPos";
          lbPosX.Text = "X:";
+         lbPosX.Visible = false;
          // 
          // lbPosY
          // 
@@ -248,6 +253,7 @@
          lbPosY.TabIndex = 16;
          lbPosY.Tag = "EditPos";
          lbPosY.Text = "Y:";
+         lbPosY.Visible = false;
          // 
          // lbSetname
          // 
@@ -259,6 +265,7 @@
          lbSetname.TabIndex = 17;
          lbSetname.Tag = "EditPos";
          lbSetname.Text = "SetName:";
+         lbSetname.Visible = false;
          // 
          // tbSetname
          // 
@@ -268,8 +275,9 @@
          tbSetname.Name = "tbSetname";
          tbSetname.Size = new Size(162, 26);
          tbSetname.TabIndex = 18;
-         tbSetname.Tag = "MouseControlDisable";
+         tbSetname.Tag = "EditPos;MouseControlDisable";
          tbSetname.TextAlign = HorizontalAlignment.Center;
+         tbSetname.Visible = false;
          tbSetname.TextChanged += tbSetname_TextChanged;
          tbSetname.KeyDown += tbSetname_KeyDown;
          // 
@@ -280,7 +288,7 @@
          btnAddSetname.Name = "btnAddSetname";
          btnAddSetname.Size = new Size(80, 24);
          btnAddSetname.TabIndex = 19;
-         btnAddSetname.Tag = "EditPos";
+         btnAddSetname.Tag = "EditPos;MouseControlDisable";
          btnAddSetname.Text = "add";
          btnAddSetname.UseVisualStyleBackColor = true;
          btnAddSetname.Visible = false;
@@ -295,6 +303,7 @@
          cmbSelectSetname.Size = new Size(162, 23);
          cmbSelectSetname.TabIndex = 20;
          cmbSelectSetname.Tag = "EditPos";
+         cmbSelectSetname.Visible = false;
          cmbSelectSetname.SelectedIndexChanged += cmbSelectSetname_SelectedIndexChanged;
          // 
          // btnSelectSetname
@@ -346,6 +355,7 @@
          lbShowedSetname.TabIndex = 25;
          lbShowedSetname.Tag = "EditPos";
          lbShowedSetname.Text = "ShowedSetname: ";
+         lbShowedSetname.Visible = false;
          // 
          // lbSelectedSetname
          // 
@@ -357,6 +367,7 @@
          lbSelectedSetname.TabIndex = 26;
          lbSelectedSetname.Tag = "EditPos";
          lbSelectedSetname.Text = "SelectedSetname: ";
+         lbSelectedSetname.Visible = false;
          // 
          // lbMouseControl
          // 

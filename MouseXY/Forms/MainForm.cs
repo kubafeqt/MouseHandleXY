@@ -137,7 +137,7 @@ namespace MouseXY
 
       private void ShowControlsOfTag(string tag, bool show = true)
       {
-         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString() == tag);
+         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString().Contains(tag) == true);
          foreach (var control in matchingControls)
          {
             control.Visible = !show ? show : showKeysPositions;
@@ -146,7 +146,7 @@ namespace MouseXY
 
       private void EnableDisableControlsOfTag(string tag, bool enable = true)
       {
-         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString() == tag);
+         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString().Contains(tag) == true);
          foreach (var control in matchingControls)
          {
             control.Enabled = enable;
