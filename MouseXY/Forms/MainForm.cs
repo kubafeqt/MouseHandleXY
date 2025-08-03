@@ -60,7 +60,7 @@ namespace MouseXY
             }
             else if (MouseHandle.middleMouseHeld) // pokud je prostřední tlačítko myši drženo
             {
-               MouseHandle.MiddleMouseHeld(0x0000000000000100); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně věcí zasekne
+               MouseHandle.MiddleMouseHeld(0x0000000000000100); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
             }
          };
          // event for set key to position of mouse cursor

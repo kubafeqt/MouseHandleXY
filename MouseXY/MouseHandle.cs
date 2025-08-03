@@ -60,7 +60,7 @@ namespace MouseXY
       #endregion
 
       #region Mouse Control Methods
-      private static void LeftMouseClick(IntPtr wParam)
+      private static void LeftMouseDown(IntPtr wParam)
       {
          if (wParam == (IntPtr)WM_KEYDOWN) // Levé tlačítko myši dolů
          {
@@ -159,7 +159,11 @@ namespace MouseXY
                      return (IntPtr)1;
                   case Keys.E:
                      {
-                        LeftMouseClick(wParam); //držení levého tlačítka myši
+                        LeftMouseDown(wParam); //držení levého tlačítka myši
+                        if (middleMouseHeld) // pokud je prostřední tlačítko myši drženo
+                        {
+                           MiddleMouseHeld(wParam); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
+                        }
                         return (IntPtr)1;
                      }
                   case Keys.Q:
