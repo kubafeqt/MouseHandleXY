@@ -78,8 +78,8 @@ namespace MouseXY
          mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
       }
 
-      static bool middleMouseHeld = false;
-      private static void MiddleMouseHeld(IntPtr wParam)
+      public static bool middleMouseHeld = false;
+      public static void MiddleMouseHeld(IntPtr wParam)
       {
          if (wParam == (IntPtr)WM_KEYDOWN)
          {
