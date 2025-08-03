@@ -141,7 +141,7 @@ namespace MouseXY
                   }
             }
 
-            if (mouseCursor) //when mouse control by keyboard is enabled
+            if (mouseCursorHandle) //when mouse control by keyboard is enabled
             {
                switch ((Keys)vkCode)
                {
@@ -208,17 +208,17 @@ namespace MouseXY
       #endregion
 
       #region Open/Close Mouse Control by Keyboard
-      public static event Action<bool> OnMouseCursorOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
-      private static bool _mouseCursor = false;
-      public static bool mouseCursor // property for enable/disable mouse control by keyboard
+      public static event Action<bool> OnMouseCursorHandleOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
+      private static bool _mouseCursorHandle = false;
+      public static bool mouseCursorHandle // property for enable/disable mouse control by keyboard
       {
-         get => _mouseCursor;
+         get => _mouseCursorHandle;
          set
          {
-            if (_mouseCursor != value)
+            if (_mouseCursorHandle != value)
             {
-               _mouseCursor = value;
-               OnMouseCursorOpenChanged?.Invoke(value);
+               _mouseCursorHandle = value;
+               OnMouseCursorHandleOpenChanged?.Invoke(value);
             }
          }
       }
@@ -229,8 +229,8 @@ namespace MouseXY
 
          if (stopwatch.ElapsedMilliseconds < Settings.delayMs)
          {
-            mouseCursor = !mouseCursor;
-            Sounds.PlaySound(mouseCursor);
+            mouseCursorHandle = !mouseCursorHandle;
+            Sounds.PlaySound(mouseCursorHandle);
          }
          stopwatch.Restart();
       }
