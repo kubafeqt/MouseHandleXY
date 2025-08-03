@@ -416,7 +416,7 @@ namespace MouseXY
          else //edit SetName
          {
             string setName = tbSetname.Text.Trim().ToLower();
-            string? newSetName = InputBox.Show($"Zadejte nový název pro setname {setName}:", "Přidat nový SetName", nullable: true);
+            string? newSetName = InputBox.Show($"Zadejte nový název pro {setName}:", "Změnit název setname", nullable: true);
             if (!string.IsNullOrWhiteSpace(newSetName))
             {
                newSetName = newSetName.Trim().ToLower();
