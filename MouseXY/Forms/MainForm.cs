@@ -486,7 +486,7 @@ namespace MouseXY
          string setName = tbSetname.Text.Trim().ToLower();
          if (setName != "default" && cmbSelectSetname.Items.Contains(setName))
          {
-            btnAddSetname.Enabled = true;
+            btnAddSetname.Enabled = MouseHandle.mouseCursor ? false : true;
             btnAddSetname.Text = "Edit"; // Pokud je název již v ComboBoxu, změní text tlačítka na "Edit"
             if (tbSetname.Text.Length > 0 && !cmbSelectSetname.Items.Contains(tbSetname.Text.Substring(0, tbSetname.Text.Length - 1)))
             {
@@ -497,7 +497,7 @@ namespace MouseXY
          else if (setName != "default")
          {
             cmbSelectSetname.SelectedItem = cmbSelectSetname.SelectedItem == "default" ? cmbSelectSetname.SelectedItem : latestSelecedItem ?? cmbSelectSetname.SelectedItem;
-            btnAddSetname.Enabled = true;
+            btnAddSetname.Enabled = MouseHandle.mouseCursor ? false : true;
             btnAddSetname.Text = "Add"; // Pokud název není v ComboBoxu, změní text tlačítka na "Add"
          }
          else
