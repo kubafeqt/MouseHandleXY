@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -77,8 +76,7 @@ namespace MouseXY
 
       private void MainForm_Load(object sender, EventArgs e)
       {
-         // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
-         cboxOnStartup.Checked = StartupManager.IsInStartup(appName);
+         cboxOnStartup.Checked = StartupManager.IsInStartup(appName); // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
          lbDelayMsDescription.Text = "for double control (open/close mouse control by keyboard)\nand double shift (change speed of mouse step) methods";
 
          #region DB_loading
@@ -221,7 +219,7 @@ namespace MouseXY
          }
       }
 
-      private void timer_tick(object sender, EventArgs e)
+      private void timer_tick(object sender, EventArgs e) //showing SetKey Position, enabling/disabling only in SetKeyPos method
       {
          lbSetKeyPos.Text = $"(open) X: {Cursor.Position.X}, Y: {Cursor.Position.Y}";
       }
@@ -394,7 +392,7 @@ namespace MouseXY
          if (!btnAddSetname.Text.Equals("Edit", StringComparison.OrdinalIgnoreCase))
          {
             int newId = KeyPos.PossibleFreeIdForSetname(); // Získání nového ID pro SetName
-            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower() : Interaction.InputBox("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
+            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(setName))
             {
                if (cmbSelectSetname.Items.Contains(setName))
@@ -418,9 +416,10 @@ namespace MouseXY
          else //edit SetName
          {
             string setName = tbSetname.Text.Trim().ToLower();
-            string? newSetName = Interaction.InputBox($"Zadejte nový název pro {setName}:", "Přidat nový SetName", $"").Trim().ToLower();
+            string? newSetName = InputBox.Show($"Zadejte nový název pro setname {setName}:", "Přidat nový SetName", nullable: true);
             if (!string.IsNullOrWhiteSpace(newSetName))
             {
+               newSetName = newSetName.Trim().ToLower();
                if (cmbSelectSetname.Items.Contains(newSetName) && newSetName != setName)
                {
                   MessageBox.Show($"Setname {newSetName} již existuje. Zvolte jiný název.");
@@ -438,7 +437,7 @@ namespace MouseXY
                }
                ShowSetname(); // Nastaví aktuálně zobrazený setName
             }
-            else // pokud je nový název prázdný zobrazí se dialog pro potvrzení smazání
+            else if (newSetName != null) // pokud uživatel zruší dialog
             {
                DialogResult result = MessageBox.Show(
                    $"Chcete smazat setname: {setName} se všemi jeho hotkeys?", // text zprávy
