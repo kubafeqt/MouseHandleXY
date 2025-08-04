@@ -179,6 +179,7 @@ namespace MouseXY
          {
             KeyPositions.Remove(k);
          });
+         setNames.Remove(setNames.FirstOrDefault(x => x.Value == setname).Key); // odstraní setName z mapy setNames
       }
 
    }

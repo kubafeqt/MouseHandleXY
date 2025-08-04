@@ -144,8 +144,7 @@ namespace MouseXY
          {
             command.Parameters.AddWithValue("@SetName", setname);
             command.ExecuteNonQuery();
-         }
-         KeyPos.DeleteKeysBySetName(setname); // Smazání všech kláves spojených s tímto setName z objektu KeyPos v listu KeyPositions
+         }         
       }
 
       #endregion
@@ -176,7 +175,6 @@ namespace MouseXY
                   command.Parameters.AddWithValue("@OldSetName", oldSetName);
                   command.ExecuteNonQuery();
                }
-               KeyPos.UpdateKeysSetName(setName, oldSetName); // Aktualizuje název sady v objektu KeyPos
             }
             catch (SqlException ex)
             {
@@ -185,7 +183,7 @@ namespace MouseXY
          }
       }
 
-      public static void DeleteSetNameAndItKeysById(int setId)
+      public static void DeleteSetNameAndItKeysById(int setId, string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
@@ -198,7 +196,7 @@ namespace MouseXY
                   command.Parameters.AddWithValue("@Id", setId);
                   command.ExecuteNonQuery();
                }
-               DeleteKeysBySetName(KeyPos.setNames[setId], connection); // Smaže všechny klávesy spojené s tímto setName
+               DeleteKeysBySetName(setName, connection); // Smaže všechny klávesy spojené s tímto setName
             }
             catch (SqlException ex)
             {

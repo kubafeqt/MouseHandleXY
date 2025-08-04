@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Win32;
+using MouseXY.Database;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -407,7 +408,7 @@ namespace MouseXY
                latestSelecedItem = null;
                cmbSelectSetname.SelectedItem = setName; // Nastaví právě přidaný název jako vybraný
                tbSetname.Text = string.Empty;
-               DBAccess.SaveOrUpdateSetName(newId, setName);
+               SetNameService.SaveOrUpdateSetName(newId, setName);
             }
             else
             {
@@ -431,7 +432,7 @@ namespace MouseXY
                int index = cmbSelectSetname.Items.IndexOf(setName);
                cmbSelectSetname.Items[index] = newSetName; // Aktualizace položky v ComboBoxu
                tbSetname.Text = string.Empty; // Vyprázdní TextBox
-               DBAccess.SaveOrUpdateSetName(id, newSetName, setName);
+               SetNameService.SaveOrUpdateSetName(id, newSetName, setName);
                if (KeyPos.selectedSetName == setName)
                {
                   SelectSetname(newSetName);
@@ -453,7 +454,7 @@ namespace MouseXY
                   KeyPos.setNames.Remove(id); // Odstranění setName z mapy dictionary
                   cmbSelectSetname.Items.Remove(setName);
                   tbSetname.Text = string.Empty;
-                  DBAccess.DeleteSetNameAndItKeysById(id); // Smazání setName z databáze
+                  SetNameService.DeleteSetNameAndItKeysById(id); // Smazání setName z databáze
                   MessageBox.Show($"Setname: {setName} byl smazán se všemi jeho uloženými hotkeys.");
                   cmbSelectSetname.SelectedIndex = cmbSelectSetname.Items.Count - 1;
                   if (KeyPos.selectedSetName == setName)
