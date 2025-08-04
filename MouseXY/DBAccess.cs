@@ -38,20 +38,6 @@ namespace MouseXY
       }
 
       #region KeysPosTable
-      public static bool SavedKeyExist(Keys k, string setName, SqlConnection connection)
-      {
-         string sql = "SELECT 1 FROM KeyPosTable WHERE [Key] = @Key and SetName = @SetName";
-         using (SqlCommand command = new SqlCommand(sql, connection))
-         {
-            command.Parameters.AddWithValue("@Key", k.ToString());
-            command.Parameters.AddWithValue("@SetName", setName);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-               return reader.HasRows;
-            }
-         }
-      }
-
       public static void SaveOrUpdateKeyPos(Keys key, Point position, string setname = "default", bool isActive = true)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -59,7 +45,7 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = SavedKeyExist(key, setname, connection) ? 
+               string sql = SavedKeyExist(key, setname, connection) ?
                   "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key AND SetName = @SetName"
                   : "INSERT INTO KeyPosTable ([Key], Position, SetName) VALUES (@Key, @Position, @SetName)";
                using (SqlCommand command = new SqlCommand(sql, connection))
@@ -74,6 +60,20 @@ namespace MouseXY
             catch (SqlException ex)
             {
                MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      private static bool SavedKeyExist(Keys k, string setName, SqlConnection connection)
+      {
+         string sql = "SELECT 1 FROM KeyPosTable WHERE [Key] = @Key and SetName = @SetName";
+         using (SqlCommand command = new SqlCommand(sql, connection))
+         {
+            command.Parameters.AddWithValue("@Key", k.ToString());
+            command.Parameters.AddWithValue("@SetName", setName);
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+               return reader.HasRows;
             }
          }
       }
@@ -217,7 +217,7 @@ namespace MouseXY
          }
       }
 
-      public static bool DbContainsSetNameId(int id, SqlConnection connection)
+      private static bool DbContainsSetNameId(int id, SqlConnection connection)
       {
          string sql = "SELECT 1 FROM SetNamesTable WHERE Id = @id";
          using (SqlCommand command = new SqlCommand(sql, connection))
