@@ -73,28 +73,6 @@ namespace MouseXY
          }
       }
 
-      private static void UpdateKeysSetName(string newSetName, string oldSetName)
-      {
-         using (SqlConnection connection = new SqlConnection(connectionString))
-         {
-            try
-            {
-               connection.Open();
-               string sql = "UPDATE KeyPosTable SET SetName = @NewSetName WHERE SetName = @OldSetName";
-               using (SqlCommand command = new SqlCommand(sql, connection))
-               {
-                  command.Parameters.AddWithValue("@NewSetName", newSetName);
-                  command.Parameters.AddWithValue("@OldSetName", oldSetName);
-                  command.ExecuteNonQuery();
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při aktualizaci názvu sady: " + ex.Message);
-            }
-         }
-      }
-
       public static void LoadKeysPositions()//(string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -190,20 +168,24 @@ namespace MouseXY
             {
                connection.Open();
                bool update = DbContainsSetNameId(setId, connection);
-               string sql = update
-                  ? "UPDATE SetNamesTable SET Name = @SetName WHERE Id = @SetId"
-                  : "INSERT INTO SetNamesTable (Id, Name) VALUES (@SetID, @SetName)";
+               string sql = @"IF EXISTS (SELECT 1 FROM SetNamesTable WHERE Id = @SetId)
+                  BEGIN
+                      UPDATE SetNamesTable SET Name = @SetName WHERE Id = @SetId;
+                      UPDATE KeyPosTable SET SetName = @NewSetName WHERE SetName = @OldSetName;
+                  END
+                  ELSE
+                  BEGIN
+                      INSERT INTO SetNamesTable (Id, Name) VALUES (@SetId, @SetName);
+                  END";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@SetID", setId);
                   command.Parameters.AddWithValue("@SetName", setName);
+                  command.Parameters.AddWithValue("@NewSetName", setName);
+                  command.Parameters.AddWithValue("@OldSetName", oldSetName);
                   command.ExecuteNonQuery();
                }
-               if (update)
-               {
-                  UpdateKeysSetName(setName, oldSetName); // Aktualizuje název sady v tabulce KeyPosTable
-                  KeyPos.UpdateKeysSetName(setName, oldSetName); // Aktualizuje název sady v objektu KeyPos
-               }
+               KeyPos.UpdateKeysSetName(setName, oldSetName); // Aktualizuje název sady v objektu KeyPos
             }
             catch (SqlException ex)
             {
