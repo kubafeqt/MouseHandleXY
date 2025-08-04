@@ -173,13 +173,13 @@ namespace MouseXY
       /// Vymaže všechny klávesy z daného setu podle názvu setu.
       /// </summary>
       /// <param name="setname">název setu k vymazání kláves</param>
-      public static void DeleteKeysBySetName(string setname)
+      public static void DeleteKeysBySetName(int setId, string setname)
       {
          KeyPositions.Where(k => k.SetName == setname).ToList().ForEach(k =>
          {
             KeyPositions.Remove(k);
          });
-         setNames.Remove(setNames.FirstOrDefault(x => x.Value == setname).Key); // odstraní setName z mapy setNames
+         setNames.Remove(setId); // odstraní setName z mapy setNames
       }
 
    }

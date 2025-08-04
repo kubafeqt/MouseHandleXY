@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Win32;
-using MouseXY.Database;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -451,10 +450,9 @@ namespace MouseXY
                if (result == DialogResult.Yes) //delete set name se všemi hotkeys
                {
                   int id = KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
-                  KeyPos.setNames.Remove(id); // Odstranění setName z mapy dictionary
                   cmbSelectSetname.Items.Remove(setName);
                   tbSetname.Text = string.Empty;
-                  SetNameService.DeleteSetNameAndItKeysById(id); // Smazání setName z databáze
+                  SetNameService.DeleteSetNameAndItKeysById(id, setName); // Smazání setName z databáze
                   MessageBox.Show($"Setname: {setName} byl smazán se všemi jeho uloženými hotkeys.");
                   cmbSelectSetname.SelectedIndex = cmbSelectSetname.Items.Count - 1;
                   if (KeyPos.selectedSetName == setName)

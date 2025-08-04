@@ -138,7 +138,6 @@ namespace MouseXY
 
       private static void DeleteKeysBySetName(string setname, SqlConnection connection)
       {
-         connection.Open();
          string sql = "DELETE FROM KeyPosTable WHERE SetName = @SetName";
          using (SqlCommand command = new SqlCommand(sql, connection))
          {
@@ -150,6 +149,12 @@ namespace MouseXY
       #endregion
 
       #region SetNamesTable
+      /// <summary>
+      /// Accesible only through SetNameService class.
+      /// </summary>
+      /// <param name="setId"></param>
+      /// <param name="setName"></param>
+      /// <param name="oldSetName"></param>
       public static void SaveOrUpdateSetName(int setId, string setName, string oldSetName = "")
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -183,6 +188,11 @@ namespace MouseXY
          }
       }
 
+      /// <summary>
+      /// Accesible only through SetNameService class.
+      /// </summary>
+      /// <param name="setId"></param>
+      /// <param name="setName"></param>
       public static void DeleteSetNameAndItKeysById(int setId, string setName)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
