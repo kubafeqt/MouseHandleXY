@@ -12,7 +12,7 @@ namespace MouseXY
     {
       static readonly string binDir = AppDomain.CurrentDomain.BaseDirectory; // Běhový adresář (např. bin\Debug\net8.0)
       static readonly string projectDir = Directory.GetParent(binDir).Parent.Parent.Parent.FullName; // Projektová složka = 3 úrovně výš z bin\Debug\netX
-      static readonly string dbFilePath = Path.Combine(projectDir, "mssql_dbFile.mdf");
+      static readonly string dbFilePath = Path.Combine(projectDir, @"Database\mssql_dbFile.mdf");
 
       static readonly string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbFilePath};Integrated Security=True";
 
