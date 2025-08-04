@@ -45,7 +45,6 @@ namespace MouseXY
          timer.Interval = 50;
          timer.Tick += timer_tick;
 
-
          #region events
          // event for change button enabled state when mouse cursor is controlled by keyboard or not
          MouseHandle.OnMouseCursorHandleOpenChanged += (val) =>
@@ -141,7 +140,7 @@ namespace MouseXY
 
       private void ShowControlsOfTag(string tag, bool show = true)
       {
-         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString().Contains(tag) == true);
+         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
          foreach (var control in matchingControls)
          {
             control.Visible = !show ? show : showKeysPositions;
@@ -150,7 +149,7 @@ namespace MouseXY
 
       private void EnableDisableControlsOfTag(string tag, bool enable = true)
       {
-         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag?.ToString().Contains(tag) == true);
+         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
          foreach (var control in matchingControls)
          {
             control.Enabled = enable;

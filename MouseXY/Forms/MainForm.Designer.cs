@@ -205,7 +205,7 @@
          // 
          lbKeyPos.AutoSize = true;
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbKeyPos.Location = new Point(617, 133);
+         lbKeyPos.Location = new Point(617, 132);
          lbKeyPos.Name = "lbKeyPos";
          lbKeyPos.Size = new Size(34, 17);
          lbKeyPos.TabIndex = 12;

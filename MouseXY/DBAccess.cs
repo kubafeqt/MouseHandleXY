@@ -77,30 +77,15 @@ namespace MouseXY
             {
                connection.Open();
 
-               if (SavedKeyExist(key, setname))
+               string sql = SavedKeyExist(key, setname) ? "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key AND SetName = @SetName"
+                  : "INSERT INTO KeyPosTable ([Key], Position, SetName) VALUES (@Key, @Position, @SetName)";
+               using (SqlCommand command = new SqlCommand(sql, connection))
                {
-                  // UPDATE
-                  string updateSql = "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key AND SetName = @SetName";
-                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
-                  {
-                     updateCmd.Parameters.AddWithValue("@Key", key.ToString());
-                     updateCmd.Parameters.AddWithValue("@SetName", setname);
-                     updateCmd.Parameters.AddWithValue("@Position", $"{position.X},{position.Y}");
-                     updateCmd.Parameters.AddWithValue("@IsActive", isActive);
-                     updateCmd.ExecuteNonQuery();
-                  }
-               }
-               else
-               {
-                  // INSERT
-                  string insertSql = "INSERT INTO KeyPosTable ([Key], Position, SetName) VALUES (@Key, @Position, @SetName)";
-                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
-                  {
-                     insertCmd.Parameters.AddWithValue("@Key", key.ToString());
-                     insertCmd.Parameters.AddWithValue("@Position", $"{position.X},{position.Y}");
-                     insertCmd.Parameters.AddWithValue("@SetName", setname);
-                     insertCmd.ExecuteNonQuery();
-                  }
+                  command.Parameters.AddWithValue("@Key", key.ToString());
+                  command.Parameters.AddWithValue("@Position", $"{position.X},{position.Y}");
+                  command.Parameters.AddWithValue("@SetName", setname);
+                  command.Parameters.AddWithValue("@IsActive", isActive);
+                  command.ExecuteNonQuery();
                }
             }
             catch (SqlException ex)
@@ -227,29 +212,20 @@ namespace MouseXY
             try
             {
                connection.Open();
-               if (DbContainsSetNameId(setId))
+               bool update = DbContainsSetNameId(setId);
+               string sql = update
+                  ? "UPDATE SetNamesTable SET Name = @SetName WHERE Id = @SetId"
+                  : "INSERT INTO SetNamesTable (Id, Name) VALUES (@SetID, @SetName)";
+               using (SqlCommand command = new SqlCommand(sql, connection))
                {
-                  // UPDATE
-                  string updateSql = "UPDATE SetNamesTable SET Name = @Name WHERE Id = @Id";
-                  using (SqlCommand updateCmd = new SqlCommand(updateSql, connection))
-                  {
-                     updateCmd.Parameters.AddWithValue("@Id", setId);
-                     updateCmd.Parameters.AddWithValue("@Name", setName);
-                     updateCmd.ExecuteNonQuery();
-                  }
+                  command.Parameters.AddWithValue("@SetID", setId);
+                  command.Parameters.AddWithValue("@SetName", setName);
+                  command.ExecuteNonQuery();
+               }
+               if (update)
+               {
                   UpdateKeysSetName(setName, oldSetName); // Aktualizuje název sady v tabulce KeyPosTable
                   KeyPos.UpdateKeysSetName(setName, oldSetName); // Aktualizuje název sady v objektu KeyPos
-               }
-               else
-               {
-                  // INSERT
-                  string insertSql = "INSERT INTO SetNamesTable (Id, Name) VALUES (@SetID, @SetName)";
-                  using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
-                  {
-                     insertCmd.Parameters.AddWithValue("@SetID", setId);
-                     insertCmd.Parameters.AddWithValue("@SetName", setName);
-                     insertCmd.ExecuteNonQuery();
-                  }
                }
             }
             catch (SqlException ex)

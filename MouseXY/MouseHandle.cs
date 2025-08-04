@@ -160,9 +160,9 @@ namespace MouseXY
                   case Keys.E:
                      {
                         LeftMouseDown(wParam); //držení levého tlačítka myši
-                        if (middleMouseHeld) // pokud je prostřední tlačítko myši drženo
+                        if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
                         {
-                           MiddleMouseHeld(wParam); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
+                           MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
                         }
                         return (IntPtr)1;
                      }
