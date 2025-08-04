@@ -45,9 +45,18 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = SavedKeyExist(key, setname, connection) ?
-                  "UPDATE KeyPosTable SET Position = @Position, IsActive = @IsActive WHERE [Key] = @Key AND SetName = @SetName"
-                  : "INSERT INTO KeyPosTable ([Key], Position, SetName) VALUES (@Key, @Position, @SetName)";
+               string sql = @"
+                     IF EXISTS (SELECT 1 FROM KeyPosTable WHERE [Key] = @Key AND SetName = @SetName)
+                     BEGIN
+                        UPDATE KeyPosTable
+                        SET Position = @Position, IsActive = @IsActive
+                        WHERE [Key] = @Key AND SetName = @SetName
+                     END
+                     ELSE
+                     BEGIN
+                        INSERT INTO KeyPosTable ([Key], Position, SetName)
+                        VALUES (@Key, @Position, @SetName)
+                     END";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@Key", key.ToString());
@@ -60,20 +69,6 @@ namespace MouseXY
             catch (SqlException ex)
             {
                MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-            }
-         }
-      }
-
-      private static bool SavedKeyExist(Keys k, string setName, SqlConnection connection)
-      {
-         string sql = "SELECT 1 FROM KeyPosTable WHERE [Key] = @Key and SetName = @SetName";
-         using (SqlCommand command = new SqlCommand(sql, connection))
-         {
-            command.Parameters.AddWithValue("@Key", k.ToString());
-            command.Parameters.AddWithValue("@SetName", setName);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-               return reader.HasRows;
             }
          }
       }
@@ -294,9 +289,16 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = SettingsTableRowExist(connection)
-                  ? "UPDATE SettingsTable SET DelayMs = @delay, ShowDgvAfterSetKeyPos = @showDgv, LatestSelectedSetName = @LatestSelectedSetName"
-                  : "INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos, LatestSelectedSetName) VALUES (@delay, @showDgv, @LatestSelectedSetName)";
+               string sql = @"IF EXISTS (SELECT 1 FROM SettingsTable)
+                  BEGIN
+                      UPDATE SettingsTable
+                      SET DelayMs = @delay, ShowDgvAfterSetKeyPos = @showDgv, LatestSelectedSetName = @LatestSelectedSetName;
+                  END
+                  ELSE
+                  BEGIN
+                      INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos, LatestSelectedSetName)
+                      VALUES (@delay, @showDgv, @LatestSelectedSetName);
+                  END";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@delay", Settings.delayMs);
@@ -309,16 +311,6 @@ namespace MouseXY
             {
                MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
             }
-         }
-      }
-
-      private static bool SettingsTableRowExist(SqlConnection connection)
-      {
-         string sql = "SELECT COUNT(*) FROM SettingsTable";
-         using (SqlCommand command = new SqlCommand(sql, connection))
-         {
-            int count = Convert.ToInt32(command.ExecuteScalar());
-            return count > 0;
          }
       }
 
