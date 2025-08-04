@@ -86,12 +86,10 @@ namespace MouseXY
          //DBAccess.ConnectionTest();
          DBAccess.LoadSetNames(); // načtení názvů setNames z databáze do dictionary setNames
          DBAccess.LoadKeysPositions(); // načtení pozic kláves z databáze do objektů KeyPos a na seznam KeyPositions
-         DBAccess.LoadLatestSelectedSetName(); // načtení posledního vybraného setName z databáze
+         DBAccess.LoadSettings(); // načtení nastavení z databáze do Settings
          KeyPos.UpdateKeyPosDict(); // aktualizuje/načte dictionary pozic kláves z KeyPositions
-         Settings.delayMs = DBAccess.LoadDelayMsSettingsRowExists().Item1;
          nmDelayMs.Value = Settings.delayMs;
-         cboxShowSetKeyPos.Checked = DBAccess.LoadShowDgvAfterSetKeyPos();
-         Settings.showDgvAfterSetKeyPos = cboxShowSetKeyPos.Checked;
+         cboxShowSetKeyPos.Checked = Settings.showDgvAfterSetKeyPos;
 
          #endregion
 
@@ -455,7 +453,7 @@ namespace MouseXY
                   KeyPos.setNames.Remove(id); // Odstranění setName z mapy dictionary
                   cmbSelectSetname.Items.Remove(setName);
                   tbSetname.Text = string.Empty;
-                  DBAccess.DeleteSetName(id); // Smazání setName z databáze
+                  DBAccess.DeleteSetNameById(id); // Smazání setName z databáze
                   DBAccess.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z databáze
                   KeyPos.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z objektu KeyPos v listu KeyPositions
                   MessageBox.Show($"Setname: {setName} byl smazán se všemi jeho uloženými hotkeys.");
