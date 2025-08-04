@@ -136,25 +136,16 @@ namespace MouseXY
          }
       }
 
-      public static void DeleteKeysBySetName(string setname)
+      private static void DeleteKeysBySetName(string setname, SqlConnection connection)
       {
-         using (SqlConnection connection = new SqlConnection(connectionString))
+         connection.Open();
+         string sql = "DELETE FROM KeyPosTable WHERE SetName = @SetName";
+         using (SqlCommand command = new SqlCommand(sql, connection))
          {
-            try
-            {
-               connection.Open();
-               string sql = "DELETE FROM KeyPosTable WHERE SetName = @SetName";
-               using (SqlCommand command = new SqlCommand(sql, connection))
-               {
-                  command.Parameters.AddWithValue("@SetName", setname);
-                  command.ExecuteNonQuery();
-               }
-            }
-            catch (SqlException ex)
-            {
-               MessageBox.Show("Chyba při mazání z databáze: " + ex.Message);
-            }
+            command.Parameters.AddWithValue("@SetName", setname);
+            command.ExecuteNonQuery();
          }
+         KeyPos.DeleteKeysBySetName(setname); // Smazání všech kláves spojených s tímto setName z objektu KeyPos v listu KeyPositions
       }
 
       #endregion
@@ -177,27 +168,6 @@ namespace MouseXY
                       INSERT INTO SetNamesTable (Id, Name) VALUES (@SetId, @SetName);
                   END";
 
-               #region merge sql test
-               //string sql = @"DECLARE @actionVar TABLE (Action NVARCHAR(10));
-
-               //MERGE SetNamesTable AS target
-               //USING (SELECT @SetId AS Id, @SetName AS Name) AS source
-               //ON target.Id = source.Id
-               //WHEN MATCHED THEN
-               //    UPDATE SET Name = source.Name
-               //WHEN NOT MATCHED THEN
-               //    INSERT (Id, Name) VALUES (source.Id, source.Name)
-               //OUTPUT $action INTO @actionVar;
-
-               //IF EXISTS (SELECT 1 FROM @actionVar WHERE Action = 'UPDATE')
-               //BEGIN
-               //    UPDATE KeyPosTable
-               //    SET SetName = @NewSetName
-               //    WHERE SetName = @OldSetName;
-               //END";
-
-               #endregion
-
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@SetID", setId);
@@ -215,7 +185,7 @@ namespace MouseXY
          }
       }
 
-      public static void DeleteSetNameById(int setId)
+      public static void DeleteSetNameAndItKeysById(int setId)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
@@ -228,6 +198,7 @@ namespace MouseXY
                   command.Parameters.AddWithValue("@Id", setId);
                   command.ExecuteNonQuery();
                }
+               DeleteKeysBySetName(KeyPos.setNames[setId], connection); // Smaže všechny klávesy spojené s tímto setName
             }
             catch (SqlException ex)
             {

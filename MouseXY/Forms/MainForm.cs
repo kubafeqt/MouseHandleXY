@@ -453,9 +453,7 @@ namespace MouseXY
                   KeyPos.setNames.Remove(id); // Odstranění setName z mapy dictionary
                   cmbSelectSetname.Items.Remove(setName);
                   tbSetname.Text = string.Empty;
-                  DBAccess.DeleteSetNameById(id); // Smazání setName z databáze
-                  DBAccess.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z databáze
-                  KeyPos.DeleteKeysBySetName(setName); // Smazání všech kláves spojených s tímto setName z objektu KeyPos v listu KeyPositions
+                  DBAccess.DeleteSetNameAndItKeysById(id); // Smazání setName z databáze
                   MessageBox.Show($"Setname: {setName} byl smazán se všemi jeho uloženými hotkeys.");
                   cmbSelectSetname.SelectedIndex = cmbSelectSetname.Items.Count - 1;
                   if (KeyPos.selectedSetName == setName)
