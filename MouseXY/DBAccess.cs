@@ -167,7 +167,6 @@ namespace MouseXY
             try
             {
                connection.Open();
-               bool update = DbContainsSetNameId(setId, connection);
                string sql = @"IF EXISTS (SELECT 1 FROM SetNamesTable WHERE Id = @SetId)
                   BEGIN
                       UPDATE SetNamesTable SET Name = @SetName WHERE Id = @SetId;
@@ -177,6 +176,28 @@ namespace MouseXY
                   BEGIN
                       INSERT INTO SetNamesTable (Id, Name) VALUES (@SetId, @SetName);
                   END";
+
+               #region merge sql test
+               //string sql = @"DECLARE @actionVar TABLE (Action NVARCHAR(10));
+
+               //MERGE SetNamesTable AS target
+               //USING (SELECT @SetId AS Id, @SetName AS Name) AS source
+               //ON target.Id = source.Id
+               //WHEN MATCHED THEN
+               //    UPDATE SET Name = source.Name
+               //WHEN NOT MATCHED THEN
+               //    INSERT (Id, Name) VALUES (source.Id, source.Name)
+               //OUTPUT $action INTO @actionVar;
+
+               //IF EXISTS (SELECT 1 FROM @actionVar WHERE Action = 'UPDATE')
+               //BEGIN
+               //    UPDATE KeyPosTable
+               //    SET SetName = @NewSetName
+               //    WHERE SetName = @OldSetName;
+               //END";
+
+               #endregion
+
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@SetID", setId);
@@ -190,24 +211,6 @@ namespace MouseXY
             catch (SqlException ex)
             {
                MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-            }
-         }
-      }
-
-      private static bool DbContainsSetNameId(int id, SqlConnection connection)
-      {
-         string sql = "SELECT 1 FROM SetNamesTable WHERE Id = @id";
-         using (SqlCommand command = new SqlCommand(sql, connection))
-         {
-            command.Parameters.AddWithValue("@id", id);
-            object result = command.ExecuteScalar();
-            if (result != null && result != DBNull.Value)
-            {
-               return true; //Id exists
-            }
-            else
-            {
-               return false; //Id does not exist
             }
          }
       }
