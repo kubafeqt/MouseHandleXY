@@ -73,17 +73,16 @@ namespace MouseXY
          }
       }
 
-      public static void LoadKeysPositions()//(string setName)
+      public static void LoadKeysPositions()
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
             try
             {
                connection.Open();
-               string sql = "SELECT * FROM KeyPosTable";// WHERE @SetName = SetName";
+               string sql = "SELECT * FROM KeyPosTable";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
-                  //command.Parameters.AddWithValue("@SetName", setName);
                   using (SqlDataReader reader = command.ExecuteReader())
                   {
                      while (reader.Read())
@@ -136,16 +135,6 @@ namespace MouseXY
          }
       }
 
-      private static void DeleteKeysBySetName(string setname, SqlConnection connection)
-      {
-         string sql = "DELETE FROM KeyPosTable WHERE SetName = @SetName";
-         using (SqlCommand command = new SqlCommand(sql, connection))
-         {
-            command.Parameters.AddWithValue("@SetName", setname);
-            command.ExecuteNonQuery();
-         }         
-      }
-
       #endregion
 
       #region SetNamesTable
@@ -171,7 +160,6 @@ namespace MouseXY
                   BEGIN
                       INSERT INTO SetNamesTable (Id, Name) VALUES (@SetId, @SetName);
                   END";
-
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@SetID", setId);
@@ -200,13 +188,16 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = "DELETE FROM SetNamesTable WHERE Id = @Id";
+               string sql = @"BEGIN 
+                     DELETE FROM SetNamesTable WHERE Id = @Id;
+                     DELETE FROM KeyPosTable WHERE SetName = @SetName;
+                  END";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@Id", setId);
+                  command.Parameters.AddWithValue("@SetName", setName);
                   command.ExecuteNonQuery();
                }
-               DeleteKeysBySetName(setName, connection); // Smaže všechny klávesy spojené s tímto setName
             }
             catch (SqlException ex)
             {

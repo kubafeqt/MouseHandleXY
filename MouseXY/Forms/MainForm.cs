@@ -109,8 +109,8 @@ namespace MouseXY
       private void LoadComboBoxSetNames()
       {
          cmbSelectSetname.Items.Add("default"); // Přidání výchozího SetName
-         lbShowedSetname.Text = $"ShowedSetname: {KeyPos.showedSetName}"; //then load from DB
-         lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}"; //then load from DB settings
+         lbShowedSetname.Text = $"ShowedSetname: {KeyPos.showedSetName}";
+         lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}";
          foreach (var setName in KeyPos.setNames.Values)
          {
             cmbSelectSetname.Items.Add(setName);
@@ -404,8 +404,9 @@ namespace MouseXY
                KeyPos.setNames[newId] = setName; // Přidání nového názvu do slovníku setNames
                // Aktualizace ComboBoxu s názvy nastavení:
                cmbSelectSetname.Items.Add(setName);
-               latestSelecedItem = null;
                cmbSelectSetname.SelectedItem = setName; // Nastaví právě přidaný název jako vybraný
+               ShowSetname(); // Nastaví aktuálně zobrazený setName
+               latestSelecedItem = null;
                tbSetname.Text = string.Empty;
                SetNameService.SaveOrUpdateSetName(newId, setName);
             }
