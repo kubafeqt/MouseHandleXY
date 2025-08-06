@@ -16,14 +16,14 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 ## Controls
 
-- **Move cursor**: Arrow keys or **W / A / S / D**
-- **Left click**: Hold and release **E** (simulates press and release)
-- **Right click**: Press **Q**
-- **Middle mouse held**: Press **R** or **F** , then again press **R** or **F** to unheld middle mouse button
+- **Move cursor movement**: Arrow keys or **W / A / S / D**
+- **Left mouse click down**: Hold and release **E** (simulates press and release)
+- **Right mouse click down**: Hold and release **Q** (simulates press and release)
+- **Middle mouse click down**: Hold and release **R** or **F** (simulates press and release)
 
 **Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
 
-**Version 1.03** - You can add/remove sets of configurable hotkeys
+**Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
 ## Use Case
 
