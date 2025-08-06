@@ -36,7 +36,10 @@ namespace MouseXY
             }
          }
       }
-
+      
+      /// <summary>
+      /// Loads Keys Positions, SetNames, Settings
+      /// </summary>
       public static void LoadAll()
       {
          LoadKeysPositions();

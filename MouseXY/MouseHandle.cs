@@ -12,6 +12,8 @@ namespace MouseXY
       #region Imports from user32.dll and kernel32.dll
       private const int WH_KEYBOARD_LL = 13;
       private const int WM_KEYDOWN = 0x0100;
+      private const int WM_KEYUP = 0x0101;
+
       public static LowLevelKeyboardProc _proc = HookCallback;
       public static IntPtr _hookID = IntPtr.Zero;
 
@@ -55,8 +57,6 @@ namespace MouseXY
       private const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
       private const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
 
-      private const int WM_KEYUP = 0x0101;
-
       #endregion
 
       #region Mouse Control Methods
@@ -75,10 +75,19 @@ namespace MouseXY
          }
       }
 
-      private static void RightMouseClick()
+      private static bool isRightMouseDown = false;
+      private static void RightMouseDown(IntPtr wParam)
       {
-         mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
-         mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+         if (wParam == (IntPtr)WM_KEYDOWN && !isRightMouseDown)
+         {
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
+            isRightMouseDown = true;
+         }
+         else if (wParam == (IntPtr)WM_KEYUP && isRightMouseDown)
+         {
+            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+            isRightMouseDown = false;
+         }
       }
 
       private static bool isMiddleMouseDown = false;
@@ -95,24 +104,6 @@ namespace MouseXY
             isMiddleMouseDown = false;
          }
       }
-
-      //public static bool middleMouseHeld = false;
-      //public static void MiddleMouseHeld(IntPtr wParam)
-      //{
-      //   if (wParam == (IntPtr)WM_KEYDOWN)
-      //   {
-      //      middleMouseHeld = !middleMouseHeld;
-
-      //      if (middleMouseHeld)
-      //      {
-      //         mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
-      //      }
-      //      else
-      //      {
-      //         mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
-      //      }
-      //   }
-      //}
 
       #endregion
 
@@ -178,19 +169,11 @@ namespace MouseXY
                   case Keys.E:
                      {
                         LeftMouseDown(wParam); //držení levého tlačítka myši
-                        //if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
-                        //{
-                        //   MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-                        //}
                         return (IntPtr)1;
                      }
                   case Keys.Q:
                      {
-                        RightMouseClick(); //kliknutí pravým tlačítkem myši
-                        //if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
-                        //{
-                        //   MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-                        //}
+                        RightMouseDown(wParam); //kliknutí pravým tlačítkem myši
                         return (IntPtr)1;
                      }
                   case Keys.R or Keys.F:
@@ -198,11 +181,6 @@ namespace MouseXY
                         MiddleMouseDown(wParam); //držení prostředního tlačítka myši
                         return (IntPtr)1;
                      }
-                  //case Keys.F:
-                  //   {
-                  //      MiddleMouseHeld(wParam); //přepíná držení prostředního tlačítka myši
-                  //      return (IntPtr)1;
-                  //   }
                }
 
                if (KeyPos.keysPositionDict.Count > 0 && KeyPos.keysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici

@@ -57,10 +57,6 @@ namespace MouseXY
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
             }
-            //else if (MouseHandle.middleMouseHeld) // pokud je prostřední tlačítko myši drženo
-            //{
-            //   MouseHandle.MiddleMouseHeld(0x0000000000000100); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-            //}
          };
          // event for set key to position of mouse cursor
          MouseHandle.OnSetKeyToPos += () =>
