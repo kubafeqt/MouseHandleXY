@@ -60,15 +60,18 @@ namespace MouseXY
       #endregion
 
       #region Mouse Control Methods
+      private static bool isLeftMouseDown = false;
       private static void LeftMouseDown(IntPtr wParam)
       {
-         if (wParam == (IntPtr)WM_KEYDOWN) // Levé tlačítko myši dolů
+         if (wParam == (IntPtr)WM_KEYDOWN && !isLeftMouseDown) // Levé tlačítko myši dolů
          {
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+            isLeftMouseDown = true;
          }
-         else if (wParam == (IntPtr)WM_KEYUP) // Levé tlačítko myši nahoru
+         else if (wParam == (IntPtr)WM_KEYUP && isLeftMouseDown) // Levé tlačítko myši nahoru
          {
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+            isLeftMouseDown = false;
          }
       }
 
@@ -78,23 +81,38 @@ namespace MouseXY
          mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
       }
 
-      public static bool middleMouseHeld = false;
-      public static void MiddleMouseHeld(IntPtr wParam)
+      private static bool isMiddleMouseDown = false;
+      private static void MiddleMouseDown(IntPtr wParam)
       {
-         if (wParam == (IntPtr)WM_KEYDOWN)
+         if (wParam == (IntPtr)WM_KEYDOWN && !isMiddleMouseDown) // Stisk prostředního tlačítka myši
          {
-            middleMouseHeld = !middleMouseHeld;
-
-            if (middleMouseHeld)
-            {
-               mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
-            }
-            else
-            {
-               mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
-            }
+            mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
+            isMiddleMouseDown = true;
+         }
+         else if (wParam == (IntPtr)WM_KEYUP && isMiddleMouseDown) // Uvolnění prostředního tlačítka myši
+         {
+            mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
+            isMiddleMouseDown = false;
          }
       }
+
+      //public static bool middleMouseHeld = false;
+      //public static void MiddleMouseHeld(IntPtr wParam)
+      //{
+      //   if (wParam == (IntPtr)WM_KEYDOWN)
+      //   {
+      //      middleMouseHeld = !middleMouseHeld;
+
+      //      if (middleMouseHeld)
+      //      {
+      //         mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
+      //      }
+      //      else
+      //      {
+      //         mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
+      //      }
+      //   }
+      //}
 
       #endregion
 
@@ -160,22 +178,31 @@ namespace MouseXY
                   case Keys.E:
                      {
                         LeftMouseDown(wParam); //držení levého tlačítka myši
-                        if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
-                        {
-                           MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-                        }
+                        //if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
+                        //{
+                        //   MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
+                        //}
                         return (IntPtr)1;
                      }
                   case Keys.Q:
                      {
                         RightMouseClick(); //kliknutí pravým tlačítkem myši
+                        //if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
+                        //{
+                        //   MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
+                        //}
                         return (IntPtr)1;
                      }
                   case Keys.R or Keys.F:
                      {
-                        MiddleMouseHeld(wParam); //přepíná držení prostředního tlačítka myši
+                        MiddleMouseDown(wParam); //držení prostředního tlačítka myši
                         return (IntPtr)1;
                      }
+                  //case Keys.F:
+                  //   {
+                  //      MiddleMouseHeld(wParam); //přepíná držení prostředního tlačítka myši
+                  //      return (IntPtr)1;
+                  //   }
                }
 
                if (KeyPos.keysPositionDict.Count > 0 && KeyPos.keysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici

@@ -37,6 +37,13 @@ namespace MouseXY
          }
       }
 
+      public static void LoadAll()
+      {
+         LoadKeysPositions();
+         LoadSetNames();
+         LoadSettings();
+      }
+
       #region KeysPosTable
       public static void SaveOrUpdateKeyPos(Keys key, Point position, string setname = "default", bool isActive = true)
       {
@@ -73,7 +80,7 @@ namespace MouseXY
          }
       }
 
-      public static void LoadKeysPositions()
+      private static void LoadKeysPositions()
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
@@ -206,7 +213,7 @@ namespace MouseXY
          }
       }
 
-      public static void LoadSetNames()
+      private static void LoadSetNames()
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {
@@ -269,7 +276,7 @@ namespace MouseXY
          }
       }
 
-      public static void LoadSettings()
+      private static void LoadSettings()
       {
          try
          {

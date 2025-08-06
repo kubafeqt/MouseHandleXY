@@ -47,20 +47,20 @@ namespace MouseXY
 
          #region events
          // event for change button enabled state when mouse cursor is controlled by keyboard or not
-         MouseHandle.OnMouseCursorHandleOpenChanged += (val) =>
+         MouseHandle.OnMouseCursorHandleOpenChanged += (mouseCursorHandle) =>
          {
             //btnSetKeyPos.Enabled = !val;
-            EnableDisableControlsOfTag("MouseControlDisable", !val); // Enable/disable controls for editing positions of keys
-            lbMouseControl.Visible = val; // Zobrazí nebo skryje popisek pro ovládání myši
-            lbMouseControl.Text = val ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
-            if (val)
+            EnableDisableControlsOfTag("MouseControlDisable", !mouseCursorHandle); // Enable/disable controls for editing positions of keys
+            lbMouseControl.Visible = mouseCursorHandle; // Zobrazí nebo skryje popisek pro ovládání myši
+            lbMouseControl.Text = mouseCursorHandle ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
+            if (mouseCursorHandle)
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
             }
-            else if (MouseHandle.middleMouseHeld) // pokud je prostřední tlačítko myši drženo
-            {
-               MouseHandle.MiddleMouseHeld(0x0000000000000100); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-            }
+            //else if (MouseHandle.middleMouseHeld) // pokud je prostřední tlačítko myši drženo
+            //{
+            //   MouseHandle.MiddleMouseHeld(0x0000000000000100); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
+            //}
          };
          // event for set key to position of mouse cursor
          MouseHandle.OnSetKeyToPos += () =>
@@ -84,9 +84,7 @@ namespace MouseXY
 
          #region DB_loading
          //DBAccess.ConnectionTest();
-         DBAccess.LoadSetNames(); // načtení názvů setNames z databáze do dictionary setNames
-         DBAccess.LoadKeysPositions(); // načtení pozic kláves z databáze do objektů KeyPos a na seznam KeyPositions
-         DBAccess.LoadSettings(); // načtení nastavení z databáze do Settings
+         DBAccess.LoadAll(); // Načte všechny klávesy a jejich pozice, setNames a Settings z databáze
          KeyPos.UpdateKeyPosDict(); // aktualizuje/načte dictionary pozic kláves z KeyPositions
          nmDelayMs.Value = Settings.delayMs;
          cboxShowSetKeyPos.Checked = Settings.showDgvAfterSetKeyPos;
