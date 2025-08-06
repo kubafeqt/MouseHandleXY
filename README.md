@@ -20,7 +20,7 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - **Left mouse click down**: Hold and release **E** (simulates press and release)
 - **Right mouse click down**: Hold and release **Q** (simulates press and release)
 - **Middle mouse click down**: Hold and release **R** or **F** (simulates press and release)
-- 
+
 **Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
