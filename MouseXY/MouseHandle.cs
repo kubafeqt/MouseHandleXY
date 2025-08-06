@@ -127,7 +127,7 @@ namespace MouseXY
          Keys.NumLock
       };
 
-      static int step = 10;
+      static int step = Settings.normalSpeed;
       private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) //captures key presses
       {
          if (nCode >= 0)
@@ -253,14 +253,14 @@ namespace MouseXY
 
          if (stopwatch.ElapsedMilliseconds < Settings.delayMs)
          {
-            mouseCursorHandle = !mouseCursorHandle;d
+            mouseCursorHandle = !mouseCursorHandle;
             Sounds.PlaySound(mouseCursorHandle);
          }
          stopwatch.Restart();
       }
 
       static DateTime dateTime = DateTime.Now;
-      private static void ShiftMethod(IntPtr wParam) //change mouse step speed
+      private static void ShiftMethod(IntPtr wParam) //change mouse step speed to slower
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
@@ -271,14 +271,17 @@ namespace MouseXY
          dateTime = DateTime.Now;
       }
 
+      static int latestSpeed = step;
       static Stopwatch swJumpMethod = Stopwatch.StartNew();
-      private static void JumpMethod(IntPtr wParam)
+      private static void JumpMethod(IntPtr wParam) //change mouse step speed to faster
       {
          if (wParam != (IntPtr)WM_SYSKEYDOWN) return;
 
          if (mouseCursorHandle && swJumpMethod.ElapsedMilliseconds < Settings.delayMs)
          {
-            step = step == Settings.fastSpeed ? Settings.normalSpeed : Settings.fastSpeed; //modify slowSpeed and normalSpeed to fastSpeed, slowing down fastSpeed
+            bool fastSpeed = step == Settings.fastSpeed;
+            latestSpeed = fastSpeed ? latestSpeed : step;
+            step = fastSpeed ? latestSpeed : Settings.fastSpeed; //modify slowSpeed and normalSpeed to fastSpeed, slowing down fastSpeed    
          }
          swJumpMethod.Restart();
       }
