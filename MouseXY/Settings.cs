@@ -12,5 +12,9 @@ namespace MouseXY
       public static readonly Size defaultFormSize = new Size(462, 338); // default size of the form
       public static bool showDgvAfterSetKeyPos;
 
+      public static int slowSpeed = 2;
+      public static int normalSpeed = 10;
+      public static int fastSpeed = 50;
+
    }
 }

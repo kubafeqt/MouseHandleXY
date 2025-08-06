@@ -13,6 +13,7 @@ namespace MouseXY
       private const int WH_KEYBOARD_LL = 13;
       private const int WM_KEYDOWN = 0x0100;
       private const int WM_KEYUP = 0x0101;
+      private const int WM_SYSKEYDOWN = 0x0104;
 
       public static LowLevelKeyboardProc _proc = HookCallback;
       public static IntPtr _hookID = IntPtr.Zero;
@@ -136,16 +137,22 @@ namespace MouseXY
 
             switch ((Keys)vkCode)
             {
-               //open/close mouse control by keyboard
+               //double ctrl for open/close mouse control by keyboard
                case Keys.LControlKey:
                   {
                      ControlMethod(wParam);
                      break;
                   }
-               //double shift for change speed of mouse step
+               //double shift to change speed of mouse step to slow
                case Keys.LShiftKey:
                   {
                      ShiftMethod(wParam);
+                     break;
+                  }
+               //double left alt to change speed of mouse step to fast
+               case Keys.LMenu:
+                  {
+                     JumpMethod(wParam);
                      break;
                   }
             }
@@ -155,17 +162,25 @@ namespace MouseXY
                switch ((Keys)vkCode)
                {
                   case Keys.Up or Keys.W:
-                     SetCursorPos(pos.X, pos.Y - step);
-                     return (IntPtr)1; //Blokuje klávesu
+                     {
+                        SetCursorPos(pos.X, pos.Y - step);
+                        return (IntPtr)1; //Blokuje klávesu
+                     }
                   case Keys.Down or Keys.S:
-                     SetCursorPos(pos.X, pos.Y + step);
-                     return (IntPtr)1;
+                     {
+                        SetCursorPos(pos.X, pos.Y + step);
+                        return (IntPtr)1;
+                     }
                   case Keys.Left or Keys.A:
-                     SetCursorPos(pos.X - step, pos.Y);
-                     return (IntPtr)1;
+                     {
+                        SetCursorPos(pos.X - step, pos.Y);
+                        return (IntPtr)1;
+                     }
                   case Keys.Right or Keys.D:
-                     SetCursorPos(pos.X + step, pos.Y);
-                     return (IntPtr)1;
+                     {
+                        SetCursorPos(pos.X + step, pos.Y);
+                        return (IntPtr)1;
+                     }
                   case Keys.E:
                      {
                         LeftMouseDown(wParam); //držení levého tlačítka myši
@@ -185,7 +200,7 @@ namespace MouseXY
 
                if (KeyPos.keysPositionDict.Count > 0 && KeyPos.keysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
                {
-                  KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == ((Keys)vkCode).ToString());
+                  KeyPos? k = KeyPos.KeyPositions.Find(k => k.Key == ((Keys)vkCode).ToString());
                   if (k != null && k.IsActive) // pokud je klávesa aktivní
                   {
                      Point keyPos = KeyPos.keysPositionDict[(Keys)vkCode];
@@ -202,7 +217,7 @@ namespace MouseXY
                   KeyPos.CreateUpdateKeyPosition(key.ToString(), pos); // aktualizovat pozici v objektu KeyPos a seznamu KeyPosList
                   DBAccess.SaveOrUpdateKeyPos(key, pos, KeyPos.showedSetName); // uložit pozici do databáze
                   OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and SetKeyPos()
-                  return (IntPtr)1; // Blokuje klávesu
+                  return (IntPtr)1;
                }
             }
          }
@@ -211,13 +226,12 @@ namespace MouseXY
          return CallNextHookEx(_hookID, nCode, wParam, lParam);
       }
 
-      public static Action OnSetKeyToPos; // event for set key to position of mouse cursor
-
+      public static Action? OnSetKeyToPos; // event for set key to position of mouse cursor
 
       #endregion
 
       #region Open/Close Mouse Control by Keyboard
-      public static event Action<bool> OnMouseCursorHandleOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
+      public static event Action<bool>? OnMouseCursorHandleOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
       private static bool _mouseCursorHandle = false;
       public static bool mouseCursorHandle // property for enable/disable mouse control by keyboard
       {
@@ -231,6 +245,7 @@ namespace MouseXY
             }
          }
       }
+
       static Stopwatch stopwatch = Stopwatch.StartNew();
       private static void ControlMethod(IntPtr wParam) //open/close mouse control by keyboard
       {
@@ -238,7 +253,7 @@ namespace MouseXY
 
          if (stopwatch.ElapsedMilliseconds < Settings.delayMs)
          {
-            mouseCursorHandle = !mouseCursorHandle;
+            mouseCursorHandle = !mouseCursorHandle;d
             Sounds.PlaySound(mouseCursorHandle);
          }
          stopwatch.Restart();
@@ -249,11 +264,23 @@ namespace MouseXY
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
-         if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
+         if (mouseCursorHandle && DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
          {
-            step = step == 10 ? 2 : 10;
+            step = step == Settings.normalSpeed ? Settings.slowSpeed : Settings.normalSpeed; //Slowing down fastSpeed and normalSpeed, fasting up slowSpeed
          }
          dateTime = DateTime.Now;
+      }
+
+      static Stopwatch swJumpMethod = Stopwatch.StartNew();
+      private static void JumpMethod(IntPtr wParam)
+      {
+         if (wParam != (IntPtr)WM_SYSKEYDOWN) return;
+
+         if (mouseCursorHandle && swJumpMethod.ElapsedMilliseconds < Settings.delayMs)
+         {
+            step = step == Settings.fastSpeed ? Settings.normalSpeed : Settings.fastSpeed; //modify slowSpeed and normalSpeed to fastSpeed, slowing down fastSpeed
+         }
+         swJumpMethod.Restart();
       }
 
       #endregion
