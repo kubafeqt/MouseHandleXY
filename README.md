@@ -7,8 +7,9 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 ## Activation
 
-- Press **Left Control twice within 250 milliseconds** to toggle keyboard mouse control on or off.
-- Press **Left Shift twice within 250 milliseconds** to enable or disable precise cursor control.
+- Press **Left Control twice within 250 (or setted) milliseconds** to toggle keyboard mouse control on or off.
+- Press **Left Shift twice within 250 (or setted) milliseconds** to enable or disable precise cursor control or slow down fast cursor control to normal cursor control.
+- Press **Left ALT twice within 250 (or setted) milliseconds** to enable or disable fast cursor control.
 
 > **Cursor step size**: Normal = 10px, Precise = 2px
 
