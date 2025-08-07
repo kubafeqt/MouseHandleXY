@@ -26,7 +26,7 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
-**Version 1.04** - Export to json, import from json.
+**Version 1.04** - Export keypositions and setnames to json, import from json.
 
 ## Use Case
 
