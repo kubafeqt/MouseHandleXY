@@ -22,11 +22,13 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - **Right mouse click down**: Hold and release **Q** (simulates press and release)
 - **Middle mouse click down**: Hold and release **R** or **F** (simulates press and release)
 
+## New features:
+
 **Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
-**Version 1.04** - Export keypositions and setnames to json, import from json.
+**Version 1.04** - Export keypositions and setnames to json, import from json. **actually in alpha version**
 
 ## Use Case
 
