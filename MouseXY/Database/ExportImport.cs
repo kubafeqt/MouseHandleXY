@@ -50,8 +50,8 @@ namespace MouseXY
                string json = File.ReadAllText(fullPath);
                var data = JsonSerializer.Deserialize<ExpImpDataContainer>(json);
 
-               //if (data != null)
-               //{
+               if (data != null)
+               {
                   //var importedSetNames = data.setNames;
 
                   //foreach (var kvp in importedSetNames)
@@ -104,12 +104,12 @@ namespace MouseXY
                   //// Předpokládáme, že KeyPositions se importují bez kolizí
                   //KeyPos.KeyPositions = data.KeyPositions;
 
-               //   MessageBox.Show($"Import dokončen z \"{fileName}\".", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-               //}
-               //else
-               //{
-               //   MessageBox.Show("Soubor je prázdný nebo chybný.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-               //}
+                  //   MessageBox.Show($"Import dokončen z \"{fileName}\".", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               }
+               else
+               {
+                  MessageBox.Show("Soubor je prázdný nebo chybný.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               }
             }
             catch (Exception ex)
             {
