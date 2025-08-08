@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Data.SqlClient;
 
@@ -48,6 +49,45 @@ namespace MouseXY
       }
 
       #region KeysPosTable
+      public static void SaveOrUpdateAllKeyPos() //after import from file
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               foreach (var keypos in KeyPos.KeyPositions)
+               {
+                  string sql = @"
+                     IF EXISTS (SELECT 1 FROM KeyPosTable WHERE [Key] = @Key AND SetName = @SetName)
+                     BEGIN
+                        UPDATE KeyPosTable
+                        SET Position = @Position, IsActive = @IsActive, CreatedAt = @CreatedAt
+                        WHERE [Key] = @Key AND SetName = @SetName
+                     END
+                     ELSE
+                     BEGIN
+                        INSERT INTO KeyPosTable ([Key], Position, SetName, IsActive, CreatedAt)
+                        VALUES (@Key, @Position, @SetName, @IsActive, @CreatedAt)
+                     END";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@Key", keypos.Key.ToString());
+                     command.Parameters.AddWithValue("@Position", $"{keypos.Position.X},{keypos.Position.Y}");
+                     command.Parameters.AddWithValue("@SetName", keypos.SetName);
+                     command.Parameters.AddWithValue("@IsActive", keypos.IsActive);
+                     command.Parameters.AddWithValue("@CreatedAt", keypos.CreatedAt);
+                     command.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
       public static void SaveOrUpdateKeyPos(Keys key, Point position, string setname = "default", bool isActive = true)
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
@@ -148,6 +188,34 @@ namespace MouseXY
       #endregion
 
       #region SetNamesTable
+      public static void SaveAllSetNames()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               foreach (var kvp in KeyPos.setNames)
+               {
+                  string sql = @"IF NOT EXISTS (SELECT 1 FROM SetNamesTable WHERE Name = @SetName)
+                  BEGIN
+                      INSERT INTO SetNamesTable (Id, Name) VALUES (@SetId, @SetName);
+                  END";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@SetID", kvp.Key);
+                     command.Parameters.AddWithValue("@SetName", kvp.Value);
+                     command.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
       /// <summary>
       /// Accesible only through SetNameService class.
       /// </summary>

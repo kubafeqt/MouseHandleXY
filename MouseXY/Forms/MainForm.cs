@@ -59,15 +59,34 @@ namespace MouseXY
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
             }
          };
+
          // event for set key to position of mouse cursor
          MouseHandle.OnSetKeyToPos += () =>
          {
-            SetKeyPos();
+            SwitchSetKeyPos();
             UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
             if (cboxShowSetKeyPos.Checked && !showKeysPositions)
             {
                ShowKeysPositions();
             }
+         };
+
+         //event after importing json file
+         ExportImport.OnFileImport += () =>
+         {
+            cmbSelectSetname.Items.Clear();
+            //cmbSelectSetname.Items.Add("default");
+            //cmbSelectSetname.Items.AddRange(KeyPos.setNames.Values.ToArray());
+            //cmbSelectSetname.SelectedIndex = 0;
+            LoadComboBoxSetNames();
+            cmbSelectSetname.SelectedIndex = 0;
+            UpdateDataGridView();
+            if (cboxShowSetKeyPos.Checked && !showKeysPositions)
+            {
+               ShowKeysPositions();
+            }
+            DBAccess.SaveOrUpdateAllKeyPos();
+            DBAccess.SaveAllSetNames();
          };
 
          #endregion
@@ -106,10 +125,11 @@ namespace MouseXY
          cmbSelectSetname.Items.Add("default"); // Přidání výchozího SetName
          lbShowedSetname.Text = $"ShowedSetname: {KeyPos.showedSetName}";
          lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}";
-         foreach (var setName in KeyPos.setNames.Values)
-         {
-            cmbSelectSetname.Items.Add(setName);
-         }
+         cmbSelectSetname.Items.AddRange(KeyPos.setNames.Values.ToArray());
+         //foreach (var setName in KeyPos.setNames.Values)
+         //{
+         //   cmbSelectSetname.Items.Add(setName);
+         //}
          int index = cmbSelectSetname.Items.IndexOf(KeyPos.showedSetName);
          cmbSelectSetname.SelectedIndex = index;
          EnableDisableAddKeyToSetnameButton();
@@ -201,10 +221,10 @@ namespace MouseXY
 
       private void btnSetKeyPos_Click(object sender, EventArgs e)
       {
-         SetKeyPos();
+         SwitchSetKeyPos();
       }
 
-      private void SetKeyPos()
+      private void SwitchSetKeyPos()
       {
          MouseHandle.setKeyToPos = !MouseHandle.setKeyToPos; //then play sound when disabled
          timer.Enabled = MouseHandle.setKeyToPos; // start or stop timer
@@ -542,6 +562,9 @@ namespace MouseXY
          }
       }
 
+      /// <summary>
+      /// disable Add Key to setName button when selected setName matches showed setName
+      /// </summary>
       private void EnableDisableAddKeyToSetnameButton() => btnAddKeyToSelectedSetname.Enabled = KeyPos.selectedSetName != KeyPos.showedSetName ? true : false;
 
       private void btnAddKeyToSelectedSetname_Click(object sender, EventArgs e)
