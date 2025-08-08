@@ -26,6 +26,8 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
+**Version 1.04** - Export keypositions and setnames to json, import from json.
+
 ## Use Case
 
 This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
