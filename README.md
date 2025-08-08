@@ -22,17 +22,17 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - **Right mouse click down**: Hold and release **Q** (simulates press and release)
 - **Middle mouse click down**: Hold and release **R** or **F** (simulates press and release)
 
-## New features:
+## Use Case
+
+This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
+
+## New features
 
 **Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
 **Version 1.04** - Export keypositions and setnames to json, import from json. **actually in alpha version**
-
-## Use Case
-
-This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
 
 ## Planned Features and Innovations
 - Additional innovative features are currently in development and will be announced in future updates.
