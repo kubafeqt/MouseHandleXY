@@ -53,6 +53,7 @@ namespace MouseXY
             EnableDisableControlsOfTag("MouseControlDisable", !mouseCursorHandle); // Enable/disable controls for editing positions of keys
             lbMouseControl.Visible = mouseCursorHandle; // Zobrazí nebo skryje popisek pro ovládání myši
             lbMouseControl.Text = mouseCursorHandle ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
+            ShowControlsOfTag("ExpImp", !mouseCursorHandle);
             if (mouseCursorHandle)
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
@@ -386,8 +387,8 @@ namespace MouseXY
       {
          if (!btnAddSetname.Text.Equals("Edit", StringComparison.OrdinalIgnoreCase))
          {
-            int newId = KeyPos.PossibleFreeIdForSetname(); // Získání nového ID pro SetName
-            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
+            int newId = KeyPos.PossibleFreeIdInDictKeys(KeyPos.setNames); //Získání nového ID pro SetName
+            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower().Trim() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(setName))
             {
                if (cmbSelectSetname.Items.Contains(setName))
@@ -395,11 +396,10 @@ namespace MouseXY
                   MessageBox.Show($"Setname {setName} již existuje. Zvolte jiný název.");
                   return;
                }
-               KeyPos.setNames[newId] = setName; // Přidání nového názvu do slovníku setNames
-               // Aktualizace ComboBoxu s názvy nastavení:
-               cmbSelectSetname.Items.Add(setName);
-               cmbSelectSetname.SelectedItem = setName; // Nastaví právě přidaný název jako vybraný
-               ShowSetname(); // Nastaví aktuálně zobrazený setName
+               KeyPos.setNames[newId] = setName; //Přidání nového názvu do slovníku setNames
+               cmbSelectSetname.Items.Add(setName); //Aktualizace ComboBoxu s názvy nastavení
+               cmbSelectSetname.SelectedItem = setName; //Nastaví právě přidaný název jako vybraný
+               ShowSetname(); //Nastaví aktuálně zobrazený setName
                latestSelecedItem = null;
                tbSetname.Text = string.Empty;
                SetNameService.SaveOrUpdateSetName(newId, setName);
@@ -554,6 +554,19 @@ namespace MouseXY
          }
       }
 
+
+      #endregion
+
+      #region Export and Import
+      private void btnExport_Click(object sender, EventArgs e)
+      {
+         ExportImport.ExportToJson();
+      }
+
+      private void btnImport_Click(object sender, EventArgs e)
+      {
+         ExportImport.ImportFromJson();
+      }
 
       #endregion
 

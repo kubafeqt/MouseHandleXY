@@ -272,18 +272,18 @@ namespace MouseXY
       }
 
       static int latestSpeed = step;
-      static Stopwatch swJumpMethod = Stopwatch.StartNew();
+      static DateTime dtJumpMethod = DateTime.Now;
       private static void JumpMethod(IntPtr wParam) //change mouse step speed to faster
       {
          if (wParam != (IntPtr)WM_SYSKEYDOWN) return;
 
-         if (mouseCursorHandle && swJumpMethod.ElapsedMilliseconds < Settings.delayMs)
+         if (mouseCursorHandle && DateTime.Now.Subtract(dtJumpMethod).TotalMilliseconds < Settings.delayMs)
          {
             bool fastSpeed = step == Settings.fastSpeed;
             latestSpeed = fastSpeed ? latestSpeed : step;
             step = fastSpeed ? latestSpeed : Settings.fastSpeed; //modify slowSpeed and normalSpeed to fastSpeed, slowing down fastSpeed    
          }
-         swJumpMethod.Restart();
+         dtJumpMethod = DateTime.Now;
       }
 
       #endregion

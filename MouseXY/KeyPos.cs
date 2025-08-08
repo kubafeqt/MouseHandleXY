@@ -9,17 +9,17 @@ using System.Windows.Forms.VisualStyles;
 namespace MouseXY
 {
    class KeyPos
-   {
-      
+   {    
       public static List<KeyPos> KeyPositions = new(); //pro zobrazování dat
       public static Dictionary<Keys, Point> keysPositionDict { get; private set; } = new(); //pro manipulaci s klávesy - stores the position of the mouse for each key
       public static Dictionary<int, string> setNames = new();
+      //public static List<string> setNames = new();
       public static string selectedSetName = "default"; // pro manipulaci s klávesy - stores the name of the set of keys
       public static string showedSetName = "default"; // pro zobrazení v UI, aby se neukazoval default setName
 
-      public static int PossibleFreeIdForSetname()
+      public static int PossibleFreeIdInDictKeys(Dictionary<int, string> dict)
       {
-         var usedIds = setNames.Keys.OrderBy(id => id).ToList();
+         var usedIds = dict.Keys.OrderBy(id => id).ToList();
          int expectedId = 1;
          foreach (var id in usedIds)
          {

@@ -55,6 +55,8 @@
          lbShowedSetname = new Label();
          lbSelectedSetname = new Label();
          lbMouseControl = new Label();
+         btnExport = new Button();
+         btnImport = new Button();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          SuspendLayout();
@@ -157,7 +159,7 @@
          lbSetKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetKeyPos.Location = new Point(270, 156);
          lbSetKeyPos.Name = "lbSetKeyPos";
-         lbSetKeyPos.Size = new Size(155, 17);
+         lbSetKeyPos.Size = new Size(167, 19);
          lbSetKeyPos.TabIndex = 8;
          lbSetKeyPos.Text = "setKeyPos open - X: , Y:";
          lbSetKeyPos.Visible = false;
@@ -191,7 +193,7 @@
          // btnEditPosition
          // 
          btnEditPosition.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnEditPosition.Location = new Point(749, 152);
+         btnEditPosition.Location = new Point(751, 152);
          btnEditPosition.Name = "btnEditPosition";
          btnEditPosition.Size = new Size(75, 25);
          btnEditPosition.TabIndex = 11;
@@ -207,7 +209,7 @@
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbKeyPos.Location = new Point(617, 132);
          lbKeyPos.Name = "lbKeyPos";
-         lbKeyPos.Size = new Size(34, 17);
+         lbKeyPos.Size = new Size(38, 19);
          lbKeyPos.TabIndex = 12;
          lbKeyPos.Tag = "EditPos";
          lbKeyPos.Text = "Key:";
@@ -215,7 +217,7 @@
          // 
          // tbPosX
          // 
-         tbPosX.Location = new Point(638, 153);
+         tbPosX.Location = new Point(640, 153);
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
@@ -224,7 +226,7 @@
          // 
          // tbPosY
          // 
-         tbPosY.Location = new Point(701, 153);
+         tbPosY.Location = new Point(705, 153);
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
@@ -237,7 +239,7 @@
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosX.Location = new Point(617, 156);
          lbPosX.Name = "lbPosX";
-         lbPosX.Size = new Size(21, 17);
+         lbPosX.Size = new Size(22, 19);
          lbPosX.TabIndex = 15;
          lbPosX.Tag = "EditPos";
          lbPosX.Text = "X:";
@@ -247,9 +249,9 @@
          // 
          lbPosY.AutoSize = true;
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosY.Location = new Point(681, 156);
+         lbPosY.Location = new Point(683, 156);
          lbPosY.Name = "lbPosY";
-         lbPosY.Size = new Size(20, 17);
+         lbPosY.Size = new Size(22, 19);
          lbPosY.TabIndex = 16;
          lbPosY.Tag = "EditPos";
          lbPosY.Text = "Y:";
@@ -261,7 +263,7 @@
          lbSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetname.Location = new Point(505, 15);
          lbSetname.Name = "lbSetname";
-         lbSetname.Size = new Size(67, 17);
+         lbSetname.Size = new Size(74, 19);
          lbSetname.TabIndex = 17;
          lbSetname.Tag = "EditPos";
          lbSetname.Text = "SetName:";
@@ -351,7 +353,7 @@
          lbShowedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbShowedSetname.Location = new Point(492, 99);
          lbShowedSetname.Name = "lbShowedSetname";
-         lbShowedSetname.Size = new Size(117, 17);
+         lbShowedSetname.Size = new Size(128, 19);
          lbShowedSetname.TabIndex = 25;
          lbShowedSetname.Tag = "EditPos";
          lbShowedSetname.Text = "ShowedSetname: ";
@@ -363,7 +365,7 @@
          lbSelectedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSelectedSetname.Location = new Point(492, 116);
          lbSelectedSetname.Name = "lbSelectedSetname";
-         lbSelectedSetname.Size = new Size(120, 17);
+         lbSelectedSetname.Size = new Size(132, 19);
          lbSelectedSetname.TabIndex = 26;
          lbSelectedSetname.Tag = "EditPos";
          lbSelectedSetname.Text = "SelectedSetname: ";
@@ -381,11 +383,37 @@
          lbMouseControl.Text = "mouse control";
          lbMouseControl.Visible = false;
          // 
+         // btnExport
+         // 
+         btnExport.Font = new Font("Segoe UI Semibold", 8.727273F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnExport.Location = new Point(244, 66);
+         btnExport.Name = "btnExport";
+         btnExport.Size = new Size(77, 24);
+         btnExport.TabIndex = 28;
+         btnExport.Tag = "ExpImp";
+         btnExport.Text = "export";
+         btnExport.UseVisualStyleBackColor = true;
+         btnExport.Click += btnExport_Click;
+         // 
+         // btnImport
+         // 
+         btnImport.Font = new Font("Segoe UI Semibold", 8.727273F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnImport.Location = new Point(327, 66);
+         btnImport.Name = "btnImport";
+         btnImport.Size = new Size(77, 24);
+         btnImport.TabIndex = 29;
+         btnImport.Tag = "ExpImp";
+         btnImport.Text = "import";
+         btnImport.UseVisualStyleBackColor = true;
+         btnImport.Click += btnImport_Click;
+         // 
          // MainForm
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
          ClientSize = new Size(856, 656);
+         Controls.Add(btnImport);
+         Controls.Add(btnExport);
          Controls.Add(lbMouseControl);
          Controls.Add(lbSelectedSetname);
          Controls.Add(lbShowedSetname);
@@ -453,5 +481,7 @@
       private Label lbShowedSetname;
       private Label lbSelectedSetname;
       private Label lbMouseControl;
+      private Button btnExport;
+      private Button btnImport;
    }
 }
