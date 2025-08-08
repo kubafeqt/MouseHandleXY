@@ -44,7 +44,10 @@ namespace MouseXY
          SetName = setName;
          CreatedAt = createdAt;
          IsActive = isActive;
-         InitializeKeyPositions();
+         if (!ExportImport.import)
+         {
+            InitializeKeyPositions();
+         }
       }
 
       private void InitializeKeyPositions()

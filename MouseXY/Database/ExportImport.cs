@@ -15,8 +15,8 @@ namespace MouseXY
       {
          var data = new ExpImpDataContainer
          {
-            KeyPositions = KeyPos.KeyPositions,
-            setNames = KeyPos.setNames
+            KeyPositions = KeyPos.KeyPositions.ToList(),
+            setNames = KeyPos.setNames.ToDictionary()
          };
 
          var options = new JsonSerializerOptions { WriteIndented = true };
@@ -37,6 +37,7 @@ namespace MouseXY
          }
       }
 
+      public static bool import = false;
       public static void ImportFromJson()
       {
          string fileName = ImportBox.ShowJsonFileSelector(exportFolder);
@@ -47,8 +48,10 @@ namespace MouseXY
 
             try
             {
+               import = true;
                string json = File.ReadAllText(fullPath);
                var data = JsonSerializer.Deserialize<ExpImpDataContainer>(json);
+               import = false;
 
                if (data != null)
                {
