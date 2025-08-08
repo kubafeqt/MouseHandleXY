@@ -48,7 +48,7 @@ namespace MouseXY
 
             try
             {
-               import = true;
+               import = true; //do not add to KeyPos.KeyPosition list
                string json = File.ReadAllText(fullPath);
                var data = JsonSerializer.Deserialize<ExpImpDataContainer>(json);
                import = false;
@@ -68,13 +68,13 @@ namespace MouseXY
                            MessageBoxButtons.YesNoCancel,
                            MessageBoxIcon.Question
                        );
-                  if (defResult == DialogResult.Yes)
+                  if (defResult == DialogResult.Yes) //replace default setname and its saved keypositions
                   {
                      KeyPos.KeyPositions.RemoveAll(x => x.SetName == "default"); //smazat všechny se stejným setName
                      var newPositions = data.KeyPositions.Where(x => x.SetName == "default");
                      KeyPos.KeyPositions.AddRange(newPositions);
                   }
-                  else if (defResult == DialogResult.No)
+                  else if (defResult == DialogResult.No) //rename imported default setname
                   {
                      string newSetName = PromptForNewSetName("default");
                      if (!string.IsNullOrEmpty(newSetName))
@@ -85,15 +85,8 @@ namespace MouseXY
                            goto newSetNameExist;
                         }
                      }
-                     //else
-                     //{
-                     //   goto newSetNameExist;
-                     //}
                   }
-                  //else if (defResult == DialogResult.Cancel)
-                  //{
-                  //   //nothing, continue
-                  //}
+
 
                   //pokud setname existuje -> zachovej ID
                   //pokud setname neexistuje -> přidej nový setname s novým ID
@@ -172,7 +165,7 @@ namespace MouseXY
 
                   OnFileImport.Invoke();
                }
-               else
+               else //data == null
                {
                   MessageBox.Show("Soubor je prázdný nebo chybný.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                }
