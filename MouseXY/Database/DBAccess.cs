@@ -61,7 +61,7 @@ namespace MouseXY
                   string sql = @"
                      IF EXISTS (SELECT 1 FROM KeyPosTable WHERE [Key] = @Key AND SetName = @SetName)
                      BEGIN
-                        UPDATE KeyPosTable
+                        Update KeyPosTable
                         SET Position = @Position, IsActive = @IsActive, CreatedAt = @CreatedAt
                         WHERE [Key] = @Key AND SetName = @SetName
                      END
