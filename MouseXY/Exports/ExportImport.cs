@@ -48,6 +48,14 @@ namespace MouseXY
 
             try
             {
+
+            }
+            catch (Exception)
+            {
+
+               throw;
+            }
+            {
                import = true; //do not add to KeyPos.KeyPosition list
                string json = File.ReadAllText(fullPath);
                var data = JsonSerializer.Deserialize<ExpImpDataContainer>(json);
@@ -61,7 +69,7 @@ namespace MouseXY
                   //default setname:
                   string defSetName = "default";
                newSetNameExist:
-                  string msg = $"Chceš přepsat {defSetName} setname?\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = nepřepisovat";
+                  string msg = $"Chceš přepsat \"{defSetName}\" setname?\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = nepřepisovat";
                   DialogResult defResult = MessageBox.Show(
                            msg,
                            "Kolize názvu",
