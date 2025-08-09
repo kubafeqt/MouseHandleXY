@@ -11,7 +11,7 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - Press **Left Shift twice within 250 (or setted) milliseconds** to enable or disable precise cursor control or slow down fast cursor control to normal cursor control.
 - Press **Left ALT twice within 250 (or setted) milliseconds** to enable or disable fast cursor control.
 
-> **Cursor step size**: Normal = 10px, Precise = 2px
+> **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
 **Version 1.01** - Configurable hotkeys and opening/closing controls delays
 
@@ -32,8 +32,10 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
-**Version 1.04** - Export keypositions and setnames to json, import from json. **actually in alpha version**
+**Version 1.04** - Export keypositions and setnames to json, import from json. ( **actually in alpha version** )
 
 ## Planned Features and Innovations
+- View on exported files, view on files before import - advanced UI and UI,
+- Multilingual support,
 - Additional innovative features are currently in development and will be announced in future updates.
 - Custom user-defined sounds  
