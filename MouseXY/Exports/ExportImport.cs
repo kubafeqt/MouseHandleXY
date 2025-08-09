@@ -48,14 +48,6 @@ namespace MouseXY
 
             try
             {
-
-            }
-            catch (Exception)
-            {
-
-               throw;
-            }
-            {
                import = true; //do not add to KeyPos.KeyPosition list
                string json = File.ReadAllText(fullPath);
                var data = JsonSerializer.Deserialize<ExpImpDataContainer>(json);
