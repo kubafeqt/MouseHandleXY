@@ -15,8 +15,8 @@ namespace MouseXY
       {
          var data = new ExpImpDataContainer
          {
-            KeyPositions = KeyPos.KeyPositions.ToList(),
-            setNames = KeyPos.setNames.ToDictionary()
+            KeyPositionsList = KeyPos.KeyPositionsList.ToList(),
+            SetNamesDict = KeyPos.SetNamesDict.ToDictionary()
          };
 
          var options = new JsonSerializerOptions { WriteIndented = true };
@@ -37,7 +37,7 @@ namespace MouseXY
          }
       }
 
-      public static bool import = false;
+      public static bool import = false; //for KeyPos constructor - do not add to KeyPositions list
       public static void ImportFromJson()
       {
          string fileName = ImportBox.ShowJsonFileSelector(exportFolder);
@@ -53,10 +53,10 @@ namespace MouseXY
                var data = JsonSerializer.Deserialize<ExpImpDataContainer>(json);
                import = false;
 
-               if (data != null)
+               if (data != null && data.SetNamesDict != null && data.KeyPositionsList != null)
                {
-                  var importedSetNames = data.setNames;
-                  var importedKeyPositions = data.KeyPositions;
+                  var importedSetNames = data.SetNamesDict;
+                  var importedKeyPositions = data.KeyPositionsList;
 
                   //default setname:
                   string defSetName = "default";
@@ -72,21 +72,21 @@ namespace MouseXY
                   
                   if (defResult == DialogResult.Yes) //replace default setname and its saved keypositions
                   {
-                     KeyPos.KeyPositions.RemoveAll(x => x.SetName == defSetName); //smazat všechny se stejným setName v aktual
+                     KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == defSetName); //smazat všechny se stejným setName v aktual
                      if (defSetName != "default")
                      {
                         importedKeyPositions.RemoveAll(x => x.SetName == defSetName); //smazat všechny se stejným setName v imported
                         ChangeSetNamesInImportedKeyPositions(importedKeyPositions, "default", defSetName);
                      }
                      var newPositions = importedKeyPositions.Where(x => x.SetName == defSetName);
-                     KeyPos.KeyPositions.AddRange(newPositions);
+                     KeyPos.KeyPositionsList.AddRange(newPositions);
                   }
                   else if (defResult == DialogResult.No) //rename imported default setname
                   {
                      string newSetName = PromptForNewSetName("default");
                      if (!string.IsNullOrEmpty(newSetName))
                      {
-                        if (KeyPos.setNames.ContainsValue(newSetName))
+                        if (KeyPos.SetNamesDict.ContainsValue(newSetName))
                         {
                            defSetName = newSetName;
                            goto newSetNameExist;
@@ -107,7 +107,7 @@ namespace MouseXY
                      string setName = kvp.Value;
 
                      // Kolize
-                     if (KeyPos.setNames.ContainsValue(setName))
+                     if (KeyPos.SetNamesDict.ContainsValue(setName))
                      {
                      setNameExist:
                         DialogResult result = MessageBox.Show(
@@ -128,7 +128,7 @@ namespace MouseXY
                            string newSetName = PromptForNewSetName(setName);
                            if (!string.IsNullOrEmpty(newSetName))
                            {
-                              if (KeyPos.setNames.ContainsValue(newSetName))
+                              if (KeyPos.SetNamesDict.ContainsValue(newSetName))
                               {
                                  setName = newSetName;
                                  goto setNameExist;
@@ -154,19 +154,19 @@ namespace MouseXY
                   foreach (var kvp in importedSetNames.ToDictionary())
                   {
                      string setname = kvp.Value;
-                     if (KeyPos.setNames.ContainsValue(setname))
+                     if (KeyPos.SetNamesDict.ContainsValue(setname))
                      {
-                        int defId = KeyPos.setNames.FirstOrDefault(x => x.Value == setname).Key;
-                        KeyPos.setNames[defId] = setname;
-                        KeyPos.KeyPositions.RemoveAll(x => x.SetName == setname); //smazat všechny se stejným setName
+                        int defId = KeyPos.SetNamesDict.FirstOrDefault(x => x.Value == setname).Key;
+                        KeyPos.SetNamesDict[defId] = setname;
+                        KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == setname); //smazat všechny se stejným setName
                      }
                      else
                      {
-                        int newId = KeyPos.PossibleFreeIdInDictKeys(KeyPos.setNames);
-                        KeyPos.setNames[newId] = setname;
+                        int newId = KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict);
+                        KeyPos.SetNamesDict[newId] = setname;
                      }
-                     var newPositions = data.KeyPositions.Where(x => x.SetName == setname);
-                     KeyPos.KeyPositions.AddRange(newPositions);
+                     var newPositions = importedKeyPositions.Where(x => x.SetName == setname);
+                     KeyPos.KeyPositionsList.AddRange(newPositions);
                   }
 
                   ////importovat pouze keypos kde je setname

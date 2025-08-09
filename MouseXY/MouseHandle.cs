@@ -198,12 +198,12 @@ namespace MouseXY
                      }
                }
 
-               if (KeyPos.keysPositionDict.Count > 0 && KeyPos.keysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
+               if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
                {
-                  KeyPos? k = KeyPos.KeyPositions.Find(k => k.Key == ((Keys)vkCode).ToString());
+                  KeyPos? k = KeyPos.KeyPositionsList.Find(k => k.Key == ((Keys)vkCode).ToString());
                   if (k != null && k.IsActive) // pokud je klávesa aktivní
                   {
-                     Point keyPos = KeyPos.keysPositionDict[(Keys)vkCode];
+                     Point keyPos = KeyPos.KeysPositionDict[(Keys)vkCode];
                      SetCursorPos(keyPos.X, keyPos.Y);
                      return (IntPtr)1; // Blokuje klávesu
                   }

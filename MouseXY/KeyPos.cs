@@ -10,25 +10,33 @@ namespace MouseXY
 {
    class KeyPos
    {    
-      public static List<KeyPos> KeyPositions = new(); //pro zobrazování dat
-      public static Dictionary<Keys, Point> keysPositionDict { get; private set; } = new(); //pro manipulaci s klávesy - stores the position of the mouse for each key
-      public static Dictionary<int, string> setNames = new();
+      public static List<KeyPos> KeyPositionsList = new(); //pro zobrazování dat
+      public static Dictionary<Keys, Point> KeysPositionDict { get; private set; } = new(); //pro manipulaci s klávesy - stores the position of the mouse for each key
+      public static Dictionary<int, string> SetNamesDict = new();
       //public static List<string> setNames = new();
       public static string selectedSetName = "default"; // pro manipulaci s klávesy - stores the name of the set of keys
       public static string showedSetName = "default"; // pro zobrazení v UI, aby se neukazoval default setName
 
       public static int PossibleFreeIdInDictKeys(Dictionary<int, string> dict)
       {
-         var usedIds = dict.Keys.OrderBy(id => id).ToList();
-         int expectedId = 1;
-         foreach (var id in usedIds)
+         try
          {
-            if (id == expectedId)
-               expectedId++;
-            else if (id > expectedId)
-               break; // expectedId je volné
+            var usedIds = dict.Keys.OrderBy(id => id).ToList();
+            int expectedId = 1;
+            foreach (var id in usedIds)
+            {
+               if (id == expectedId)
+                  expectedId++;
+               else if (id > expectedId)
+                  break; // expectedId je volné
+            }
+            return expectedId;
          }
-         return expectedId;
+         catch (Exception ex)
+         {
+            MessageBox.Show($"{ex.Message}");
+            return -1;
+         }
       }
 
       public string Key { get; set; }
@@ -52,17 +60,17 @@ namespace MouseXY
 
       private void InitializeKeyPositions()
       {
-         if (!KeyPositions.Any(k => k.Key == Key && k.SetName == SetName)) //key in setame does not exist - add new
+         if (!KeyPositionsList.Any(k => k.Key == Key && k.SetName == SetName)) //key in setame does not exist - add new
          {
-            KeyPositions.Add(this);
+            KeyPositionsList.Add(this);
             if (SetName == selectedSetName)
             {
-               keysPositionDict.Add((Keys)Enum.Parse(typeof(Keys), Key), Position);
+               KeysPositionDict.Add((Keys)Enum.Parse(typeof(Keys), Key), Position);
             }
          }
          else //key in setName exists - edit
          {
-            var existingKeyPos = KeyPositions.Find(k => k.Key == Key && k.SetName == SetName);
+            var existingKeyPos = KeyPositionsList.Find(k => k.Key == Key && k.SetName == SetName);
             if (existingKeyPos != null)
             {
                existingKeyPos.Position = Position;
@@ -71,7 +79,7 @@ namespace MouseXY
                existingKeyPos.IsActive = IsActive;
                if (SetName == selectedSetName)
                {
-                  keysPositionDict[(Keys)Enum.Parse(typeof(Keys), Key)] = Position; // update the position in the dictionary
+                  KeysPositionDict[(Keys)Enum.Parse(typeof(Keys), Key)] = Position; // update the position in the dictionary
                }
             }
          }
@@ -80,13 +88,13 @@ namespace MouseXY
       public static void CreateUpdateKeyPosition(string key, Point position, bool selectedSetname = true) // updates the position of the key in the selected set
       {
          string setName = selectedSetname ? selectedSetName : showedSetName; //determine if we are updating the selected set or the displayed set
-         var existingKeyPos = KeyPositions.Find(k => k.Key == key && k.SetName == setName);
+         var existingKeyPos = KeyPositionsList.Find(k => k.Key == key && k.SetName == setName);
          if (existingKeyPos != null)
          {
             existingKeyPos.Position = position;
             if (selectedSetname)
             {
-               keysPositionDict[(Keys)Enum.Parse(typeof(Keys), key)] = position; // update the position in the dictionary
+               KeysPositionDict[(Keys)Enum.Parse(typeof(Keys), key)] = position; // update the position in the dictionary
             }
          }
          else
@@ -99,25 +107,25 @@ namespace MouseXY
       {
          if (key == null)
          {
-            keysPositionDict.Clear();
-            foreach (var keyPos in KeyPositions.Where(k => k.SetName == selectedSetName && k.IsActive))
+            KeysPositionDict.Clear();
+            foreach (var keyPos in KeyPositionsList.Where(k => k.SetName == selectedSetName && k.IsActive))
             {
-               keysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
+               KeysPositionDict[(Keys)Enum.Parse(typeof(Keys), keyPos.Key)] = keyPos.Position;
             }
          }
          else if (selectedSetName == showedSetName)//dont have to update all keys, just the one specified
          {
-            var keyPos = KeyPositions.Find(k => k.Key == key.ToString() && k.SetName == selectedSetName && k.IsActive); //only from selected setname will be in dictionary
+            var keyPos = KeyPositionsList.Find(k => k.Key == key.ToString() && k.SetName == selectedSetName && k.IsActive); //only from selected setname will be in dictionary
             if (keyPos != null)
             {
-               keysPositionDict[(Keys)key] = keyPos.Position;
+               KeysPositionDict[(Keys)key] = keyPos.Position;
             }
          }
       }
 
       public static void UpdateKeysSetName(string newSetName, string oldSetName)
       {
-         KeyPositions.Where(k => k.SetName == oldSetName).ToList().ForEach(k =>
+         KeyPositionsList.Where(k => k.SetName == oldSetName).ToList().ForEach(k =>
          {
             k.SetName = newSetName;
          });
@@ -126,7 +134,7 @@ namespace MouseXY
       public static void AddKeyToSelectedSetname(string key, Point position)
       {
          Keys Key = (Keys)Enum.Parse(typeof(Keys), key);
-         if (!KeyPositions.Any(k => k.Key == key && k.SetName == selectedSetName)) // pokud klíč ještě neexistuje v daném setu
+         if (!KeyPositionsList.Any(k => k.Key == key && k.SetName == selectedSetName)) // pokud klíč ještě neexistuje v daném setu
          {
             new KeyPos(key, position, selectedSetName, DateTime.Now, true);
             DBAccess.SaveOrUpdateKeyPos(Key, position, selectedSetName);
@@ -140,7 +148,7 @@ namespace MouseXY
          }
          else // pokud klíč již existuje v daném setu - kontrola na duplikát nebo přepsání
          {
-            var existing = KeyPositions.Find(k => k.Key == key && k.SetName == selectedSetName);
+            var existing = KeyPositionsList.Find(k => k.Key == key && k.SetName == selectedSetName);
             if (existing.Position == position) // Klíč již existuje s těmito souřadnicemi
             {
                MessageBox.Show(
@@ -178,11 +186,11 @@ namespace MouseXY
       /// <param name="setname">název setu k vymazání kláves</param>
       public static void DeleteKeysBySetName(int setId, string setname)
       {
-         KeyPositions.Where(k => k.SetName == setname).ToList().ForEach(k =>
+         KeyPositionsList.Where(k => k.SetName == setname).ToList().ForEach(k =>
          {
-            KeyPositions.Remove(k);
+            KeyPositionsList.Remove(k);
          });
-         setNames.Remove(setId); // odstraní setName z mapy setNames
+         SetNamesDict.Remove(setId); // odstraní setName z mapy setNames
       }
 
    }

@@ -56,7 +56,7 @@ namespace MouseXY
             try
             {
                connection.Open();
-               foreach (var keypos in KeyPos.KeyPositions)
+               foreach (var keypos in KeyPos.KeyPositionsList)
                {
                   string sql = @"
                      IF EXISTS (SELECT 1 FROM KeyPosTable WHERE [Key] = @Key AND SetName = @SetName)
@@ -195,7 +195,7 @@ namespace MouseXY
             try
             {
                connection.Open();
-               foreach (var kvp in KeyPos.setNames)
+               foreach (var kvp in KeyPos.SetNamesDict)
                {
                   string sql = @"IF NOT EXISTS (SELECT 1 FROM SetNamesTable WHERE Name = @SetName)
                   BEGIN
@@ -300,7 +300,7 @@ namespace MouseXY
                      {
                         int setId = reader.GetInt32(reader.GetOrdinal("Id"));
                         string setName = reader["Name"].ToString();
-                        KeyPos.setNames[setId] = setName; // Přidá nebo aktualizuje setName v dictionary
+                        KeyPos.SetNamesDict[setId] = setName; // Přidá nebo aktualizuje setName v dictionary
                      }
                   }
                }
