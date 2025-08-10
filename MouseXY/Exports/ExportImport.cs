@@ -91,23 +91,21 @@ namespace MouseXY
                            defSetName = newSetName;
                            goto newSetNameExist;
                         }
-                        //importedSetNames[kvp.Key] = newSetName;
                         importedSetNames.Add(KeyPos.PossibleFreeIdInDictKeys(importedSetNames), newSetName);
                         ChangeSetNamesInImportedKeyPositions(importedKeyPositions, defSetName, newSetName);
                      }
+                     else
+                     {
+                        goto newSetNameExist;
+                     }
                   }
-
-
-                  //pokud setname existuje -> zachovej ID
-                  //pokud setname neexistuje -> přidej nový setname s novým ID
 
                   // oveření importovaných setNames
                   foreach (var kvp in importedSetNames.ToDictionary())
                   {
                      string setName = kvp.Value;
 
-                     // Kolize
-                     if (KeyPos.SetNamesDict.ContainsValue(setName))
+                     if (KeyPos.SetNamesDict.ContainsValue(setName)) //kolize
                      {
                      setNameExist:
                         DialogResult result = MessageBox.Show(
@@ -120,6 +118,10 @@ namespace MouseXY
                         if (result == DialogResult.Yes)
                         {
                            importedSetNames[kvp.Key] = setName;
+                           if (setName != kvp.Value)
+                           {
+                              ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, setName);
+                           }
                            continue; // Přepsat = ponecháme
                         }
                         else if (result == DialogResult.No)
@@ -133,9 +135,8 @@ namespace MouseXY
                                  setName = newSetName;
                                  goto setNameExist;
                               }
-                              //importedSetNames.Remove(kvp.Key);
                               importedSetNames[kvp.Key] = newSetName;
-                              ChangeSetNamesInImportedKeyPositions(importedKeyPositions, setName, newSetName);
+                              ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, newSetName);
                            }
                            else
                            {
@@ -149,6 +150,9 @@ namespace MouseXY
                         }
                      }
                   }
+
+                  //pokud setname existuje -> zachovej ID
+                  //pokud setname neexistuje -> přidej nový setname s novým ID
 
                   // Import setnames a keypositons pouze, kde je setname
                   foreach (var kvp in importedSetNames.ToDictionary())
