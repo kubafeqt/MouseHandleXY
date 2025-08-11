@@ -7,28 +7,37 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 ## Activation
 
-- Press **Left Control twice within 250 milliseconds** to toggle keyboard mouse control on or off.
-- Press **Left Shift twice within 250 milliseconds** to enable or disable precise cursor control.
+- Press **Left Control twice within 250 (or setted) milliseconds** to toggle keyboard mouse control on or off.
+- Press **Left Shift twice within 250 (or setted) milliseconds** to enable or disable precise cursor control or slow down fast cursor control to normal cursor control.
+- Press **Left ALT twice within 250 (or setted) milliseconds** to enable or disable fast cursor control.
 
-> **Cursor step size**: Normal = 10px, Precise = 2px
+> **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
 **Version 1.01** - Configurable hotkeys and opening/closing controls delays
 
 ## Controls
 
-- **Move cursor**: Arrow keys or **W / A / S / D**
-- **Left click**: Hold and release **E** (simulates press and release)
-- **Right click**: Press **Q**
-- **Middle mouse held**: Press **R** or **F** , then again press **R** or **F** to unheld middle mouse button
-
-**Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
-
-**Version 1.03** - You can add/remove sets of configurable hotkeys
+- **Move cursor movement**: Arrow keys or **W / A / S / D**
+- **Left mouse click down**: Hold and release **E** (simulates press and release)
+- **Right mouse click down**: Hold and release **Q** (simulates press and release)
+- **Middle mouse click down**: Hold and release **R** or **F** (simulates press and release)
 
 ## Use Case
 
 This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
 
+## New features
+
+**Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
+
+**Version 1.03** - You can add/remove/edit sets of configurable hotkeys
+
+**Version 1.04** - Export keypositions and setnames to json, import from json. ( **actually in alpha version** )
+
+[ **alpha version - refactoring ImportFromJson method in ImportExport class** ]
+
 ## Planned Features and Innovations
+- View on exported files, view on files before import - advanced UI and UI,
+- Multilingual support,
 - Additional innovative features are currently in development and will be announced in future updates.
 - Custom user-defined sounds  

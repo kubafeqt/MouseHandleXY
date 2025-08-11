@@ -12,6 +12,9 @@ namespace MouseXY
       #region Imports from user32.dll and kernel32.dll
       private const int WH_KEYBOARD_LL = 13;
       private const int WM_KEYDOWN = 0x0100;
+      private const int WM_KEYUP = 0x0101;
+      private const int WM_SYSKEYDOWN = 0x0104;
+
       public static LowLevelKeyboardProc _proc = HookCallback;
       public static IntPtr _hookID = IntPtr.Zero;
 
@@ -55,8 +58,6 @@ namespace MouseXY
       private const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
       private const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
 
-      private const int WM_KEYUP = 0x0101;
-
       #endregion
 
       #region Mouse Control Methods
@@ -75,10 +76,19 @@ namespace MouseXY
          }
       }
 
-      private static void RightMouseClick()
+      private static bool isRightMouseDown = false;
+      private static void RightMouseDown(IntPtr wParam)
       {
-         mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
-         mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+         if (wParam == (IntPtr)WM_KEYDOWN && !isRightMouseDown)
+         {
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
+            isRightMouseDown = true;
+         }
+         else if (wParam == (IntPtr)WM_KEYUP && isRightMouseDown)
+         {
+            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+            isRightMouseDown = false;
+         }
       }
 
       private static bool isMiddleMouseDown = false;
@@ -95,24 +105,6 @@ namespace MouseXY
             isMiddleMouseDown = false;
          }
       }
-
-      //public static bool middleMouseHeld = false;
-      //public static void MiddleMouseHeld(IntPtr wParam)
-      //{
-      //   if (wParam == (IntPtr)WM_KEYDOWN)
-      //   {
-      //      middleMouseHeld = !middleMouseHeld;
-
-      //      if (middleMouseHeld)
-      //      {
-      //         mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
-      //      }
-      //      else
-      //      {
-      //         mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
-      //      }
-      //   }
-      //}
 
       #endregion
 
@@ -135,7 +127,7 @@ namespace MouseXY
          Keys.NumLock
       };
 
-      static int step = 10;
+      static int step = Settings.normalSpeed;
       private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) //captures key presses
       {
          if (nCode >= 0)
@@ -145,16 +137,22 @@ namespace MouseXY
 
             switch ((Keys)vkCode)
             {
-               //open/close mouse control by keyboard
+               //double ctrl for open/close mouse control by keyboard
                case Keys.LControlKey:
                   {
                      ControlMethod(wParam);
                      break;
                   }
-               //double shift for change speed of mouse step
+               //double shift to change speed of mouse step to slow
                case Keys.LShiftKey:
                   {
                      ShiftMethod(wParam);
+                     break;
+                  }
+               //double left alt to change speed of mouse step to fast
+               case Keys.LMenu:
+                  {
+                     JumpMethod(wParam);
                      break;
                   }
             }
@@ -164,33 +162,33 @@ namespace MouseXY
                switch ((Keys)vkCode)
                {
                   case Keys.Up or Keys.W:
-                     SetCursorPos(pos.X, pos.Y - step);
-                     return (IntPtr)1; //Blokuje klávesu
+                     {
+                        SetCursorPos(pos.X, pos.Y - step);
+                        return (IntPtr)1; //Blokuje klávesu
+                     }
                   case Keys.Down or Keys.S:
-                     SetCursorPos(pos.X, pos.Y + step);
-                     return (IntPtr)1;
+                     {
+                        SetCursorPos(pos.X, pos.Y + step);
+                        return (IntPtr)1;
+                     }
                   case Keys.Left or Keys.A:
-                     SetCursorPos(pos.X - step, pos.Y);
-                     return (IntPtr)1;
+                     {
+                        SetCursorPos(pos.X - step, pos.Y);
+                        return (IntPtr)1;
+                     }
                   case Keys.Right or Keys.D:
-                     SetCursorPos(pos.X + step, pos.Y);
-                     return (IntPtr)1;
+                     {
+                        SetCursorPos(pos.X + step, pos.Y);
+                        return (IntPtr)1;
+                     }
                   case Keys.E:
                      {
                         LeftMouseDown(wParam); //držení levého tlačítka myši
-                        //if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
-                        //{
-                        //   MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-                        //}
                         return (IntPtr)1;
                      }
                   case Keys.Q:
                      {
-                        RightMouseClick(); //kliknutí pravým tlačítkem myši
-                        //if (middleMouseHeld) //pokud je prostřední tlačítko myši drženo
-                        //{
-                        //   MiddleMouseHeld(wParam); //přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-                        //}
+                        RightMouseDown(wParam); //kliknutí pravým tlačítkem myši
                         return (IntPtr)1;
                      }
                   case Keys.R or Keys.F:
@@ -198,19 +196,14 @@ namespace MouseXY
                         MiddleMouseDown(wParam); //držení prostředního tlačítka myši
                         return (IntPtr)1;
                      }
-                  //case Keys.F:
-                  //   {
-                  //      MiddleMouseHeld(wParam); //přepíná držení prostředního tlačítka myši
-                  //      return (IntPtr)1;
-                  //   }
                }
 
-               if (KeyPos.keysPositionDict.Count > 0 && KeyPos.keysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
+               if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
                {
-                  KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == ((Keys)vkCode).ToString());
+                  KeyPos? k = KeyPos.KeyPositionsList.Find(k => k.Key == ((Keys)vkCode).ToString());
                   if (k != null && k.IsActive) // pokud je klávesa aktivní
                   {
-                     Point keyPos = KeyPos.keysPositionDict[(Keys)vkCode];
+                     Point keyPos = KeyPos.KeysPositionDict[(Keys)vkCode];
                      SetCursorPos(keyPos.X, keyPos.Y);
                      return (IntPtr)1; // Blokuje klávesu
                   }
@@ -224,7 +217,7 @@ namespace MouseXY
                   KeyPos.CreateUpdateKeyPosition(key.ToString(), pos); // aktualizovat pozici v objektu KeyPos a seznamu KeyPosList
                   DBAccess.SaveOrUpdateKeyPos(key, pos, KeyPos.showedSetName); // uložit pozici do databáze
                   OnSetKeyToPos?.Invoke(); // invoke event to set key to show keys positions in datagridview and SetKeyPos()
-                  return (IntPtr)1; // Blokuje klávesu
+                  return (IntPtr)1;
                }
             }
          }
@@ -233,13 +226,12 @@ namespace MouseXY
          return CallNextHookEx(_hookID, nCode, wParam, lParam);
       }
 
-      public static Action OnSetKeyToPos; // event for set key to position of mouse cursor
-
+      public static Action? OnSetKeyToPos; // event for set key to position of mouse cursor
 
       #endregion
 
       #region Open/Close Mouse Control by Keyboard
-      public static event Action<bool> OnMouseCursorHandleOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
+      public static event Action<bool>? OnMouseCursorHandleOpenChanged; // event when change mouseCursor property for enable/disable button to set key position
       private static bool _mouseCursorHandle = false;
       public static bool mouseCursorHandle // property for enable/disable mouse control by keyboard
       {
@@ -253,6 +245,7 @@ namespace MouseXY
             }
          }
       }
+
       static Stopwatch stopwatch = Stopwatch.StartNew();
       private static void ControlMethod(IntPtr wParam) //open/close mouse control by keyboard
       {
@@ -267,15 +260,30 @@ namespace MouseXY
       }
 
       static DateTime dateTime = DateTime.Now;
-      private static void ShiftMethod(IntPtr wParam) //change mouse step speed
+      private static void ShiftMethod(IntPtr wParam) //change mouse step speed to slower
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
-         if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
+         if (mouseCursorHandle && DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
          {
-            step = step == 10 ? 2 : 10;
+            step = step == Settings.normalSpeed ? Settings.slowSpeed : Settings.normalSpeed; //Slowing down fastSpeed and normalSpeed, fasting up slowSpeed
          }
          dateTime = DateTime.Now;
+      }
+
+      static int latestSpeed = step;
+      static DateTime dtJumpMethod = DateTime.Now;
+      private static void JumpMethod(IntPtr wParam) //change mouse step speed to faster
+      {
+         if (wParam != (IntPtr)WM_SYSKEYDOWN) return;
+
+         if (mouseCursorHandle && DateTime.Now.Subtract(dtJumpMethod).TotalMilliseconds < Settings.delayMs)
+         {
+            bool fastSpeed = step == Settings.fastSpeed;
+            latestSpeed = fastSpeed ? latestSpeed : step;
+            step = fastSpeed ? latestSpeed : Settings.fastSpeed; //modify slowSpeed and normalSpeed to fastSpeed, slowing down fastSpeed    
+         }
+         dtJumpMethod = DateTime.Now;
       }
 
       #endregion

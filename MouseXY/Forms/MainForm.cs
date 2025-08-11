@@ -53,24 +53,40 @@ namespace MouseXY
             EnableDisableControlsOfTag("MouseControlDisable", !mouseCursorHandle); // Enable/disable controls for editing positions of keys
             lbMouseControl.Visible = mouseCursorHandle; // Zobrazí nebo skryje popisek pro ovládání myši
             lbMouseControl.Text = mouseCursorHandle ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
+            ShowControlsOfTag("ExpImp", !mouseCursorHandle);
             if (mouseCursorHandle)
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
             }
-            //else if (MouseHandle.middleMouseHeld) // pokud je prostřední tlačítko myši drženo
-            //{
-            //   MouseHandle.MiddleMouseHeld(0x0000000000000100); // přepne držení prostředního tlačítka myši - důležitý, jinak se hodně může zaseknout
-            //}
          };
+
          // event for set key to position of mouse cursor
          MouseHandle.OnSetKeyToPos += () =>
          {
-            SetKeyPos();
+            SwitchSetKeyPos();
             UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
             if (cboxShowSetKeyPos.Checked && !showKeysPositions)
             {
                ShowKeysPositions();
             }
+         };
+
+         //event after importing json file
+         ExportImport.OnFileImport += () =>
+         {
+            cmbSelectSetname.Items.Clear();
+            //cmbSelectSetname.Items.Add("default");
+            //cmbSelectSetname.Items.AddRange(KeyPos.setNames.Values.ToArray());
+            //cmbSelectSetname.SelectedIndex = 0;
+            LoadComboBoxSetNames();
+            cmbSelectSetname.SelectedIndex = 0;
+            UpdateDataGridView();
+            if (cboxShowSetKeyPos.Checked && !showKeysPositions)
+            {
+               ShowKeysPositions();
+            }
+            DBAccess.SaveOrUpdateAllKeyPos();
+            DBAccess.SaveAllSetNames();
          };
 
          #endregion
@@ -109,10 +125,11 @@ namespace MouseXY
          cmbSelectSetname.Items.Add("default"); // Přidání výchozího SetName
          lbShowedSetname.Text = $"ShowedSetname: {KeyPos.showedSetName}";
          lbSelectedSetname.Text = $"SelectedSetname: {KeyPos.selectedSetName}";
-         foreach (var setName in KeyPos.setNames.Values)
-         {
-            cmbSelectSetname.Items.Add(setName);
-         }
+         cmbSelectSetname.Items.AddRange(KeyPos.SetNamesDict.Values.ToArray());
+         //foreach (var setName in KeyPos.setNames.Values)
+         //{
+         //   cmbSelectSetname.Items.Add(setName);
+         //}
          int index = cmbSelectSetname.Items.IndexOf(KeyPos.showedSetName);
          cmbSelectSetname.SelectedIndex = index;
          EnableDisableAddKeyToSetnameButton();
@@ -125,7 +142,7 @@ namespace MouseXY
       private void UpdateDataGridView(int selectedRowIndex = 0)
       {
          bs = new BindingSource();
-         bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositions.Where(k => k.SetName == KeyPos.showedSetName).ToList());
+         bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositionsList.Where(k => k.SetName == KeyPos.showedSetName).ToList());
          dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
          selectedRowIndex = selectedRowIndex > 0 && dgvShowKeysPositions.RowCount > selectedRowIndex ? selectedRowIndex : --selectedRowIndex;
          if (selectedRowIndex > 0 && selectedRowIndex <= dgvShowKeysPositions.Rows.Count)
@@ -204,10 +221,10 @@ namespace MouseXY
 
       private void btnSetKeyPos_Click(object sender, EventArgs e)
       {
-         SetKeyPos();
+         SwitchSetKeyPos();
       }
 
-      private void SetKeyPos()
+      private void SwitchSetKeyPos()
       {
          MouseHandle.setKeyToPos = !MouseHandle.setKeyToPos; //then play sound when disabled
          timer.Enabled = MouseHandle.setKeyToPos; // start or stop timer
@@ -264,9 +281,9 @@ namespace MouseXY
             {
                if (KeyPos.showedSetName == KeyPos.selectedSetName)
                {
-                  KeyPos.keysPositionDict.Remove(key); // Odstranění klávesy z mapy pozic
+                  KeyPos.KeysPositionDict.Remove(key); // Odstranění klávesy z mapy pozic
                }
-               KeyPos.KeyPositions.RemoveAll(k => k.Key == key.ToString() && k.SetName == KeyPos.showedSetName); // Odstranění záznamu z listu KeyPositions
+               KeyPos.KeyPositionsList.RemoveAll(k => k.Key == key.ToString() && k.SetName == KeyPos.showedSetName); // Odstranění záznamu z listu KeyPositions
                DBAccess.DeleteKey(key);
                int selectedRowIndex = dgvShowKeysPositions.CurrentCell.RowIndex;
                UpdateDataGridView(selectedRowIndex); // Aktualizace DataGridView s pozicemi kláves
@@ -348,7 +365,7 @@ namespace MouseXY
          {
             bool isActive = (bool)dgvShowKeysPositions.Rows[e.RowIndex].Cells["IsActive"].Value; // Získání hodnoty buňky IsActive
             Keys key = (Keys)Enum.Parse(typeof(Keys), dgvShowKeysPositions.Rows[e.RowIndex].Cells["Key"].Value.ToString()); // Získání klávesy z buňky Key
-            KeyPos k = KeyPos.KeyPositions.Find(k => k.Key == key.ToString());
+            KeyPos k = KeyPos.KeyPositionsList.Find(k => k.Key == key.ToString());
             if (k != null)
             {
                k.IsActive = isActive; // Aktualizace stavu IsActive v objektu KeyPos
@@ -390,8 +407,8 @@ namespace MouseXY
       {
          if (!btnAddSetname.Text.Equals("Edit", StringComparison.OrdinalIgnoreCase))
          {
-            int newId = KeyPos.PossibleFreeIdForSetname(); // Získání nového ID pro SetName
-            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
+            int newId = KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict); //Získání nového ID pro SetName
+            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower().Trim() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(setName))
             {
                if (cmbSelectSetname.Items.Contains(setName))
@@ -399,11 +416,10 @@ namespace MouseXY
                   MessageBox.Show($"Setname {setName} již existuje. Zvolte jiný název.");
                   return;
                }
-               KeyPos.setNames[newId] = setName; // Přidání nového názvu do slovníku setNames
-               // Aktualizace ComboBoxu s názvy nastavení:
-               cmbSelectSetname.Items.Add(setName);
-               cmbSelectSetname.SelectedItem = setName; // Nastaví právě přidaný název jako vybraný
-               ShowSetname(); // Nastaví aktuálně zobrazený setName
+               KeyPos.SetNamesDict[newId] = setName; //Přidání nového názvu do slovníku setNames
+               cmbSelectSetname.Items.Add(setName); //Aktualizace ComboBoxu s názvy nastavení
+               cmbSelectSetname.SelectedItem = setName; //Nastaví právě přidaný název jako vybraný
+               ShowSetname(); //Nastaví aktuálně zobrazený setName
                latestSelecedItem = null;
                tbSetname.Text = string.Empty;
                SetNameService.SaveOrUpdateSetName(newId, setName);
@@ -425,8 +441,8 @@ namespace MouseXY
                   MessageBox.Show($"Setname {newSetName} již existuje. Zvolte jiný název.");
                   return;
                }
-               int id = KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
-               KeyPos.setNames[id] = newSetName;
+               int id = KeyPos.SetNamesDict.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
+               KeyPos.SetNamesDict[id] = newSetName;
                int index = cmbSelectSetname.Items.IndexOf(setName);
                cmbSelectSetname.Items[index] = newSetName; // Aktualizace položky v ComboBoxu
                tbSetname.Text = string.Empty; // Vyprázdní TextBox
@@ -448,7 +464,7 @@ namespace MouseXY
 
                if (result == DialogResult.Yes) //delete set name se všemi hotkeys
                {
-                  int id = KeyPos.setNames.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
+                  int id = KeyPos.SetNamesDict.FirstOrDefault(x => x.Value == setName).Key; // Získání ID pro stávající setName
                   cmbSelectSetname.Items.Remove(setName);
                   tbSetname.Text = string.Empty;
                   SetNameService.DeleteSetNameAndItKeysById(id, setName); // Smazání setName z databáze
@@ -546,6 +562,9 @@ namespace MouseXY
          }
       }
 
+      /// <summary>
+      /// disable Add Key to setName button when selected setName matches showed setName
+      /// </summary>
       private void EnableDisableAddKeyToSetnameButton() => btnAddKeyToSelectedSetname.Enabled = KeyPos.selectedSetName != KeyPos.showedSetName ? true : false;
 
       private void btnAddKeyToSelectedSetname_Click(object sender, EventArgs e)
@@ -558,6 +577,19 @@ namespace MouseXY
          }
       }
 
+
+      #endregion
+
+      #region Export and Import
+      private void btnExport_Click(object sender, EventArgs e)
+      {
+         ExportImport.ExportToJson();
+      }
+
+      private void btnImport_Click(object sender, EventArgs e)
+      {
+         ExportImport.ImportFromJson();
+      }
 
       #endregion
 
