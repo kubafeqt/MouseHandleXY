@@ -97,18 +97,18 @@ namespace MouseXY
                            string newSetName = PromptForNewSetName(setName);
                            if (!string.IsNullOrEmpty(newSetName))
                            {
-                              if (KeyPos.SetNamesDict.ContainsValue(newSetName))
-                              {
-                                 setName = newSetName;
-                                 goto setNameExist;
-                              }
-                              else if (prepImportedSetNames.ContainsValue(newSetName))
+                              if (prepImportedSetNames.ContainsValue(newSetName) && newSetName != kvp.Value)
                               {
                                  setName = newSetName;
                                  importedSetName = "v importovaných setnames";
                                  goto setNameExist;
                               }
-                                 prepImportedSetNames[kvp.Key] = newSetName;
+                              else if (KeyPos.SetNamesDict.ContainsValue(newSetName))
+                              {
+                                 setName = newSetName;
+                                 goto setNameExist;
+                              }
+                              prepImportedSetNames[kvp.Key] = newSetName;
                               ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, kvp.Value, newSetName);
                            }
                            else //zadán prázdný název
