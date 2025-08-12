@@ -62,63 +62,71 @@ namespace MouseXY
                   var prepImportedSetNames = importedSetNamesDict.ToDictionary();
                   var prepImportedKeyPositions = importedKeyPositions.ToList();
 
-                  prepImportedSetNames.Add(0, "default");
-                  prepImportedSetNames = prepImportedSetNames.OrderBy(x => x.Key).ToDictionary();
+                  importedSetNamesDict.Add(0, "default");
+                  importedSetNamesDict = importedSetNamesDict.OrderBy(x => x.Key).ToDictionary();
 
                   //oveření importovaných setNames - příprava dat
-                  foreach (var kvp in prepImportedSetNames.ToDictionary())
+                  foreach (var kvp in importedSetNamesDict.ToDictionary())
                   {
                      string setName = kvp.Value;
-                     string importedSetName = string.Empty;
+                     //string importedSetName = string.Empty;
 
                      if (KeyPos.SetNamesDict.ContainsValue(setName) || setName == "default") //kolize - aktuální (KeyPos) setName již existuje
                      {
 
                      setNameExist:
                         DialogResult result = MessageBox.Show(
-                            $"SetName \"{setName}\" už existuje {importedSetName}.\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = přeskočit",
+                            $"SetName \"{setName}\" už existuje.\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = přeskočit",
                             "Kolize názvu",
                             MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question
                         );
-                        importedSetName = string.Empty;
+                        //importedSetName = string.Empty;
+
+                        //potřebuju ->
+                        //pokud zadá nové jméno, tak se to savne pod novým názvem
+                        //
+                        //aby dal z importedKeyPositions na prepImportedKeyPositions
+                        //
+                        //
 
                         if (result == DialogResult.Yes)
                         {
-                           prepImportedSetNames[kvp.Key] = setName;
-                           if (setName != kvp.Value)
-                           {
-                              ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, kvp.Value, setName);
+                           prepImportedSetNames[kvp.Key] = setName; //přiřazení nového setName
+                           if (setName != kvp.Value || prepImportedKeyPositions.Any(x => x.SetName == setName)) //setName je jiný (nový)
+                           { 
+                              ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, kvp.Value, setName); //přepsat všechny na tento setName
+                              prepImportedKeyPositions.RemoveAll(x => x.SetName == setName); //smazat všechny value se stejným setName
                            }
-                           continue; //přepsat = ponecháme
+                           continue; //přepsat, ponecháme
                         }
                         else if (result == DialogResult.No) //přejmenovat
                         {
                            string newSetName = PromptForNewSetName(setName);
                            if (!string.IsNullOrEmpty(newSetName))
                            {
-                              if (prepImportedSetNames.ContainsValue(newSetName) && newSetName != kvp.Value)
-                              {
-                                 setName = newSetName;
-                                 importedSetName = "v importovaných setnames";
-                                 goto setNameExist;
-                              }
-                              else if (KeyPos.SetNamesDict.ContainsValue(newSetName))
+                              if (KeyPos.SetNamesDict.ContainsValue(newSetName))
                               {
                                  setName = newSetName;
                                  goto setNameExist;
                               }
                               prepImportedSetNames[kvp.Key] = newSetName;
-                              ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, kvp.Value, newSetName);
+                              if (newSetName != kvp.Value) //setName je jiný (nový)
+                              {
+
+                                 prepImportedKeyPositions.RemoveAll(x => x.SetName == setName); //smazat všechny value se stejným setName      
+                                 ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, kvp.Value, setName); //přepsat všechny na tento setName
+                                     
+                              }
                            }
                            else //zadán prázdný název
                            {
-                              prepImportedSetNames.Remove(kvp.Key); // zrušeno
+                              prepImportedSetNames.Remove(kvp.Key); //zrušeno
                            }
                         }
-                        else if (result == DialogResult.Cancel)
+                        else if (result == DialogResult.Cancel) //přeskočit
                         {
-                           prepImportedSetNames.Remove(kvp.Key); // Přeskočit
+                           prepImportedSetNames.Remove(kvp.Key);
                         }
                      }
                   }
@@ -127,7 +135,7 @@ namespace MouseXY
                   foreach (var kvp in prepImportedSetNames.ToDictionary())
                   {
                      string setname = kvp.Value;
-                     if (KeyPos.SetNamesDict.ContainsValue(setname))
+                     if (KeyPos.SetNamesDict.ContainsValue(setname)) //setname je obsažen
                      {
                         int defId = KeyPos.SetNamesDict.FirstOrDefault(x => x.Value == setname).Key;
                         KeyPos.SetNamesDict[defId] = setname;
@@ -141,136 +149,6 @@ namespace MouseXY
                      var newPositions = importedKeyPositions.Where(x => x.SetName == setname);
                      KeyPos.KeyPositionsList.AddRange(newPositions);
                   }
-
-
-
-                  //PrepDefaultSetName(ref prepImportedSetNames, ref prepImportedKeyPositions, importedSetNames);
-
-                  //   //default setname:
-                  //   string defSetName = "default";
-
-                  //newSetNameExist:
-                  //   string msg = $"Chceš přepsat \"{defSetName}\" setname?\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = nepřepisovat";
-                  //   DialogResult defResult = MessageBox.Show(
-                  //            msg,
-                  //            "Kolize názvu",
-                  //            MessageBoxButtons.YesNoCancel,
-                  //            MessageBoxIcon.Question
-                  //        );
-
-
-                  //   if (defResult == DialogResult.Yes) //potvrzení přepsání
-                  //   {
-                  //      if (defSetName != "default")
-                  //      {
-                  //         if (!prepImportedSetNames.Any(x => x.Value == defSetName)) //přidat defSetName do prepImportedSetNames, pokud tam není
-                  //         {
-                  //            prepImportedSetNames.Add(KeyPos.PossibleFreeIdInDictKeys(prepImportedSetNames), defSetName);
-                  //         }
-                  //         else //smazat všechny se stejným setName v imported, pokud defSetName již existuje
-                  //         {
-                  //            prepImportedKeyPositions.RemoveAll(x => x.SetName == defSetName);
-                  //         }
-                  //         ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, "default", defSetName);
-                  //      }
-                  //      else //pokud je setName default, tak to zpracuj do KeyPos.KeyPositionList
-                  //      {
-                  //         KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == defSetName); //smazat všechny se stejným setName v aktual
-                  //         var newPositions = prepImportedKeyPositions.Where(x => x.SetName == defSetName);
-                  //         KeyPos.KeyPositionsList.AddRange(newPositions);
-                  //      }
-                  //   }
-                  //   else if (defResult == DialogResult.No) //rename imported default setname
-                  //   {
-                  //      string newSetName = PromptForNewSetName("default");
-                  //      if (!string.IsNullOrEmpty(newSetName))
-                  //      {
-                  //         if (KeyPos.SetNamesDict.ContainsValue(newSetName))
-                  //         {
-                  //            defSetName = newSetName;
-                  //            goto newSetNameExist;
-                  //         }
-                  //         prepImportedSetNames.Add(KeyPos.PossibleFreeIdInDictKeys(importedSetNames), newSetName);
-                  //         prepImportedKeyPositions.RemoveAll(x => x.SetName == newSetName);
-                  //         ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, defSetName, newSetName);
-                  //      }
-                  //      else
-                  //      {
-                  //         goto newSetNameExist;
-                  //      }
-                  //   }
-
-                  ////oveření importovaných setNames
-                  //foreach (var kvp in importedSetNames.ToDictionary())
-                  //{
-                  //   string setName = kvp.Value;
-
-                  //   if (KeyPos.SetNamesDict.ContainsValue(setName)) //kolize - aktuální (KeyPos) setName již existuje
-                  //   {
-
-                  //   setNameExist:
-                  //      DialogResult result = MessageBox.Show(
-                  //          $"SetName \"{setName}\" už existuje.\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = přeskočit",
-                  //          "Kolize názvu",
-                  //          MessageBoxButtons.YesNoCancel,
-                  //          MessageBoxIcon.Question
-                  //      );
-
-                  //      if (result == DialogResult.Yes) //potvrzení přepsání
-                  //      {
-                  //         importedSetNames[kvp.Key] = setName;
-                  //         if (setName != kvp.Value)
-                  //         {
-                  //            ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, setName);
-                  //         }
-                  //         continue; // Přepsat = ponecháme
-                  //      }
-                  //      else if (result == DialogResult.No)
-                  //      {
-                  //         // Přejmenovat
-                  //         string newSetName = PromptForNewSetName(setName);
-                  //         if (!string.IsNullOrEmpty(newSetName))
-                  //         {
-                  //            if (KeyPos.SetNamesDict.ContainsValue(newSetName))
-                  //            {
-                  //               setName = newSetName;
-                  //               goto setNameExist;
-                  //            }
-                  //            importedSetNames[kvp.Key] = newSetName;
-                  //            ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, newSetName);
-                  //         }
-                  //         else //zadán prázdný název
-                  //         {
-                  //            //goto setNameExist;
-                  //            prepImportedSetNames.Remove(kvp.Key); // zrušeno
-                  //         }
-                  //      }
-                  //      else if (result == DialogResult.Cancel)
-                  //      {
-                  //         prepImportedSetNames.Remove(kvp.Key); // Přeskočit
-                  //      }
-                  //   }
-                  //}
-
-                  ////pokud setname existuje -> zachovej ID, pokud setname neexistuje -> přidej nový setname s novým ID
-                  //// Import setnames a keypositons pouze, kde je setname
-                  //foreach (var kvp in prepImportedSetNames.ToDictionary())
-                  //{
-                  //   string setname = kvp.Value;
-                  //   if (KeyPos.SetNamesDict.ContainsValue(setname))
-                  //   {
-                  //      int defId = KeyPos.SetNamesDict.FirstOrDefault(x => x.Value == setname).Key;
-                  //      KeyPos.SetNamesDict[defId] = setname;
-                  //      KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == setname); //smazat všechny se stejným setName
-                  //   }
-                  //   else
-                  //   {
-                  //      int newId = KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict);
-                  //      KeyPos.SetNamesDict[newId] = setname;
-                  //   }
-                  //   var newPositions = importedKeyPositions.Where(x => x.SetName == setname);
-                  //   KeyPos.KeyPositionsList.AddRange(newPositions);
-                  //}
 
                   MessageBox.Show($"Import dokončen z \"{fileName}\".", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -288,63 +166,6 @@ namespace MouseXY
          }
       }
       
-      private static void PrepDefaultSetName(ref Dictionary<int, string> prepImportedSetNames, ref List<KeyPos> prepImportedKeyPositions, Dictionary<int, string> importedSetNames)
-      {
-         //default setname:
-         string defSetName = "default";
-
-      newSetNameExist:
-         string msg = $"Chceš přepsat \"{defSetName}\" setname?\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = nepřepisovat";
-         DialogResult defResult = MessageBox.Show(
-                  msg,
-                  "Kolize názvu",
-                  MessageBoxButtons.YesNoCancel,
-                  MessageBoxIcon.Question
-              );
-
-
-         if (defResult == DialogResult.Yes) //potvrzení přepsání
-         {
-            if (defSetName != "default")
-            {
-               if (!prepImportedSetNames.Any(x => x.Value == defSetName)) //přidat defSetName do prepImportedSetNames, pokud tam není
-               {
-                  prepImportedSetNames.Add(KeyPos.PossibleFreeIdInDictKeys(prepImportedSetNames), defSetName);
-               }
-               else //smazat všechny se stejným setName v imported, pokud defSetName již existuje
-               {
-                  prepImportedKeyPositions.RemoveAll(x => x.SetName == defSetName);
-               }
-               ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, "default", defSetName);
-            }
-            else //pokud je setName default, tak to zpracuj do KeyPos.KeyPositionList
-            {
-               KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == defSetName); //smazat všechny se stejným setName v aktual
-               var newPositions = prepImportedKeyPositions.Where(x => x.SetName == defSetName);
-               KeyPos.KeyPositionsList.AddRange(newPositions);
-            }
-         }
-         else if (defResult == DialogResult.No) //rename imported default setname
-         {
-            string newSetName = PromptForNewSetName("default");
-            if (!string.IsNullOrEmpty(newSetName))
-            {
-               if (KeyPos.SetNamesDict.ContainsValue(newSetName))
-               {
-                  defSetName = newSetName;
-                  goto newSetNameExist;
-               }
-               prepImportedSetNames.Add(KeyPos.PossibleFreeIdInDictKeys(importedSetNames), newSetName);
-               prepImportedKeyPositions.RemoveAll(x => x.SetName == newSetName);
-               ChangeSetNamesInImportedKeyPositions(prepImportedKeyPositions, defSetName, newSetName);
-            }
-            else
-            {
-               goto newSetNameExist;
-            }
-         }
-      }
-
       private static string PromptForNewSetName(string oldName)
       {
          return InputBox.Show($"Zadej nový název pro set \"{oldName}\":", "Přejmenovat", $"{oldName}_");
@@ -358,6 +179,25 @@ namespace MouseXY
             {
                pos.SetName = newSetName;
             }
+         }
+      }
+
+      private static void ChangeSetNamesInImportedKeyPositions(List<KeyPos> importedKeyPositions, List<KeyPos> prepImportedKeyPositions, string setName, string newSetName)
+      {
+         foreach (var pos in importedKeyPositions)
+         {
+            
+            var setname = prepImportedKeyPositions.Where(x => pos.SetName == x.SetName).ToString();
+            if (setname == setName)
+            {
+               setname = newSetName;
+            }
+
+            //if (pos.SetName == setName)
+            //{
+            //   pos.SetName = newSetName;
+            //}
+
          }
       }
 
