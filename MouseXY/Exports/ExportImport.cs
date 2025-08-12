@@ -56,10 +56,10 @@ namespace MouseXY
 
                if (data != null && data.SetNamesDict != null && data.KeyPositionsList != null)
                {
-                  var importedSetNames = data.SetNamesDict;
+                  var importedSetNamesDict = data.SetNamesDict;
                   var importedKeyPositions = data.KeyPositionsList;
 
-                  var prepImportedSetNames = importedSetNames.ToDictionary();
+                  var prepImportedSetNames = importedSetNamesDict.ToDictionary();
                   var prepImportedKeyPositions = importedKeyPositions.ToList();
 
                   prepImportedSetNames.Add(0, "default");
@@ -83,7 +83,7 @@ namespace MouseXY
                         );
                         importedSetName = string.Empty;
 
-                        if (result == DialogResult.Yes) //potvrzení přepsání
+                        if (result == DialogResult.Yes)
                         {
                            prepImportedSetNames[kvp.Key] = setName;
                            if (setName != kvp.Value)
