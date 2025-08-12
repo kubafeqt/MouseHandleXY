@@ -49,7 +49,7 @@ namespace MouseXY
          {
             return null;
          }
-         return dialogResult == DialogResult.OK ? textBox.Text : string.Empty;
+         return dialogResult == DialogResult.OK ? textBox.Text.Trim().ToLower() : string.Empty;
       }
    }
 }

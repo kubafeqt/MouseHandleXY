@@ -408,7 +408,7 @@ namespace MouseXY
          if (!btnAddSetname.Text.Equals("Edit", StringComparison.OrdinalIgnoreCase))
          {
             int newId = KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict); //Získání nového ID pro SetName
-            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower().Trim() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}").Trim().ToLower();
+            string setName = tbSetname.Text != string.Empty ? tbSetname.Text.ToLower().Trim() : InputBox.Show("Zadejte název pro nový SetName:", "Přidat nový SetName", $"SetName {newId}");
             if (!string.IsNullOrWhiteSpace(setName))
             {
                if (cmbSelectSetname.Items.Contains(setName))
@@ -435,7 +435,6 @@ namespace MouseXY
             string? newSetName = InputBox.Show($"Zadejte nový název pro {setName}:", "Změnit název setname", nullable: true);
             if (!string.IsNullOrWhiteSpace(newSetName))
             {
-               newSetName = newSetName.Trim().ToLower();
                if (cmbSelectSetname.Items.Contains(newSetName) && newSetName != setName)
                {
                   MessageBox.Show($"Setname {newSetName} již existuje. Zvolte jiný název.");

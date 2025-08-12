@@ -104,7 +104,7 @@ namespace MouseXY
 
                if (!string.IsNullOrWhiteSpace(newName))
                {
-                  string newFile = newName.Trim() + ".json";
+                  string newFile = $"{newName}.json";
                   string newPath = Path.Combine(folderPath, newFile);
 
                   if (File.Exists(newPath))
