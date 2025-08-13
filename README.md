@@ -32,9 +32,7 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 
 **Version 1.03** - You can add/remove/edit sets of configurable hotkeys
 
-**Version 1.04** - Export keypositions and setnames to json, import from json. ( **actually in alpha version** )
-
-[ **alpha version - refactoring ImportFromJson method in ImportExport class** ]
+**Version 1.04** - Export keypositions and setnames to json, import from json. ( **actually in beta version** )
 
 ## Planned Features and Innovations
 - View on exported files, view on files before import - advanced UI and UI,
