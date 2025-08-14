@@ -13,6 +13,8 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 
 > **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
+**Version 1.01** - Configurable hotkeys and opening/closing controls delays
+
 ## Controls
 
 - **Move cursor movement**: Arrow keys or **W / A / S / D**
@@ -25,8 +27,6 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
 
 ## New features
-
-**Version 1.01** - Configurable hotkeys and opening/closing controls delays
 
 **Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
 
