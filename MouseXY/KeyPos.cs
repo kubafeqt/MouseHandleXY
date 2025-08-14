@@ -13,7 +13,7 @@ namespace MouseXY
       public static List<KeyPos> KeyPositionsList = new(); //pro zobrazování dat
       public static Dictionary<Keys, Point> KeysPositionDict { get; private set; } = new(); //pro manipulaci s klávesy - stores the position of the mouse for each key
       public static Dictionary<int, string> SetNamesDict = new();
-      //public static List<string> setNames = new();
+
       public static string selectedSetName = "default"; // pro manipulaci s klávesy - stores the name of the set of keys
       public static string showedSetName = "default"; // pro zobrazení v UI, aby se neukazoval default setName
 

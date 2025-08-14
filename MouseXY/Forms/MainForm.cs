@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -49,11 +50,10 @@ namespace MouseXY
          // event for change button enabled state when mouse cursor is controlled by keyboard or not
          MouseHandle.OnMouseCursorHandleOpenChanged += (mouseCursorHandle) =>
          {
-            //btnSetKeyPos.Enabled = !val;
-            EnableDisableControlsOfTag("MouseControlDisable", !mouseCursorHandle); // Enable/disable controls for editing positions of keys
+            EnableDisableControlsOfTagInPanel(panelMain, "MouseControlDisable", !mouseCursorHandle); // Enable/disable controls for editing positions of keys
             lbMouseControl.Visible = mouseCursorHandle; // Zobrazí nebo skryje popisek pro ovládání myši
             lbMouseControl.Text = mouseCursorHandle ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
-            ShowControlsOfTag("ExpImp", !mouseCursorHandle);
+            EnableDisableControlsOfTagInPanel(panelMain, "ExpImp", !mouseCursorHandle);
             if (mouseCursorHandle)
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
@@ -75,9 +75,6 @@ namespace MouseXY
          ExportImport.OnFileImport += () =>
          {
             cmbSelectSetname.Items.Clear();
-            //cmbSelectSetname.Items.Add("default");
-            //cmbSelectSetname.Items.AddRange(KeyPos.setNames.Values.ToArray());
-            //cmbSelectSetname.SelectedIndex = 0;
             LoadComboBoxSetNames();
             cmbSelectSetname.SelectedIndex = 0;
             UpdateDataGridView();
@@ -87,6 +84,16 @@ namespace MouseXY
             }
             DBAccess.SaveOrUpdateAllKeyPos();
             DBAccess.SaveAllSetNames();
+         };
+
+         ExportImport.OnPreview += () =>
+         {
+            panelMain.Hide();
+            panelPreviewImport.Show();
+            Settings.latestSize = Size;
+            Size = Settings.biggerFormSize;
+            UpdatePreviewDataGridView();
+            LoadComboBoxPreviewSetNames();
          };
 
          #endregion
@@ -107,6 +114,7 @@ namespace MouseXY
 
          #endregion
 
+         ResizeAndLocationControlsOfTag("bigPanels", Settings.panelSize, Settings.panelLocation);
          LoadComboBoxSetNames(); // Načtení názvů setNames do ComboBoxu
          dgvShowKeysPositions.AllowUserToAddRows = false;
          dgvShowKeysPositions.AllowUserToDeleteRows = false;
@@ -118,6 +126,9 @@ namespace MouseXY
                column.ReadOnly = true; //nastaví všechny sloupce který se nejmenujou IsActive na readonly
             }
          }
+         dgvShowKeysPositions_Preview.AllowUserToAddRows = false;
+         dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
+         dgvShowKeysPositions_Preview.ReadOnly = true;
       }
 
       private void LoadComboBoxSetNames()
@@ -138,10 +149,9 @@ namespace MouseXY
       #endregion
 
       #region Updating Controls
-      BindingSource bs;
       private void UpdateDataGridView(int selectedRowIndex = 0)
       {
-         bs = new BindingSource();
+         BindingSource bs = new BindingSource();
          bs.DataSource = new BindingList<KeyPos>(KeyPos.KeyPositionsList.Where(k => k.SetName == KeyPos.showedSetName).ToList());
          dgvShowKeysPositions.DataSource = bs; // Přiřazení BindingSource do DataGridView
          selectedRowIndex = selectedRowIndex > 0 && dgvShowKeysPositions.RowCount > selectedRowIndex ? selectedRowIndex : --selectedRowIndex;
@@ -151,21 +161,46 @@ namespace MouseXY
          }
       }
 
-      private void ShowControlsOfTag(string tag, bool show = true)
+      private void UpdatePreviewDataGridView()
       {
-         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
+         BindingSource previewBs = new BindingSource();
+         previewBs.DataSource = new BindingList<KeyPos_Preview>(KeyPos_Preview.KeyPositionsList.Where(k => k.SetName == KeyPos_Preview.showedSetName).ToList());
+         dgvShowKeysPositions_Preview.DataSource = previewBs;
+      }
+
+      private void LoadComboBoxPreviewSetNames()
+      {
+         cmbSelectSetName_Preview.Items.Clear();
+         cmbSelectSetName_Preview.Items.AddRange(KeyPos_Preview.SetNamesDict.Values.ToArray());
+         cmbSelectSetName_Preview.SelectedIndex = 0;
+         lbShowedSetName_Preview.Text = $"ShowedSetname: {KeyPos_Preview.showedSetName}";
+      }
+
+      private void ShowControlsOfTagInPanel(Panel parentPanel, string tag, bool show = true)
+      {
+         var matchingControls = parentPanel.Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
          foreach (var control in matchingControls)
          {
             control.Visible = !show ? show : showKeysPositions;
          }
       }
 
-      private void EnableDisableControlsOfTag(string tag, bool enable = true)
+      private void EnableDisableControlsOfTagInPanel(Panel parentPanel, string tag, bool enable = true)
+      {
+         var matchingControls = parentPanel.Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
+         foreach (var control in matchingControls)
+         {
+            control.Enabled = enable;
+         }
+      }
+
+      private void ResizeAndLocationControlsOfTag(string tag, Size? size = null, Point? location = null)
       {
          var matchingControls = Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
          foreach (var control in matchingControls)
          {
-            control.Enabled = enable;
+            control.Size = size ?? control.Size;
+            control.Location = location ?? control.Location;
          }
       }
 
@@ -250,10 +285,10 @@ namespace MouseXY
       {
          showKeysPositions = !showKeysPositions;
          dgvShowKeysPositions.Visible = showKeysPositions;
-         ShowControlsOfTag("EditPos");
+         ShowControlsOfTagInPanel(panelMain, "EditPos");
          if (showKeysPositions)
          {
-            Size = new Size(870, 695);
+            Size = Settings.biggerFormSize;
             btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Show", "hide", StringComparison.OrdinalIgnoreCase);
 
          }
@@ -590,7 +625,58 @@ namespace MouseXY
          ExportImport.ImportFromJson();
       }
 
+      //preview panel:
+      private void btnShowSetName_Preview_Click(object sender, EventArgs e)
+      {
+         KeyPos_Preview.showedSetName = cmbSelectSetName_Preview.SelectedItem?.ToString(); //nastaví aktuálně zobrazený setName
+         lbShowedSetname.Text = $"ShowedSetname: {cmbSelectSetName_Preview.SelectedItem}";
+         UpdatePreviewDataGridView();
+      }
+
+      private void btnImportSet_Preview_Click(object sender, EventArgs e)
+      {
+         NotImplementedYetWarning();
+      }
+
+      private void NotImplementedYetWarning()
+      {
+         MessageBox.Show("This feature is not implemented yet.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
+
+      private void btnImportAll_Preview_Click(object sender, EventArgs e)
+      {
+         panelMain.Show();
+         panelPreviewImport.Hide();
+         ExportImport.ImportFromJson(KeyPos_Preview.selectedFileName);
+         KeyPos_Preview.selectedFileName = string.Empty;
+      }
+
+      private void btnBackToJsonSelect_Preview_Click(object sender, EventArgs e)
+      {
+         panelMain.Show();
+         panelPreviewImport.Hide();
+         Size = Settings.latestSize;
+         ExportImport.ImportFromJson();
+      }
+
+      private void dgvShowKeysPositions_Preview_SelectionChanged(object sender, EventArgs e)
+      {
+         if (dgvShowKeysPositions_Preview.SelectedRows.Count > 0)
+         {
+            lbKeyPos_Preview.Text = $"Key: {dgvShowKeysPositions_Preview.SelectedRows[0].Cells["Key"].Value} - ";
+            string rawValue = dgvShowKeysPositions_Preview.SelectedRows[0].Cells["Position"].Value.ToString();
+            var matches = Regex.Matches(rawValue, @"\d+");
+            if (matches.Count == 2)
+            {
+               tbPosX_Preview.Text = matches[0].Value;
+               tbPosY_Preview.Text = matches[1].Value;
+            }
+         }
+      }
+
       #endregion
+
+
 
    }
 }
