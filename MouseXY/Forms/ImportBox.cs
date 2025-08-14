@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MouseXY
 {
-    public static class ImportBox
-    {
+   public static class ImportBox
+   {
       public static string ShowJsonFileSelector(string folderPath)
       {
          Form form = new Form();
@@ -15,6 +15,7 @@ namespace MouseXY
          ListBox listBox = new ListBox();
          Button buttonOk = new Button();
          Button buttonCancel = new Button();
+         Button btnPreview = new();
 
          form.Text = "Import JSON souboru";
          label.Text = "Vyber soubor pro import:";
@@ -51,14 +52,15 @@ namespace MouseXY
          buttonCancel.DialogResult = DialogResult.Cancel;
 
          // Umístění
-         label.SetBounds(10, 10, 300, 20);
-         listBox.SetBounds(10, 35, 260, 130);
-         buttonOk.SetBounds(60, 180, 75, 23);
-         buttonCancel.SetBounds(145, 180, 75, 23);
+         label.SetBounds(12, 10, 260, 20);
+         listBox.SetBounds(12, 35, 260, 130);
+         btnPreview.SetBounds(20, 180, 75, 23);      // úplně vlevo
+         buttonOk.SetBounds(105, 180, 75, 23);        // uprostřed
+         buttonCancel.SetBounds(190, 180, 75, 23);   // vpravo
 
          label.AutoSize = true;
-         form.ClientSize = new Size(280, 220);
-         form.Controls.AddRange(new Control[] { label, listBox, buttonOk, buttonCancel });
+         form.ClientSize = new Size(290, 220);
+         form.Controls.AddRange(new Control[] { label, listBox, buttonOk, buttonCancel, btnPreview });
          form.FormBorderStyle = FormBorderStyle.FixedDialog;
          form.StartPosition = FormStartPosition.CenterScreen;
          form.MinimizeBox = false;
@@ -66,11 +68,30 @@ namespace MouseXY
          form.AcceptButton = buttonOk;
          form.CancelButton = buttonCancel;
 
+         btnPreview.Text = "Preview file";
+         btnPreview.Click += (s, e) =>
+         {
+            if (listBox.SelectedItem != null)
+            {
+               KeyPos_Preview.selectedFileName = listBox.SelectedItem.ToString();
+               ExportImport.InitPreview(listBox.SelectedItem.ToString());
+               form.Close();
+               return;
+            }
+            MessageBox.Show("Vyber soubor, který chceš previewnout.", "Vybrat soubor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+         };
+
+      Restart:
          DialogResult result = form.ShowDialog();
 
-         if (result == DialogResult.OK && listBox.SelectedItem != null)
+         if (result == DialogResult.OK)
          {
-            return listBox.SelectedItem.ToString();
+            if (listBox.SelectedItem != null)
+            {
+               return listBox.SelectedItem.ToString();
+            }
+            MessageBox.Show("Vyber soubor, který chceš importnout.", "Vybrat soubor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            goto Restart;
          }
 
          return null;

@@ -57,14 +57,32 @@
          lbMouseControl = new Label();
          btnExport = new Button();
          btnImport = new Button();
+         panelMain = new Panel();
+         panelPreviewImport = new Panel();
+         btnImportSet_Preview = new Button();
+         btnBackToJsonSelect_Preview = new Button();
+         btnImportAll_Preview = new Button();
+         lbShowedSetName_Preview = new Label();
+         btnShowSetName_Preview = new Button();
+         dgvShowKeysPositions_Preview = new DataGridView();
+         cmbSelectSetName_Preview = new ComboBox();
+         lbSetName_Preview = new Label();
+         lbKeyPos_Preview = new Label();
+         lbPosY_Preview = new Label();
+         tbPosX_Preview = new TextBox();
+         lbPosX_Preview = new Label();
+         tbPosY_Preview = new TextBox();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
+         panelMain.SuspendLayout();
+         panelPreviewImport.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions_Preview).BeginInit();
          SuspendLayout();
          // 
          // cboxOnStartup
          // 
          cboxOnStartup.AutoSize = true;
-         cboxOnStartup.Location = new Point(25, 25);
+         cboxOnStartup.Location = new Point(23, 24);
          cboxOnStartup.Name = "cboxOnStartup";
          cboxOnStartup.Size = new Size(130, 19);
          cboxOnStartup.TabIndex = 0;
@@ -74,7 +92,7 @@
          // 
          // nmDelayMs
          // 
-         nmDelayMs.Location = new Point(88, 67);
+         nmDelayMs.Location = new Point(86, 66);
          nmDelayMs.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
          nmDelayMs.Minimum = new decimal(new int[] { 150, 0, 0, 0 });
          nmDelayMs.Name = "nmDelayMs";
@@ -85,7 +103,7 @@
          // lbDelayMs
          // 
          lbDelayMs.AutoSize = true;
-         lbDelayMs.Location = new Point(25, 69);
+         lbDelayMs.Location = new Point(23, 68);
          lbDelayMs.Name = "lbDelayMs";
          lbDelayMs.Size = new Size(57, 15);
          lbDelayMs.TabIndex = 2;
@@ -95,7 +113,7 @@
          // 
          lbDelayMsDescription.AutoSize = true;
          lbDelayMsDescription.Font = new Font("Segoe UI Semibold", 10.181818F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbDelayMsDescription.Location = new Point(25, 97);
+         lbDelayMsDescription.Location = new Point(23, 96);
          lbDelayMsDescription.Name = "lbDelayMsDescription";
          lbDelayMsDescription.Size = new Size(79, 19);
          lbDelayMsDescription.TabIndex = 3;
@@ -103,7 +121,7 @@
          // 
          // btnAcceptDelayMs
          // 
-         btnAcceptDelayMs.Location = new Point(161, 67);
+         btnAcceptDelayMs.Location = new Point(159, 66);
          btnAcceptDelayMs.Name = "btnAcceptDelayMs";
          btnAcceptDelayMs.Size = new Size(77, 24);
          btnAcceptDelayMs.TabIndex = 4;
@@ -114,7 +132,7 @@
          // btnSetKeyPos
          // 
          btnSetKeyPos.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnSetKeyPos.Location = new Point(25, 153);
+         btnSetKeyPos.Location = new Point(23, 152);
          btnSetKeyPos.Name = "btnSetKeyPos";
          btnSetKeyPos.Size = new Size(79, 24);
          btnSetKeyPos.TabIndex = 5;
@@ -126,7 +144,7 @@
          // btnShowKeysPositions
          // 
          btnShowKeysPositions.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnShowKeysPositions.Location = new Point(121, 153);
+         btnShowKeysPositions.Location = new Point(119, 152);
          btnShowKeysPositions.Name = "btnShowKeysPositions";
          btnShowKeysPositions.Size = new Size(143, 24);
          btnShowKeysPositions.TabIndex = 6;
@@ -140,7 +158,7 @@
          dgvShowKeysPositions.AllowUserToDeleteRows = false;
          dgvShowKeysPositions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
          dgvShowKeysPositions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         dgvShowKeysPositions.Location = new Point(32, 190);
+         dgvShowKeysPositions.Location = new Point(33, 196);
          dgvShowKeysPositions.MultiSelect = false;
          dgvShowKeysPositions.Name = "dgvShowKeysPositions";
          dgvShowKeysPositions.RowHeadersWidth = 42;
@@ -157,7 +175,7 @@
          // 
          lbSetKeyPos.AutoSize = true;
          lbSetKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSetKeyPos.Location = new Point(270, 156);
+         lbSetKeyPos.Location = new Point(268, 155);
          lbSetKeyPos.Name = "lbSetKeyPos";
          lbSetKeyPos.Size = new Size(167, 19);
          lbSetKeyPos.TabIndex = 8;
@@ -169,7 +187,7 @@
          cboxShowSetKeyPos.AutoSize = true;
          cboxShowSetKeyPos.Checked = true;
          cboxShowSetKeyPos.CheckState = CheckState.Checked;
-         cboxShowSetKeyPos.Location = new Point(161, 25);
+         cboxShowSetKeyPos.Location = new Point(159, 24);
          cboxShowSetKeyPos.Name = "cboxShowSetKeyPos";
          cboxShowSetKeyPos.Size = new Size(214, 19);
          cboxShowSetKeyPos.TabIndex = 9;
@@ -180,7 +198,7 @@
          // btnDeleteKey
          // 
          btnDeleteKey.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnDeleteKey.Location = new Point(460, 152);
+         btnDeleteKey.Location = new Point(458, 151);
          btnDeleteKey.Name = "btnDeleteKey";
          btnDeleteKey.Size = new Size(152, 24);
          btnDeleteKey.TabIndex = 10;
@@ -193,7 +211,7 @@
          // btnEditPosition
          // 
          btnEditPosition.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnEditPosition.Location = new Point(751, 152);
+         btnEditPosition.Location = new Point(749, 151);
          btnEditPosition.Name = "btnEditPosition";
          btnEditPosition.Size = new Size(75, 25);
          btnEditPosition.TabIndex = 11;
@@ -207,7 +225,7 @@
          // 
          lbKeyPos.AutoSize = true;
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbKeyPos.Location = new Point(617, 132);
+         lbKeyPos.Location = new Point(615, 131);
          lbKeyPos.Name = "lbKeyPos";
          lbKeyPos.Size = new Size(38, 19);
          lbKeyPos.TabIndex = 12;
@@ -217,7 +235,7 @@
          // 
          // tbPosX
          // 
-         tbPosX.Location = new Point(640, 153);
+         tbPosX.Location = new Point(638, 152);
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
@@ -226,7 +244,7 @@
          // 
          // tbPosY
          // 
-         tbPosY.Location = new Point(705, 153);
+         tbPosY.Location = new Point(703, 152);
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
@@ -237,7 +255,7 @@
          // 
          lbPosX.AutoSize = true;
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosX.Location = new Point(617, 156);
+         lbPosX.Location = new Point(615, 155);
          lbPosX.Name = "lbPosX";
          lbPosX.Size = new Size(22, 19);
          lbPosX.TabIndex = 15;
@@ -249,7 +267,7 @@
          // 
          lbPosY.AutoSize = true;
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosY.Location = new Point(683, 156);
+         lbPosY.Location = new Point(681, 155);
          lbPosY.Name = "lbPosY";
          lbPosY.Size = new Size(22, 19);
          lbPosY.TabIndex = 16;
@@ -261,7 +279,7 @@
          // 
          lbSetname.AutoSize = true;
          lbSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSetname.Location = new Point(505, 15);
+         lbSetname.Location = new Point(503, 14);
          lbSetname.Name = "lbSetname";
          lbSetname.Size = new Size(74, 19);
          lbSetname.TabIndex = 17;
@@ -272,7 +290,7 @@
          // tbSetname
          // 
          tbSetname.Font = new Font("Segoe UI Semibold", 10.181818F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         tbSetname.Location = new Point(578, 11);
+         tbSetname.Location = new Point(576, 10);
          tbSetname.MaxLength = 16;
          tbSetname.Name = "tbSetname";
          tbSetname.Size = new Size(162, 26);
@@ -286,7 +304,7 @@
          // btnAddSetname
          // 
          btnAddSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnAddSetname.Location = new Point(746, 12);
+         btnAddSetname.Location = new Point(744, 11);
          btnAddSetname.Name = "btnAddSetname";
          btnAddSetname.Size = new Size(80, 24);
          btnAddSetname.TabIndex = 19;
@@ -300,7 +318,7 @@
          // 
          cmbSelectSetname.DropDownStyle = ComboBoxStyle.DropDownList;
          cmbSelectSetname.FormattingEnabled = true;
-         cmbSelectSetname.Location = new Point(492, 43);
+         cmbSelectSetname.Location = new Point(490, 42);
          cmbSelectSetname.Name = "cmbSelectSetname";
          cmbSelectSetname.Size = new Size(162, 23);
          cmbSelectSetname.TabIndex = 20;
@@ -311,7 +329,7 @@
          // btnSelectSetname
          // 
          btnSelectSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnSelectSetname.Location = new Point(746, 43);
+         btnSelectSetname.Location = new Point(744, 42);
          btnSelectSetname.Name = "btnSelectSetname";
          btnSelectSetname.Size = new Size(80, 24);
          btnSelectSetname.TabIndex = 21;
@@ -324,7 +342,7 @@
          // btnAddKeyToSelectedSetname
          // 
          btnAddKeyToSelectedSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnAddKeyToSelectedSetname.Location = new Point(492, 71);
+         btnAddKeyToSelectedSetname.Location = new Point(490, 70);
          btnAddKeyToSelectedSetname.Name = "btnAddKeyToSelectedSetname";
          btnAddKeyToSelectedSetname.Size = new Size(334, 25);
          btnAddKeyToSelectedSetname.TabIndex = 22;
@@ -337,7 +355,7 @@
          // btnShowSetname
          // 
          btnShowSetname.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnShowSetname.Location = new Point(660, 43);
+         btnShowSetname.Location = new Point(658, 42);
          btnShowSetname.Name = "btnShowSetname";
          btnShowSetname.Size = new Size(80, 24);
          btnShowSetname.TabIndex = 23;
@@ -351,7 +369,7 @@
          // 
          lbShowedSetname.AutoSize = true;
          lbShowedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbShowedSetname.Location = new Point(492, 99);
+         lbShowedSetname.Location = new Point(490, 98);
          lbShowedSetname.Name = "lbShowedSetname";
          lbShowedSetname.Size = new Size(128, 19);
          lbShowedSetname.TabIndex = 25;
@@ -363,7 +381,7 @@
          // 
          lbSelectedSetname.AutoSize = true;
          lbSelectedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSelectedSetname.Location = new Point(492, 116);
+         lbSelectedSetname.Location = new Point(490, 115);
          lbSelectedSetname.Name = "lbSelectedSetname";
          lbSelectedSetname.Size = new Size(132, 19);
          lbSelectedSetname.TabIndex = 26;
@@ -376,7 +394,7 @@
          lbMouseControl.AutoSize = true;
          lbMouseControl.Font = new Font("Segoe UI Semibold", 10.181818F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMouseControl.ForeColor = Color.DarkGreen;
-         lbMouseControl.Location = new Point(253, 67);
+         lbMouseControl.Location = new Point(251, 66);
          lbMouseControl.Name = "lbMouseControl";
          lbMouseControl.Size = new Size(99, 19);
          lbMouseControl.TabIndex = 27;
@@ -386,7 +404,7 @@
          // btnExport
          // 
          btnExport.Font = new Font("Segoe UI Semibold", 8.727273F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnExport.Location = new Point(244, 66);
+         btnExport.Location = new Point(242, 65);
          btnExport.Name = "btnExport";
          btnExport.Size = new Size(77, 24);
          btnExport.TabIndex = 28;
@@ -398,7 +416,7 @@
          // btnImport
          // 
          btnImport.Font = new Font("Segoe UI Semibold", 8.727273F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnImport.Location = new Point(327, 66);
+         btnImport.Location = new Point(325, 65);
          btnImport.Name = "btnImport";
          btnImport.Size = new Size(77, 24);
          btnImport.TabIndex = 29;
@@ -407,40 +425,218 @@
          btnImport.UseVisualStyleBackColor = true;
          btnImport.Click += btnImport_Click;
          // 
+         // panelMain
+         // 
+         panelMain.Controls.Add(cboxOnStartup);
+         panelMain.Controls.Add(btnImport);
+         panelMain.Controls.Add(nmDelayMs);
+         panelMain.Controls.Add(btnExport);
+         panelMain.Controls.Add(lbDelayMs);
+         panelMain.Controls.Add(lbMouseControl);
+         panelMain.Controls.Add(lbDelayMsDescription);
+         panelMain.Controls.Add(lbSelectedSetname);
+         panelMain.Controls.Add(btnAcceptDelayMs);
+         panelMain.Controls.Add(lbShowedSetname);
+         panelMain.Controls.Add(btnSetKeyPos);
+         panelMain.Controls.Add(btnShowSetname);
+         panelMain.Controls.Add(btnShowKeysPositions);
+         panelMain.Controls.Add(btnAddKeyToSelectedSetname);
+         panelMain.Controls.Add(dgvShowKeysPositions);
+         panelMain.Controls.Add(btnSelectSetname);
+         panelMain.Controls.Add(lbSetKeyPos);
+         panelMain.Controls.Add(cmbSelectSetname);
+         panelMain.Controls.Add(cboxShowSetKeyPos);
+         panelMain.Controls.Add(btnAddSetname);
+         panelMain.Controls.Add(btnDeleteKey);
+         panelMain.Controls.Add(tbSetname);
+         panelMain.Controls.Add(btnEditPosition);
+         panelMain.Controls.Add(lbSetname);
+         panelMain.Controls.Add(lbKeyPos);
+         panelMain.Controls.Add(lbPosY);
+         panelMain.Controls.Add(tbPosX);
+         panelMain.Controls.Add(lbPosX);
+         panelMain.Controls.Add(tbPosY);
+         panelMain.Location = new Point(12, 12);
+         panelMain.Name = "panelMain";
+         panelMain.Size = new Size(1003, 504);
+         panelMain.TabIndex = 30;
+         panelMain.Tag = "bigPanels";
+         // 
+         // panelPreviewImport
+         // 
+         panelPreviewImport.Controls.Add(btnImportSet_Preview);
+         panelPreviewImport.Controls.Add(btnBackToJsonSelect_Preview);
+         panelPreviewImport.Controls.Add(btnImportAll_Preview);
+         panelPreviewImport.Controls.Add(lbShowedSetName_Preview);
+         panelPreviewImport.Controls.Add(btnShowSetName_Preview);
+         panelPreviewImport.Controls.Add(dgvShowKeysPositions_Preview);
+         panelPreviewImport.Controls.Add(cmbSelectSetName_Preview);
+         panelPreviewImport.Controls.Add(lbSetName_Preview);
+         panelPreviewImport.Controls.Add(lbKeyPos_Preview);
+         panelPreviewImport.Controls.Add(lbPosY_Preview);
+         panelPreviewImport.Controls.Add(tbPosX_Preview);
+         panelPreviewImport.Controls.Add(lbPosX_Preview);
+         panelPreviewImport.Controls.Add(tbPosY_Preview);
+         panelPreviewImport.Location = new Point(1048, 36);
+         panelPreviewImport.Name = "panelPreviewImport";
+         panelPreviewImport.Size = new Size(839, 639);
+         panelPreviewImport.TabIndex = 31;
+         panelPreviewImport.Tag = "bigPanels";
+         panelPreviewImport.Visible = false;
+         // 
+         // btnImportSet_Preview
+         // 
+         btnImportSet_Preview.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnImportSet_Preview.Location = new Point(442, 74);
+         btnImportSet_Preview.Name = "btnImportSet_Preview";
+         btnImportSet_Preview.Size = new Size(95, 24);
+         btnImportSet_Preview.TabIndex = 57;
+         btnImportSet_Preview.Tag = "";
+         btnImportSet_Preview.Text = "Import set";
+         btnImportSet_Preview.UseVisualStyleBackColor = true;
+         btnImportSet_Preview.Click += btnImportSet_Preview_Click;
+         // 
+         // btnBackToJsonSelect_Preview
+         // 
+         btnBackToJsonSelect_Preview.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnBackToJsonSelect_Preview.Location = new Point(644, 74);
+         btnBackToJsonSelect_Preview.Name = "btnBackToJsonSelect_Preview";
+         btnBackToJsonSelect_Preview.Size = new Size(164, 24);
+         btnBackToJsonSelect_Preview.TabIndex = 56;
+         btnBackToJsonSelect_Preview.Tag = "";
+         btnBackToJsonSelect_Preview.Text = "Back to JSON selection";
+         btnBackToJsonSelect_Preview.UseVisualStyleBackColor = true;
+         btnBackToJsonSelect_Preview.Click += btnBackToJsonSelect_Preview_Click;
+         // 
+         // btnImportAll_Preview
+         // 
+         btnImportAll_Preview.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnImportAll_Preview.Location = new Point(543, 74);
+         btnImportAll_Preview.Name = "btnImportAll_Preview";
+         btnImportAll_Preview.Size = new Size(95, 24);
+         btnImportAll_Preview.TabIndex = 55;
+         btnImportAll_Preview.Tag = "";
+         btnImportAll_Preview.Text = "Import all";
+         btnImportAll_Preview.UseVisualStyleBackColor = true;
+         btnImportAll_Preview.Click += btnImportAll_Preview_Click;
+         // 
+         // lbShowedSetName_Preview
+         // 
+         lbShowedSetName_Preview.AutoSize = true;
+         lbShowedSetName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbShowedSetName_Preview.Location = new Point(480, 48);
+         lbShowedSetName_Preview.Name = "lbShowedSetName_Preview";
+         lbShowedSetName_Preview.Size = new Size(128, 19);
+         lbShowedSetName_Preview.TabIndex = 54;
+         lbShowedSetName_Preview.Tag = "";
+         lbShowedSetName_Preview.Text = "ShowedSetname: ";
+         // 
+         // btnShowSetName_Preview
+         // 
+         btnShowSetName_Preview.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnShowSetName_Preview.Location = new Point(728, 14);
+         btnShowSetName_Preview.Name = "btnShowSetName_Preview";
+         btnShowSetName_Preview.Size = new Size(80, 24);
+         btnShowSetName_Preview.TabIndex = 53;
+         btnShowSetName_Preview.Tag = "";
+         btnShowSetName_Preview.Text = "show";
+         btnShowSetName_Preview.UseVisualStyleBackColor = true;
+         btnShowSetName_Preview.Click += btnShowSetName_Preview_Click;
+         // 
+         // dgvShowKeysPositions_Preview
+         // 
+         dgvShowKeysPositions_Preview.AllowUserToAddRows = false;
+         dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
+         dgvShowKeysPositions_Preview.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+         dgvShowKeysPositions_Preview.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         dgvShowKeysPositions_Preview.Location = new Point(20, 115);
+         dgvShowKeysPositions_Preview.MultiSelect = false;
+         dgvShowKeysPositions_Preview.Name = "dgvShowKeysPositions_Preview";
+         dgvShowKeysPositions_Preview.RowHeadersWidth = 42;
+         dgvShowKeysPositions_Preview.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+         dgvShowKeysPositions_Preview.Size = new Size(791, 508);
+         dgvShowKeysPositions_Preview.TabIndex = 37;
+         dgvShowKeysPositions_Preview.SelectionChanged += dgvShowKeysPositions_Preview_SelectionChanged;
+         // 
+         // cmbSelectSetName_Preview
+         // 
+         cmbSelectSetName_Preview.DropDownStyle = ComboBoxStyle.DropDownList;
+         cmbSelectSetName_Preview.FormattingEnabled = true;
+         cmbSelectSetName_Preview.Location = new Point(560, 14);
+         cmbSelectSetName_Preview.Name = "cmbSelectSetName_Preview";
+         cmbSelectSetName_Preview.Size = new Size(162, 23);
+         cmbSelectSetName_Preview.TabIndex = 50;
+         cmbSelectSetName_Preview.Tag = "";
+         // 
+         // lbSetName_Preview
+         // 
+         lbSetName_Preview.AutoSize = true;
+         lbSetName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbSetName_Preview.Location = new Point(480, 16);
+         lbSetName_Preview.Name = "lbSetName_Preview";
+         lbSetName_Preview.Size = new Size(74, 19);
+         lbSetName_Preview.TabIndex = 47;
+         lbSetName_Preview.Tag = "";
+         lbSetName_Preview.Text = "SetName:";
+         // 
+         // lbKeyPos_Preview
+         // 
+         lbKeyPos_Preview.AutoSize = true;
+         lbKeyPos_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbKeyPos_Preview.Location = new Point(20, 83);
+         lbKeyPos_Preview.Name = "lbKeyPos_Preview";
+         lbKeyPos_Preview.Size = new Size(38, 19);
+         lbKeyPos_Preview.TabIndex = 42;
+         lbKeyPos_Preview.Tag = "";
+         lbKeyPos_Preview.Text = "Key:";
+         // 
+         // lbPosY_Preview
+         // 
+         lbPosY_Preview.AutoSize = true;
+         lbPosY_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbPosY_Preview.Location = new Point(167, 85);
+         lbPosY_Preview.Name = "lbPosY_Preview";
+         lbPosY_Preview.Size = new Size(22, 19);
+         lbPosY_Preview.TabIndex = 46;
+         lbPosY_Preview.Tag = "";
+         lbPosY_Preview.Text = "Y:";
+         // 
+         // tbPosX_Preview
+         // 
+         tbPosX_Preview.Enabled = false;
+         tbPosX_Preview.Location = new Point(124, 82);
+         tbPosX_Preview.Name = "tbPosX_Preview";
+         tbPosX_Preview.Size = new Size(42, 23);
+         tbPosX_Preview.TabIndex = 43;
+         tbPosX_Preview.Tag = "";
+         // 
+         // lbPosX_Preview
+         // 
+         lbPosX_Preview.AutoSize = true;
+         lbPosX_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbPosX_Preview.Location = new Point(101, 85);
+         lbPosX_Preview.Name = "lbPosX_Preview";
+         lbPosX_Preview.Size = new Size(22, 19);
+         lbPosX_Preview.TabIndex = 45;
+         lbPosX_Preview.Tag = "";
+         lbPosX_Preview.Text = "X:";
+         // 
+         // tbPosY_Preview
+         // 
+         tbPosY_Preview.Enabled = false;
+         tbPosY_Preview.Location = new Point(189, 82);
+         tbPosY_Preview.Name = "tbPosY_Preview";
+         tbPosY_Preview.Size = new Size(42, 23);
+         tbPosY_Preview.TabIndex = 44;
+         tbPosY_Preview.Tag = "";
+         // 
          // MainForm
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
-         ClientSize = new Size(856, 656);
-         Controls.Add(btnImport);
-         Controls.Add(btnExport);
-         Controls.Add(lbMouseControl);
-         Controls.Add(lbSelectedSetname);
-         Controls.Add(lbShowedSetname);
-         Controls.Add(btnShowSetname);
-         Controls.Add(btnAddKeyToSelectedSetname);
-         Controls.Add(btnSelectSetname);
-         Controls.Add(cmbSelectSetname);
-         Controls.Add(btnAddSetname);
-         Controls.Add(tbSetname);
-         Controls.Add(lbSetname);
-         Controls.Add(lbPosY);
-         Controls.Add(lbPosX);
-         Controls.Add(tbPosY);
-         Controls.Add(tbPosX);
-         Controls.Add(lbKeyPos);
-         Controls.Add(btnEditPosition);
-         Controls.Add(btnDeleteKey);
-         Controls.Add(cboxShowSetKeyPos);
-         Controls.Add(lbSetKeyPos);
-         Controls.Add(dgvShowKeysPositions);
-         Controls.Add(btnShowKeysPositions);
-         Controls.Add(btnSetKeyPos);
-         Controls.Add(btnAcceptDelayMs);
-         Controls.Add(lbDelayMsDescription);
-         Controls.Add(lbDelayMs);
-         Controls.Add(nmDelayMs);
-         Controls.Add(cboxOnStartup);
+         ClientSize = new Size(1244, 819);
+         Controls.Add(panelPreviewImport);
+         Controls.Add(panelMain);
          FormBorderStyle = FormBorderStyle.FixedSingle;
          MaximizeBox = false;
          Name = "MainForm";
@@ -448,8 +644,12 @@
          Load += MainForm_Load;
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).EndInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).EndInit();
+         panelMain.ResumeLayout(false);
+         panelMain.PerformLayout();
+         panelPreviewImport.ResumeLayout(false);
+         panelPreviewImport.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions_Preview).EndInit();
          ResumeLayout(false);
-         PerformLayout();
       }
 
       #endregion
@@ -483,5 +683,37 @@
       private Label lbMouseControl;
       private Button btnExport;
       private Button btnImport;
+      private Panel panelMain;
+      private Panel panelPreviewImport;
+      private CheckBox checkBox1;
+      private NumericUpDown numericUpDown1;
+      private Label label1;
+      private Label label2;
+      private Label label3;
+      private Label label4;
+      private Button button3;
+      private Label lbShowedSetName_Preview;
+      private Button button4;
+      private Button btnShowSetName_Preview;
+      private Button button6;
+      private Button button7;
+      private DataGridView dgvShowKeysPositions_Preview;
+      private Button button8;
+      private Label label6;
+      private ComboBox cmbSelectSetName_Preview;
+      private CheckBox checkBox2;
+      private Button button9;
+      private Button button10;
+      private TextBox textBox1;
+      private Button button11;
+      private Label lbSetName_Preview;
+      private Label lbKeyPos_Preview;
+      private Label lbPosY_Preview;
+      private TextBox tbPosX_Preview;
+      private Label lbPosX_Preview;
+      private TextBox tbPosY_Preview;
+      private Button btnImportAll_Preview;
+      private Button btnImportSet_Preview;
+      private Button btnBackToJsonSelect_Preview;
    }
 }

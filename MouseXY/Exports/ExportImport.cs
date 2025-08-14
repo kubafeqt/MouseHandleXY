@@ -42,11 +42,14 @@ namespace MouseXY
       public static void ImportFromJson()
       {
          string fileName = ImportBox.ShowJsonFileSelector(exportFolder);
+         ImportFromJson(fileName);
+      }
 
+      public static void ImportFromJson(string fileName)
+      {
          if (!string.IsNullOrWhiteSpace(fileName))
          {
             string fullPath = Path.Combine(exportFolder, fileName);
-
             try
             {
                import = true; //do not add to KeyPos.KeyPosition list
@@ -86,9 +89,9 @@ namespace MouseXY
                         {
                            importedSetNamesDict[kvp.Key] = setName; //přiřazení nového setName
                            if (setName != kvp.Value || importedKeyPositions.Any(x => x.SetName == setName)) //setName je jiný (nový)
-                           { 
+                           {
                               ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, setName); //přepsat všechny na tento setName
-                              //prepImportedKeyPositions.RemoveAll(x => x.SetName == setName); //smazat všechny value se stejným setName
+                                                                                                              //prepImportedKeyPositions.RemoveAll(x => x.SetName == setName); //smazat všechny value se stejným setName
                            }
                            continue; //přepsat, ponecháme
                         }
@@ -107,7 +110,6 @@ namespace MouseXY
                               importedSetNamesDict[kvp.Key] = newSetName;
                               if (newSetName != kvp.Value) //setName je jiný (nový)
                               {
-                                 //prepImportedKeyPositions.RemoveAll(x => x.SetName == setName); //smazat všechny value se stejným setName      
                                  ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, newSetName); //přepsat všechny na tento setName  
                               }
                            }
@@ -179,6 +181,8 @@ namespace MouseXY
          }
       }
 
+
+      //test it
       private static void ChangeSetNamesInImportedKeyPositions(List<KeyPos> importedKeyPositions, List<KeyPos> prepImportedKeyPositions, string setName, string newSetName)
       {
          foreach (var pos in importedKeyPositions)
@@ -190,11 +194,33 @@ namespace MouseXY
                setname = newSetName;
             }
 
-            //if (pos.SetName == setName)
-            //{
-            //   pos.SetName = newSetName;
-            //}
+         }
+      }
 
+      public static Action? OnPreview;
+      public static void InitPreview(string fileName)
+      {
+         if (!string.IsNullOrWhiteSpace(fileName))
+         {
+            string fullPath = Path.Combine(exportFolder, fileName);
+
+            try
+            {
+               KeyPos_Preview.ClearData();
+               string json = File.ReadAllText(fullPath);
+               var data = JsonSerializer.Deserialize<PreviewDataContainer>(json);
+
+               var importedSetNamesDict = data.SetNamesDict;
+               importedSetNamesDict.Add(0, "default");
+               importedSetNamesDict = importedSetNamesDict.OrderBy(x => x.Key).ToDictionary();
+               KeyPos_Preview.SetNamesDict = importedSetNamesDict;
+
+               OnPreview.Invoke();
+            }
+            catch (Exception ex)
+            {
+               MessageBox.Show("Chyba při načítání souboru:\n" + ex.Message, "Chyba importu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
          }
       }
 
