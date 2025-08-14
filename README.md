@@ -11,9 +11,9 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - Press **Left Shift twice within 250 (or setted) milliseconds** to enable or disable precise cursor control or slow down fast cursor control to normal cursor control.
 - Press **Left ALT twice within 250 (or setted) milliseconds** to enable or disable fast cursor control.
 
-> **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
-
 **Version 1.01** - Configurable hotkeys and opening/closing controls delays
+
+> **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
 ## Controls
 
