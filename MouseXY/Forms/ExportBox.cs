@@ -155,6 +155,7 @@ namespace MouseXY
             }
          };
 
+      Restart:
          DialogResult dialogResult = form.ShowDialog();
 
          if (nullable && dialogResult == DialogResult.Cancel)
@@ -172,7 +173,11 @@ namespace MouseXY
 
          if (dialogResult == DialogResult.OK)
          {
-            //string fullPath = Path.Combine(folderPath, selectedFile);
+            if (string.IsNullOrWhiteSpace(Path.GetFileNameWithoutExtension(selectedFile)))
+            {
+               MessageBox.Show("Název souboru nesmí být prázdný!", "Zadejte název souboru", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               goto Restart; // Restart dialogu pro zadání názvu
+            }
 
             if (fileExists)
             {

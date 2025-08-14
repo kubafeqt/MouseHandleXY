@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MouseXY
 {
-   class ExportImport
+   public static class ExportImport
    {
       private static string exportFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exports");
 
@@ -29,7 +29,7 @@ namespace MouseXY
          }
 
          string fileName = ExportBox.ShowJsonFileSelector(exportFolder);
-         if (!string.IsNullOrWhiteSpace(fileName))
+         if (!string.IsNullOrWhiteSpace(Path.GetFileNameWithoutExtension(fileName)))
          {
             string finalPath = Path.Combine(exportFolder, fileName);
             File.WriteAllText(finalPath, json);
@@ -113,7 +113,7 @@ namespace MouseXY
                                  ChangeSetNamesInImportedKeyPositions(importedKeyPositions, kvp.Value, newSetName); //přepsat všechny na tento setName  
                               }
                            }
-                           else //zadán prázdný název
+                           else //zadán prázdný název nebo již obsažený v importu
                            {
                               if (newSetName == null) //zrušeno
                               {
@@ -164,10 +164,10 @@ namespace MouseXY
             }
          }
       }
-      
+
       private static string PromptForNewSetName(string oldName, string prevMsg)
       {
-         return InputBox.Show($"{prevMsg}Zadej nový název pro set \"{oldName}\":", "Přejmenovat", nullable:true);
+         return InputBox.Show($"{prevMsg}Zadej nový název pro set \"{oldName}\":", "Přejmenovat", nullable: true);
       }
 
       private static void ChangeSetNamesInImportedKeyPositions(List<KeyPos> importedKeyPositions, string setName, string newSetName)
@@ -187,7 +187,7 @@ namespace MouseXY
       {
          foreach (var pos in importedKeyPositions)
          {
-            
+
             var setname = prepImportedKeyPositions.Where(x => pos.SetName == x.SetName).ToString();
             if (setname == setName)
             {
@@ -224,5 +224,61 @@ namespace MouseXY
          }
       }
 
+      public static void ImportSet()
+      {
+         string setName = KeyPos_Preview.showedSetName;
+      GoAgain:
+         if (KeyPos.SetNamesDict.ContainsValue(setName) || setName == "default") //kolize - aktuální (KeyPos) setName již existuje
+         {
+            DialogResult result = MessageBox.Show(
+                $"SetName \"{setName}\" už existuje.\nChceš ho přepsat?\n\nAno = přepsat\nNe = přejmenovat\nZrušit = přeskočit",
+                "Kolize názvu",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question
+            );
+            if (result == DialogResult.Yes) //přepsat
+            {
+               KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == setName); //smazat všechny se stejným setName
+               ImportSet(setName);
+            }
+            else if (result == DialogResult.No) //přejmenovat
+            {
+               string prevMsg = string.Empty;
+            PromptForNewSetName:
+               string? newSetName = PromptForNewSetName(setName, prevMsg);
+               if (!string.IsNullOrWhiteSpace(newSetName) && !KeyPos.SetNamesDict.ContainsValue(newSetName) && newSetName != "default")
+               {
+                  ImportSet(newSetName);
+               }
+               else
+               {
+                  if (newSetName == null) //zrušeno
+                  {
+                     return; //přeskočit
+                  }
+                  else if (string.IsNullOrWhiteSpace(newSetName))
+                  {
+                     prevMsg = "Zadán prázdný název, zkus to znovu.\n";
+                     goto PromptForNewSetName; //znovu vyzvat k zadání
+                  }
+                  else
+                  {
+                     setName = newSetName;
+                     goto GoAgain; //znovu k dialogovému oknu
+                  }
+               }
+            }
+         }
+         else //setname je free
+         {
+            ImportSet(setName);
+         }
+      }
+
+      private static void ImportSet(string setName)
+      {
+         KeyPos.KeyPositionsList.AddRange(KeyPos_Preview.KeyPositionsList.Select(preview => KeyPos.FromPreview(preview)));
+         MessageBox.Show($"Set \"{setName}\" byl úspěšně importován.", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
    }
 }

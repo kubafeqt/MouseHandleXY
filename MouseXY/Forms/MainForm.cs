@@ -1,11 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.Win32;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace MouseXY
 {
@@ -629,13 +623,13 @@ namespace MouseXY
       private void btnShowSetName_Preview_Click(object sender, EventArgs e)
       {
          KeyPos_Preview.showedSetName = cmbSelectSetName_Preview.SelectedItem?.ToString(); //nastaví aktuálně zobrazený setName
-         lbShowedSetname.Text = $"ShowedSetname: {cmbSelectSetName_Preview.SelectedItem}";
+         lbShowedSetName_Preview.Text = $"ShowedSetname: {KeyPos_Preview.showedSetName}";
          UpdatePreviewDataGridView();
       }
 
       private void btnImportSet_Preview_Click(object sender, EventArgs e)
       {
-         NotImplementedYetWarning();
+         ExportImport.ImportSet();
       }
 
       private void NotImplementedYetWarning()
@@ -675,7 +669,6 @@ namespace MouseXY
       }
 
       #endregion
-
 
 
    }

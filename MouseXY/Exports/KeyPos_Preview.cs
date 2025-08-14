@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MouseXY
 {
-    class KeyPos_Preview
-    {
+    class KeyPos_Preview // This class is used for previewing key positions before importing them
+   {
 
       public static List<KeyPos_Preview> KeyPositionsList = new();
       public static Dictionary<int, string> SetNamesDict = new();

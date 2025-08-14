@@ -17,6 +17,18 @@ namespace MouseXY
       public static string selectedSetName = "default"; // pro manipulaci s klávesy - stores the name of the set of keys
       public static string showedSetName = "default"; // pro zobrazení v UI, aby se neukazoval default setName
 
+      // Metoda pro převod KeyPos_Preview na KeyPos
+      public static KeyPos FromPreview(KeyPos_Preview preview)
+      {
+         return new KeyPos(
+             preview.Key,
+             preview.Position,
+             preview.SetName,
+             preview.CreatedAt,
+             preview.IsActive
+         );
+      }
+
       public static int PossibleFreeIdInDictKeys(Dictionary<int, string> dict)
       {
          try
