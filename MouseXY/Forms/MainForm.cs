@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -633,6 +634,11 @@ namespace MouseXY
       }
 
       private void btnImportSet_Preview_Click(object sender, EventArgs e)
+      {
+         NotImplementedYetWarning();
+      }
+
+      private void NotImplementedYetWarning()
       {
          MessageBox.Show("This feature is not implemented yet.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
