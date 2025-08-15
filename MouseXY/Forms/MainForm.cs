@@ -100,7 +100,7 @@ namespace MouseXY
       private void MainForm_Load(object sender, EventArgs e)
       {
          cboxOnStartup.Checked = StartupManager.IsInStartup(appName); // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
-         lbDelayMsDescription.Text = "for double control (open/close mouse control by keyboard)\nand double shift (change speed of mouse step) methods";
+         lbDescriptionControl.Text = "double left control to open/close mouse control by keyboard\ndouble left shift to change speed of mouse step to slower\ndouble left alt to change speed of mouse step to faster";
 
          #region DB_loading
          //DBAccess.ConnectionTest();

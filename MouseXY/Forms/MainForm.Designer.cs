@@ -31,7 +31,7 @@
          cboxOnStartup = new CheckBox();
          nmDelayMs = new NumericUpDown();
          lbDelayMs = new Label();
-         lbDelayMsDescription = new Label();
+         lbDescriptionControl = new Label();
          btnAcceptDelayMs = new Button();
          btnSetKeyPos = new Button();
          btnShowKeysPositions = new Button();
@@ -112,15 +112,15 @@
          lbDelayMs.TabIndex = 2;
          lbDelayMs.Text = "delay ms:";
          // 
-         // lbDelayMsDescription
+         // lbDescriptionControl
          // 
-         lbDelayMsDescription.AutoSize = true;
-         lbDelayMsDescription.Font = new Font("Segoe UI Semibold", 10.181818F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbDelayMsDescription.Location = new Point(23, 96);
-         lbDelayMsDescription.Name = "lbDelayMsDescription";
-         lbDelayMsDescription.Size = new Size(79, 19);
-         lbDelayMsDescription.TabIndex = 3;
-         lbDelayMsDescription.Text = "description";
+         lbDescriptionControl.AutoSize = true;
+         lbDescriptionControl.Font = new Font("Segoe UI Semibold", 10.181818F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbDescriptionControl.Location = new Point(20, 92);
+         lbDescriptionControl.Name = "lbDescriptionControl";
+         lbDescriptionControl.Size = new Size(79, 19);
+         lbDescriptionControl.TabIndex = 3;
+         lbDescriptionControl.Text = "description";
          // 
          // btnAcceptDelayMs
          // 
@@ -135,7 +135,7 @@
          // btnSetKeyPos
          // 
          btnSetKeyPos.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnSetKeyPos.Location = new Point(23, 152);
+         btnSetKeyPos.Location = new Point(23, 159);
          btnSetKeyPos.Name = "btnSetKeyPos";
          btnSetKeyPos.Size = new Size(79, 24);
          btnSetKeyPos.TabIndex = 5;
@@ -147,7 +147,7 @@
          // btnShowKeysPositions
          // 
          btnShowKeysPositions.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnShowKeysPositions.Location = new Point(119, 152);
+         btnShowKeysPositions.Location = new Point(119, 159);
          btnShowKeysPositions.Name = "btnShowKeysPositions";
          btnShowKeysPositions.Size = new Size(143, 24);
          btnShowKeysPositions.TabIndex = 6;
@@ -178,7 +178,7 @@
          // 
          lbSetKeyPos.AutoSize = true;
          lbSetKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSetKeyPos.Location = new Point(268, 155);
+         lbSetKeyPos.Location = new Point(268, 162);
          lbSetKeyPos.Name = "lbSetKeyPos";
          lbSetKeyPos.Size = new Size(155, 17);
          lbSetKeyPos.TabIndex = 8;
@@ -201,7 +201,7 @@
          // btnDeleteKey
          // 
          btnDeleteKey.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnDeleteKey.Location = new Point(458, 151);
+         btnDeleteKey.Location = new Point(458, 158);
          btnDeleteKey.Name = "btnDeleteKey";
          btnDeleteKey.Size = new Size(152, 24);
          btnDeleteKey.TabIndex = 10;
@@ -214,7 +214,7 @@
          // btnEditPosition
          // 
          btnEditPosition.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         btnEditPosition.Location = new Point(749, 151);
+         btnEditPosition.Location = new Point(749, 158);
          btnEditPosition.Name = "btnEditPosition";
          btnEditPosition.Size = new Size(75, 25);
          btnEditPosition.TabIndex = 11;
@@ -228,7 +228,7 @@
          // 
          lbKeyPos.AutoSize = true;
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbKeyPos.Location = new Point(615, 131);
+         lbKeyPos.Location = new Point(615, 138);
          lbKeyPos.Name = "lbKeyPos";
          lbKeyPos.Size = new Size(34, 17);
          lbKeyPos.TabIndex = 12;
@@ -238,7 +238,7 @@
          // 
          // tbPosX
          // 
-         tbPosX.Location = new Point(638, 152);
+         tbPosX.Location = new Point(638, 159);
          tbPosX.Name = "tbPosX";
          tbPosX.Size = new Size(42, 23);
          tbPosX.TabIndex = 13;
@@ -247,7 +247,7 @@
          // 
          // tbPosY
          // 
-         tbPosY.Location = new Point(703, 152);
+         tbPosY.Location = new Point(703, 159);
          tbPosY.Name = "tbPosY";
          tbPosY.Size = new Size(42, 23);
          tbPosY.TabIndex = 14;
@@ -258,7 +258,7 @@
          // 
          lbPosX.AutoSize = true;
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosX.Location = new Point(615, 155);
+         lbPosX.Location = new Point(615, 162);
          lbPosX.Name = "lbPosX";
          lbPosX.Size = new Size(21, 17);
          lbPosX.TabIndex = 15;
@@ -270,7 +270,7 @@
          // 
          lbPosY.AutoSize = true;
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPosY.Location = new Point(681, 155);
+         lbPosY.Location = new Point(681, 162);
          lbPosY.Name = "lbPosY";
          lbPosY.Size = new Size(20, 17);
          lbPosY.TabIndex = 16;
@@ -437,7 +437,7 @@
          panelMain.Controls.Add(btnExport);
          panelMain.Controls.Add(lbDelayMs);
          panelMain.Controls.Add(lbMouseControl);
-         panelMain.Controls.Add(lbDelayMsDescription);
+         panelMain.Controls.Add(lbDescriptionControl);
          panelMain.Controls.Add(lbSelectedSetname);
          panelMain.Controls.Add(btnAcceptDelayMs);
          panelMain.Controls.Add(lbShowedSetname);
@@ -699,7 +699,7 @@
       private CheckBox cboxOnStartup;
       private NumericUpDown nmDelayMs;
       private Label lbDelayMs;
-      private Label lbDelayMsDescription;
+      private Label lbDescriptionControl;
       private Button btnAcceptDelayMs;
       private Button btnSetKeyPos;
       private Button btnShowKeysPositions;
