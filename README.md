@@ -34,7 +34,7 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 
 **Version 1.04** - Export keypositions and setnames to json, import from json. ( **actually in beta version** )
 
-**Version 1.05** - Preview on exported files before import ( **actually in beta version** )
+**Version 1.05** - Preview on exported files before import
 
 ## Planned Features and Innovations
 - Custom user-defined sounds
