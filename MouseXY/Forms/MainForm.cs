@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Dynamic;
 using System.Text.RegularExpressions;
 
 namespace MouseXY
@@ -76,6 +77,7 @@ namespace MouseXY
             {
                ShowKeysPositions();
             }
+            btnBackToPreview.Hide();
             DBAccess.SaveOrUpdateAllKeyPos();
             DBAccess.SaveAllSetNames();
          };
@@ -86,6 +88,7 @@ namespace MouseXY
             panelPreviewImport.Show();
             Settings.latestSize = Size;
             Size = Settings.biggerFormSize;
+            lbFileName_Preview.Text = $"FileName: {KeyPos_Preview.selectedFileName}";
             UpdatePreviewDataGridView();
             LoadComboBoxPreviewSetNames();
          };
@@ -283,12 +286,14 @@ namespace MouseXY
          if (showKeysPositions)
          {
             Size = Settings.biggerFormSize;
+            Settings.latestSize = Size;
             btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Show", "hide", StringComparison.OrdinalIgnoreCase);
 
          }
          else
          {
             Size = Settings.defaultFormSize;
+            Settings.latestSize = Size;
             btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Hide", "show", StringComparison.OrdinalIgnoreCase);
 
          }
@@ -632,13 +637,9 @@ namespace MouseXY
          ExportImport.ImportSet();
       }
 
-      private void NotImplementedYetWarning()
-      {
-         MessageBox.Show("This feature is not implemented yet.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Information);
-      }
-
       private void btnImportAll_Preview_Click(object sender, EventArgs e)
       {
+         btnBackToPreview.Hide();
          ExitPreviewPanel();
          ExportImport.ImportFromJson(KeyPos_Preview.selectedFileName);
          KeyPos_Preview.selectedFileName = string.Empty;
@@ -646,12 +647,14 @@ namespace MouseXY
 
       private void btnBackToJsonSelect_Preview_Click(object sender, EventArgs e)
       {
+         btnBackToPreview.Hide();
          ExitPreviewPanel(true);
          ExportImport.ImportFromJson();
       }
 
       private void btnExit_Preview_Click(object sender, EventArgs e)
       {
+         btnBackToPreview.Show();
          ExitPreviewPanel(true);
       }
 
@@ -663,6 +666,13 @@ namespace MouseXY
          {
             Size = Settings.latestSize;
          }
+      }
+
+      private void btnBackToPreview_Click(object sender, EventArgs e)
+      {
+         panelMain.Hide();
+         panelPreviewImport.Show();
+         Size = Settings.biggerFormSize;
       }
 
       private void dgvShowKeysPositions_Preview_SelectionChanged(object sender, EventArgs e)
@@ -682,6 +692,10 @@ namespace MouseXY
 
       #endregion
 
+      private void NotImplementedYetWarning()
+      {
+         MessageBox.Show("This feature is not implemented yet.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
 
 
    }

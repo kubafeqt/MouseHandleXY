@@ -58,7 +58,9 @@
          btnExport = new Button();
          btnImport = new Button();
          panelMain = new Panel();
+         btnBackToPreview = new Button();
          panelPreviewImport = new Panel();
+         lbFileName_Preview = new Label();
          btnExit_Preview = new Button();
          btnImportSet_Preview = new Button();
          btnBackToJsonSelect_Preview = new Button();
@@ -83,7 +85,7 @@
          // cboxOnStartup
          // 
          cboxOnStartup.AutoSize = true;
-         cboxOnStartup.Location = new Point(23, 24);
+         cboxOnStartup.Location = new Point(23, 14);
          cboxOnStartup.Name = "cboxOnStartup";
          cboxOnStartup.Size = new Size(130, 19);
          cboxOnStartup.TabIndex = 0;
@@ -188,7 +190,7 @@
          cboxShowSetKeyPos.AutoSize = true;
          cboxShowSetKeyPos.Checked = true;
          cboxShowSetKeyPos.CheckState = CheckState.Checked;
-         cboxShowSetKeyPos.Location = new Point(159, 24);
+         cboxShowSetKeyPos.Location = new Point(23, 36);
          cboxShowSetKeyPos.Name = "cboxShowSetKeyPos";
          cboxShowSetKeyPos.Size = new Size(214, 19);
          cboxShowSetKeyPos.TabIndex = 9;
@@ -428,6 +430,7 @@
          // 
          // panelMain
          // 
+         panelMain.Controls.Add(btnBackToPreview);
          panelMain.Controls.Add(cboxOnStartup);
          panelMain.Controls.Add(btnImport);
          panelMain.Controls.Add(nmDelayMs);
@@ -463,8 +466,22 @@
          panelMain.TabIndex = 30;
          panelMain.Tag = "bigPanels";
          // 
+         // btnBackToPreview
+         // 
+         btnBackToPreview.Font = new Font("Segoe UI Semibold", 8.727273F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnBackToPreview.Location = new Point(325, 14);
+         btnBackToPreview.Name = "btnBackToPreview";
+         btnBackToPreview.Size = new Size(77, 41);
+         btnBackToPreview.TabIndex = 30;
+         btnBackToPreview.Tag = "BackToPreview";
+         btnBackToPreview.Text = "back to preview";
+         btnBackToPreview.UseVisualStyleBackColor = true;
+         btnBackToPreview.Visible = false;
+         btnBackToPreview.Click += btnBackToPreview_Click;
+         // 
          // panelPreviewImport
          // 
+         panelPreviewImport.Controls.Add(lbFileName_Preview);
          panelPreviewImport.Controls.Add(btnExit_Preview);
          panelPreviewImport.Controls.Add(btnImportSet_Preview);
          panelPreviewImport.Controls.Add(btnBackToJsonSelect_Preview);
@@ -485,6 +502,17 @@
          panelPreviewImport.TabIndex = 31;
          panelPreviewImport.Tag = "bigPanels";
          panelPreviewImport.Visible = false;
+         // 
+         // lbFileName_Preview
+         // 
+         lbFileName_Preview.AutoSize = true;
+         lbFileName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbFileName_Preview.Location = new Point(59, 31);
+         lbFileName_Preview.Name = "lbFileName_Preview";
+         lbFileName_Preview.Size = new Size(74, 17);
+         lbFileName_Preview.TabIndex = 59;
+         lbFileName_Preview.Tag = "";
+         lbFileName_Preview.Text = "FileName: ";
          // 
          // btnExit_Preview
          // 
@@ -730,5 +758,7 @@
       private Button btnImportSet_Preview;
       private Button btnBackToJsonSelect_Preview;
       private Button btnExit_Preview;
+      private Button btnBackToPreview;
+      private Label lbFileName_Preview;
    }
 }
