@@ -75,9 +75,17 @@ namespace MouseXY
          if (!KeyPositionsList.Any(k => k.Key == Key && k.SetName == SetName)) //key in setame does not exist - add new
          {
             KeyPositionsList.Add(this);
+            Keys key = (Keys)Enum.Parse(typeof(Keys), Key);
             if (SetName == selectedSetName)
             {
-               KeysPositionDict.Add((Keys)Enum.Parse(typeof(Keys), Key), Position);
+               if (!KeysPositionDict.ContainsKey(key)) // only add if the key is not already in the dictionary
+               {
+                  KeysPositionDict.Add(key, Position);
+               }
+               else
+               {
+                  KeysPositionDict[key] = Position; // update the position if it already exists
+               }
             }
          }
          else //key in setName exists - edit

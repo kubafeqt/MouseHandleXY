@@ -59,6 +59,7 @@
          btnImport = new Button();
          panelMain = new Panel();
          panelPreviewImport = new Panel();
+         btnExit_Preview = new Button();
          btnImportSet_Preview = new Button();
          btnBackToJsonSelect_Preview = new Button();
          btnImportAll_Preview = new Button();
@@ -458,12 +459,13 @@
          panelMain.Controls.Add(tbPosY);
          panelMain.Location = new Point(12, 12);
          panelMain.Name = "panelMain";
-         panelMain.Size = new Size(1003, 504);
+         panelMain.Size = new Size(841, 250);
          panelMain.TabIndex = 30;
          panelMain.Tag = "bigPanels";
          // 
          // panelPreviewImport
          // 
+         panelPreviewImport.Controls.Add(btnExit_Preview);
          panelPreviewImport.Controls.Add(btnImportSet_Preview);
          panelPreviewImport.Controls.Add(btnBackToJsonSelect_Preview);
          panelPreviewImport.Controls.Add(btnImportAll_Preview);
@@ -477,12 +479,24 @@
          panelPreviewImport.Controls.Add(tbPosX_Preview);
          panelPreviewImport.Controls.Add(lbPosX_Preview);
          panelPreviewImport.Controls.Add(tbPosY_Preview);
-         panelPreviewImport.Location = new Point(116, 568);
+         panelPreviewImport.Location = new Point(11, 277);
          panelPreviewImport.Name = "panelPreviewImport";
-         panelPreviewImport.Size = new Size(839, 639);
+         panelPreviewImport.Size = new Size(842, 277);
          panelPreviewImport.TabIndex = 31;
          panelPreviewImport.Tag = "bigPanels";
          panelPreviewImport.Visible = false;
+         // 
+         // btnExit_Preview
+         // 
+         btnExit_Preview.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         btnExit_Preview.Location = new Point(737, 46);
+         btnExit_Preview.Name = "btnExit_Preview";
+         btnExit_Preview.Size = new Size(71, 24);
+         btnExit_Preview.TabIndex = 58;
+         btnExit_Preview.Tag = "";
+         btnExit_Preview.Text = "Exit";
+         btnExit_Preview.UseVisualStyleBackColor = true;
+         btnExit_Preview.Click += btnExit_Preview_Click;
          // 
          // btnImportSet_Preview
          // 
@@ -634,7 +648,7 @@
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
-         ClientSize = new Size(1244, 819);
+         ClientSize = new Size(881, 577);
          Controls.Add(panelPreviewImport);
          Controls.Add(panelMain);
          FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -715,5 +729,6 @@
       private Button btnImportAll_Preview;
       private Button btnImportSet_Preview;
       private Button btnBackToJsonSelect_Preview;
+      private Button btnExit_Preview;
    }
 }

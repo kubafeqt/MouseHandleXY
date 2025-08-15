@@ -639,18 +639,30 @@ namespace MouseXY
 
       private void btnImportAll_Preview_Click(object sender, EventArgs e)
       {
-         panelMain.Show();
-         panelPreviewImport.Hide();
+         ExitPreviewPanel();
          ExportImport.ImportFromJson(KeyPos_Preview.selectedFileName);
          KeyPos_Preview.selectedFileName = string.Empty;
       }
 
       private void btnBackToJsonSelect_Preview_Click(object sender, EventArgs e)
       {
+         ExitPreviewPanel(true);
+         ExportImport.ImportFromJson();
+      }
+
+      private void btnExit_Preview_Click(object sender, EventArgs e)
+      {
+         ExitPreviewPanel(true);
+      }
+
+      private void ExitPreviewPanel(bool latestSize = false)
+      {
          panelMain.Show();
          panelPreviewImport.Hide();
-         Size = Settings.latestSize;
-         ExportImport.ImportFromJson();
+         if (latestSize)
+         {
+            Size = Settings.latestSize;
+         }
       }
 
       private void dgvShowKeysPositions_Preview_SelectionChanged(object sender, EventArgs e)
@@ -669,6 +681,7 @@ namespace MouseXY
       }
 
       #endregion
+
 
 
    }

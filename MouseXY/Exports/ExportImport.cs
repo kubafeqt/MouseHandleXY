@@ -181,6 +181,17 @@ namespace MouseXY
          }
       }
 
+      private static void ChangeSetNamesInImportedKeyPositions(List<KeyPos_Preview> importedKeyPositions, string setName, string newSetName)
+      {
+         foreach (var pos in importedKeyPositions)
+         {
+            if (pos.SetName == setName)
+            {
+               pos.SetName = newSetName;
+            }
+         }
+      }
+
 
       //test it
       private static void ChangeSetNamesInImportedKeyPositions(List<KeyPos> importedKeyPositions, List<KeyPos> prepImportedKeyPositions, string setName, string newSetName)
@@ -248,6 +259,8 @@ namespace MouseXY
                string? newSetName = PromptForNewSetName(setName, prevMsg);
                if (!string.IsNullOrWhiteSpace(newSetName) && !KeyPos.SetNamesDict.ContainsValue(newSetName) && newSetName != "default")
                {
+                  ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, newSetName);
+                  KeyPos.SetNamesDict.Add(KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict), newSetName);
                   ImportSet(newSetName);
                }
                else
@@ -271,13 +284,17 @@ namespace MouseXY
          }
          else //setname je free
          {
+            ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, setName);
+            KeyPos.SetNamesDict.Add(KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict), setName);
             ImportSet(setName);
          }
       }
 
       private static void ImportSet(string setName)
       {
-         KeyPos.KeyPositionsList.AddRange(KeyPos_Preview.KeyPositionsList.Select(preview => KeyPos.FromPreview(preview)));
+         KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == setName);
+         KeyPos_Preview.KeyPositionsList.ForEach(preview => KeyPos.FromPreview(preview));
+         OnFileImport?.Invoke();
          MessageBox.Show($"Set \"{setName}\" byl úspěšně importován.", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
    }
