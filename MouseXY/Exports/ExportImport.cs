@@ -225,6 +225,7 @@ namespace MouseXY
                importedSetNamesDict.Add(0, "default");
                importedSetNamesDict = importedSetNamesDict.OrderBy(x => x.Key).ToDictionary();
                KeyPos_Preview.SetNamesDict = importedSetNamesDict;
+               KeyPos_Preview.showedSetName = "default"; //pro zobrazení v UI, aby se neukazoval default setName
 
                OnPreview.Invoke();
             }
@@ -259,7 +260,7 @@ namespace MouseXY
                string? newSetName = PromptForNewSetName(setName, prevMsg);
                if (!string.IsNullOrWhiteSpace(newSetName) && !KeyPos.SetNamesDict.ContainsValue(newSetName) && newSetName != "default")
                {
-                  ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, newSetName);
+                  //ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, newSetName);
                   KeyPos.SetNamesDict.Add(KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict), newSetName);
                   ImportSet(newSetName);
                }
@@ -284,7 +285,7 @@ namespace MouseXY
          }
          else //setname je free
          {
-            ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, setName);
+            //ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, setName);
             KeyPos.SetNamesDict.Add(KeyPos.PossibleFreeIdInDictKeys(KeyPos.SetNamesDict), setName);
             ImportSet(setName);
          }
@@ -292,8 +293,16 @@ namespace MouseXY
 
       private static void ImportSet(string setName)
       {
-         KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == setName);
-         KeyPos_Preview.KeyPositionsList.ForEach(preview => KeyPos.FromPreview(preview));
+         //KeyPos.KeyPositionsList.RemoveAll(x => x.SetName == setName);
+         if (setName != KeyPos_Preview.showedSetName) //změnit název setName u všech Keypos, pokud je přejmenovaný
+         {
+            ChangeSetNamesInImportedKeyPositions(KeyPos_Preview.KeyPositionsList, KeyPos_Preview.showedSetName, setName);
+         }
+         if (setName == KeyPos.selectedSetName)
+         {
+            KeyPos.UpdateKeyPosDict(); //pokud je setName stejný jako aktuálně vybraný, aktualizovat KeyPos.SetNamesDict
+         }
+         KeyPos_Preview.KeyPositionsList.Where(preview => preview.SetName == setName).ToList().ForEach(preview => KeyPos.FromPreview(preview));
          OnFileImport?.Invoke();
          MessageBox.Show($"Set \"{setName}\" byl úspěšně importován.", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
