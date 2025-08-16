@@ -30,15 +30,15 @@ This app was created because my laptop's touchpad not working on Windows 10 due 
 
 ## New features
 
-**Version 1.01** - Configurable hotkeys and opening/closing controls delays
+**Version 1.01** - Configurable hotkeys and opening/closing controls delays.
 
-**Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
+**Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys.
 
-**Version 1.03** - You can add/remove/edit sets of configurable hotkeys
+**Version 1.03** - You can add/remove/edit sets of configurable hotkeys.
 
 **Version 1.04** - Export keypositions and setnames to json, import from json. ( **actually in beta version** )
 
-**Version 1.05** - Preview on exported files before import
+**Version 1.05** - Preview on exported files before import.
 
 ## Planned Features and Innovations
 - Custom user-defined sounds
