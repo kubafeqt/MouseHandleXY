@@ -8,7 +8,8 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 ## Activation
 
 - Press **Left Control twice within 250 (or setted) milliseconds** to toggle keyboard mouse control on or off.
-**when mouse control by keyboard is enabled:**
+
+**When mouse control by keyboard is enabled:**
 - Press **Left Shift** to enable or disable precise cursor control or slow down fast cursor control to normal cursor speed.
 - Press **Left Alt** to enable or disable fast cursor control or go back to latest mouse cursor speed.
 
