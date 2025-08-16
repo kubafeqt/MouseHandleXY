@@ -13,8 +13,6 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 - Press **Left Shift** to enable or disable precise cursor control or slow down fast cursor control to normal cursor speed.
 - Press **Left Alt** to enable or disable fast cursor control or go back to latest mouse cursor speed.
 
-**Version 1.01** - Configurable hotkeys and opening/closing controls delays
-
 > **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
 ## Controls
@@ -29,6 +27,8 @@ Control your mouse entirely using your keyboard — helpful when your touchpad i
 This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
 
 ## New features
+
+**Version 1.01** - Configurable hotkeys and opening/closing controls delays
 
 **Version 1.02** - You can save/load/edit cursor positions with configurable hotkeys
 
