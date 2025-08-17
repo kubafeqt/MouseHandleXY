@@ -227,7 +227,7 @@ namespace MouseXY
                KeyPos_Preview.SetNamesDict = importedSetNamesDict;
                KeyPos_Preview.showedSetName = "default"; //pro zobrazení v UI, aby se neukazoval default setName
 
-               OnPreview.Invoke();
+               OnPreview?.Invoke();
             }
             catch (Exception ex)
             {
