@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace MouseXY
 {
     class Settings
     {
       //readonly:
       public static readonly Size defaultFormSize = new(462, 338); // default size of the form
-      public static readonly Size biggerFormSize = new(870, 695);
+      public static readonly Size biggerFormSize = new(870, 705);
       public static readonly Size panelSize = new(845, 650);
       public static readonly Point panelLocation = new(7, 7);
 

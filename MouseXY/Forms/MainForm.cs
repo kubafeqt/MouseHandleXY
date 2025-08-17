@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Dynamic;
 using System.Text.RegularExpressions;
 
 namespace MouseXY
@@ -25,18 +24,18 @@ namespace MouseXY
 
          // Vytvoření tray ikony
          trayIcon = new NotifyIcon();
-         trayIcon.Text = "Myš ovládaná klávesnicí";
+         trayIcon.Text = "Mouse controlled by keyboard";
          trayIcon.Icon = SystemIcons.Application; //lze nahradit vlastní ikonou
          trayIcon.ContextMenuStrip = trayMenu;
          trayIcon.Visible = true;
          trayIcon.DoubleClick += OnShow;
 
          // Událost pro minimalizaci
-         this.Resize += OnResize;
+         Resize += OnResize;
 
          // Skryj okno po startu
-         this.Load += (s, e) => this.Hide();
-         this.FormClosing += OnFormClosing;
+         Load += (s, e) => this.Hide();
+         FormClosing += OnFormClosing;
 
          timer.Interval = 50;
          timer.Tick += timer_tick;
@@ -48,14 +47,14 @@ namespace MouseXY
             EnableDisableControlsOfTagInPanel(panelMain, "MouseControlDisable", !mouseCursorHandle); // Enable/disable controls for editing positions of keys
             lbMouseControl.Visible = mouseCursorHandle; // Zobrazí nebo skryje popisek pro ovládání myši
             lbMouseControl.Text = mouseCursorHandle ? "Mouse control is ON" : "Mouse control is OFF"; // Změní text popisku podle stavu ovládání myši
-            EnableDisableControlsOfTagInPanel(panelMain, "ExpImp", !mouseCursorHandle);
+            ShowControlsOfTagInPanel(panelMain, "ExpImp", !mouseCursorHandle);
             if (mouseCursorHandle)
             {
                MouseHandle.setKeyToPos = false; // reset key to position after mouse cursor is controlled by keyboard
             }
          };
 
-         // event for set key to position of mouse cursor
+         //event for set key to position of mouse cursor
          MouseHandle.OnSetKeyToPos += () =>
          {
             SwitchSetKeyPos();
@@ -82,6 +81,7 @@ namespace MouseXY
             DBAccess.SaveAllSetNames();
          };
 
+         //event for preview json file
          ExportImport.OnPreview += () =>
          {
             panelMain.Hide();
@@ -100,7 +100,7 @@ namespace MouseXY
       private void MainForm_Load(object sender, EventArgs e)
       {
          cboxOnStartup.Checked = StartupManager.IsInStartup(appName); // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
-         lbDescriptionControl.Text = "double left control to open/close mouse control by keyboard\ndouble left shift to change speed of mouse step to slower\ndouble left alt to change speed of mouse step to faster";
+         lbDescriptionControl.Text = "double left control to open/close mouse control by keyboard\nleft shift to change speed of mouse step to slower\nleft alt to change speed of mouse step to faster";
 
          #region DB_loading
          //DBAccess.ConnectionTest();
@@ -173,12 +173,12 @@ namespace MouseXY
          lbShowedSetName_Preview.Text = $"ShowedSetname: {KeyPos_Preview.showedSetName}";
       }
 
-      private void ShowControlsOfTagInPanel(Panel parentPanel, string tag, bool show = true)
+      private void ShowControlsOfTagInPanel(Panel parentPanel, string tag, bool show = true, bool onKeysPositions = false)
       {
          var matchingControls = parentPanel.Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
          foreach (var control in matchingControls)
          {
-            control.Visible = !show ? show : showKeysPositions;
+            control.Visible = !onKeysPositions ? show : !show ? show : showKeysPositions;
          }
       }
 
@@ -282,7 +282,7 @@ namespace MouseXY
       {
          showKeysPositions = !showKeysPositions;
          dgvShowKeysPositions.Visible = showKeysPositions;
-         ShowControlsOfTagInPanel(panelMain, "EditPos");
+         ShowControlsOfTagInPanel(panelMain, "EditPos", onKeysPositions:true);
          if (showKeysPositions)
          {
             Size = Settings.biggerFormSize;

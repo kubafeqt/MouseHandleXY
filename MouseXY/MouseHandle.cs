@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace MouseXY
 {
@@ -246,44 +242,44 @@ namespace MouseXY
          }
       }
 
-      static Stopwatch stopwatch = Stopwatch.StartNew();
+      static DateTime dateTime = DateTime.Now;
       private static void ControlMethod(IntPtr wParam) //open/close mouse control by keyboard
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
-         if (stopwatch.ElapsedMilliseconds < Settings.delayMs)
+         if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
          {
             mouseCursorHandle = !mouseCursorHandle;
             Sounds.PlaySound(mouseCursorHandle);
          }
-         stopwatch.Restart();
+         dateTime = DateTime.Now;
       }
 
-      static DateTime dateTime = DateTime.Now;
+      //static Stopwatch stopwatch = Stopwatch.StartNew();
       private static void ShiftMethod(IntPtr wParam) //change mouse step speed to slower
       {
          if (wParam != (IntPtr)WM_KEYDOWN) return;
 
-         if (mouseCursorHandle && DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
+         if (mouseCursorHandle)// && stopwatch.ElapsedMilliseconds < Settings.delayMs)
          {
             step = step == Settings.normalSpeed ? Settings.slowSpeed : Settings.normalSpeed; //Slowing down fastSpeed and normalSpeed, fasting up slowSpeed
          }
-         dateTime = DateTime.Now;
+         //stopwatch.Restart();
       }
 
       static int latestSpeed = step;
-      static DateTime dtJumpMethod = DateTime.Now;
+      //static DateTime dtJumpMethod = DateTime.Now;
       private static void JumpMethod(IntPtr wParam) //change mouse step speed to faster
       {
          if (wParam != (IntPtr)WM_SYSKEYDOWN) return;
 
-         if (mouseCursorHandle && DateTime.Now.Subtract(dtJumpMethod).TotalMilliseconds < Settings.delayMs)
+         if (mouseCursorHandle)// && DateTime.Now.Subtract(dtJumpMethod).TotalMilliseconds < Settings.delayMs)
          {
             bool fastSpeed = step == Settings.fastSpeed;
             latestSpeed = fastSpeed ? latestSpeed : step;
             step = fastSpeed ? latestSpeed : Settings.fastSpeed; //modify slowSpeed and normalSpeed to fastSpeed, slowing down fastSpeed    
          }
-         dtJumpMethod = DateTime.Now;
+         //dtJumpMethod = DateTime.Now;
       }
 
       #endregion

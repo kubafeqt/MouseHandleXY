@@ -1,4 +1,5 @@
-﻿namespace MouseXY
+﻿
+namespace MouseXY
 {
    class SetNameService
    {
