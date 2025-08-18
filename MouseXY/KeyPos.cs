@@ -136,6 +136,11 @@ namespace MouseXY
          }
       }
 
+      /// <summary>
+      /// Updates the name of the keys in the KeyPositionsList based on the old set name.
+      /// </summary>
+      /// <param name="newSetName">new set name</param>
+      /// <param name="oldSetName">old set name</param>
       public static void UpdateKeysSetName(string newSetName, string oldSetName)
       {
          KeyPositionsList.Where(k => k.SetName == oldSetName).ToList().ForEach(k =>
