@@ -3,9 +3,10 @@
 
 Control your mouse entirely using your keyboard - helpful when your touchpad isn't working.
 
-[ e.g. due to driver incompatibility on Windows 10 ]
+[ e.g. due to driver incompatibility on Windows 10 , mouse malfunction]
 
 // Doesn't work when mouse is disconnected . : - ( , Probably need to simulate HID driver .
+// Doesn't work when Task manager is on selected desktop.
 
 ## Activation
 
