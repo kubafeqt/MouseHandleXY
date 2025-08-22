@@ -692,11 +692,6 @@ namespace MouseXY
 
       #endregion
 
-      private void NotImplementedYetWarning()
-      {
-         MessageBox.Show("This feature is not implemented yet.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Information);
-      }
-
 
    }
 }

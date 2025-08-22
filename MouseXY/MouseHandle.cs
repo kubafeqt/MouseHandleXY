@@ -10,6 +10,7 @@ namespace MouseXY
       private const int WM_KEYDOWN = 0x0100;
       private const int WM_KEYUP = 0x0101;
       private const int WM_SYSKEYDOWN = 0x0104;
+      private const int WM_SYSKEYUP = 0x0105;
 
       public static LowLevelKeyboardProc _proc = HookCallback;
       public static IntPtr _hookID = IntPtr.Zero;
@@ -131,26 +132,29 @@ namespace MouseXY
             int vkCode = Marshal.ReadInt32(lParam);
             Point pos = Cursor.Position;
 
-            switch ((Keys)vkCode)
+            if ((int)wParam == WM_KEYUP)  // akce jen při puštění
             {
-               //double ctrl for open/close mouse control by keyboard
-               case Keys.LControlKey:
-                  {
-                     ControlMethod(wParam);
-                     break;
-                  }
-               //double shift to change speed of mouse step to slow
-               case Keys.LShiftKey:
-                  {
-                     ShiftMethod(wParam);
-                     break;
-                  }
-               //double left alt to change speed of mouse step to fast
-               case Keys.LMenu:
-                  {
-                     JumpMethod(wParam);
-                     break;
-                  }
+               switch ((Keys)vkCode)
+               {
+                  //double ctrl for open/close mouse control by keyboard
+                  case Keys.LControlKey:
+                     {
+                        ControlMethod(wParam);
+                        break;
+                     }
+                  //double shift to change speed of mouse step to slow
+                  case Keys.LShiftKey:
+                     {
+                        ShiftMethod(wParam);
+                        break;
+                     }
+                  //double left alt to change speed of mouse step to fast
+                  case Keys.LMenu:
+                     {
+                        JumpMethod(wParam);
+                        break;
+                     }
+               }
             }
 
             if (mouseCursorHandle) //when mouse control by keyboard is enabled
@@ -192,6 +196,10 @@ namespace MouseXY
                         MiddleMouseDown(wParam); //držení prostředního tlačítka myši
                         return (IntPtr)1;
                      }
+                  //case Keys.X:
+                  //{
+                  //   return (IntPtr)1;
+                  //}
                }
 
                if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
@@ -245,7 +253,7 @@ namespace MouseXY
       static DateTime dateTime = DateTime.Now;
       private static void ControlMethod(IntPtr wParam) //open/close mouse control by keyboard
       {
-         if (wParam != (IntPtr)WM_KEYDOWN) return;
+         if (wParam != (IntPtr)WM_KEYUP) return;
 
          if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
          {
@@ -258,7 +266,7 @@ namespace MouseXY
       //static Stopwatch stopwatch = Stopwatch.StartNew();
       private static void ShiftMethod(IntPtr wParam) //change mouse step speed to slower
       {
-         if (wParam != (IntPtr)WM_KEYDOWN) return;
+         if (wParam != (IntPtr)WM_KEYUP) return;
 
          if (mouseCursorHandle)// && stopwatch.ElapsedMilliseconds < Settings.delayMs)
          {
@@ -271,7 +279,7 @@ namespace MouseXY
       //static DateTime dtJumpMethod = DateTime.Now;
       private static void JumpMethod(IntPtr wParam) //change mouse step speed to faster
       {
-         if (wParam != (IntPtr)WM_SYSKEYDOWN) return;
+         if (wParam != (IntPtr)WM_KEYUP) return;
 
          if (mouseCursorHandle)// && DateTime.Now.Subtract(dtJumpMethod).TotalMilliseconds < Settings.delayMs)
          {
