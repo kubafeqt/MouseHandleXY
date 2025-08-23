@@ -18,7 +18,7 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 - **Move cursor**: Hold arrow keys or **W / A / S / D**
 - **Left mouse click**: Hold and release **E** (simulates press and release)
 - **Right mouse click**: Hold and release **Q** (simulates press and release)
-- **Middle mouse click**: Hold and release **X** (simulates press and release)
+- **Middle mouse click**: Hold and release **C** (simulates press and release)
 - **Middle mouse wheel scroll up**: Hold **R** (simulates scrolling up)
 - **Middle mouse wheel scroll down**: Hold **F** (simulates scrolling down)
 
