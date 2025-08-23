@@ -31,7 +31,11 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 
 ## Use Case
 
-This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
+This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. 
+
+It allows full mouse control using only the keyboard.
+
+Useful when your mouse or touchpad is malfunctioning.
 
 ## New features
 
