@@ -50,6 +50,7 @@ Useful when your mouse or touchpad is malfunctioning.
 **Version 1.05** - Preview on exported files before import.
 
 ## Planned Features and Innovations
-- Custom user-defined sounds
+- Settings and sets for basic functionality keys,
+- Custom user-defined sounds,
 - Multilingual support,
 - Additional innovative features are currently in development and will be announced in future updates.
