@@ -3,15 +3,24 @@
 
 Control your mouse entirely using your keyboard - helpful when your touchpad isn't working.
 
-[ e.g. due to driver incompatibility on Windows 10 , mouse malfunction]
+[ e.g. due to driver incompatibility on Windows 10 , mouse or touchpad malfunction]
 
 // Doesn't work when mouse is disconnected . : - ( , Probably need to simulate HID driver .
 
-// Need to run as administrator when some administrator level software or task manager is on selected desktop.
+// Need to run as administrator to work when some administrator level software or task manager is on selected desktop.
 
 ## Activation
 
 - Press **Left Control twice within 250 (or setted) milliseconds** to toggle keyboard mouse control on or off.
+
+## Controls
+
+- **Move cursor**: Hold arrow keys or **W / A / S / D**
+- **Left mouse click**: Hold and release **E** (simulates press and release)
+- **Right mouse click**: Hold and release **Q** (simulates press and release)
+- **Middle mouse click**: Hold and release **C** (simulates press and release)
+- **Middle mouse wheel scroll up**: Hold **R** (simulates scrolling up)
+- **Middle mouse wheel scroll down**: Hold **F** (simulates scrolling down)
 
 **When mouse control by keyboard is enabled:**
 - Press **Left Shift** to enable or disable precise cursor control or slow down fast cursor control to normal cursor speed.
@@ -19,16 +28,14 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 
 > **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
-## Controls
-
-- **Move cursor movement**: Arrow keys or **W / A / S / D**
-- **Left mouse click down**: Hold and release **E** (simulates press and release)
-- **Right mouse click down**: Hold and release **Q** (simulates press and release)
-- **Middle mouse click down**: Hold and release **R** or **F** (simulates press and release)
 
 ## Use Case
 
-This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. It allows full mouse control using only the keyboard.
+This app was created because my laptop's touchpad not working on Windows 10 due to a driver incompatibility. 
+
+It allows full mouse control using only the keyboard.
+
+Useful when your mouse or touchpad is malfunctioning.
 
 ## New features
 
