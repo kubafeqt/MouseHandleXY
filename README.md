@@ -7,7 +7,8 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 
 // Doesn't work when mouse is disconnected . : - ( , Probably need to simulate HID driver .
 
-// Need to run as administrator to work when some administrator level software or task manager is on selected desktop.
+> **Note:**  
+> Need to run this app as administrator for it to work when some administrator-level software, system settings, Task Manager or other protected Windows interfaces are active on the selected desktop.
 
 ## Activation
 
