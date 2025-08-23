@@ -130,7 +130,7 @@ namespace MouseXY
       {
          Keys.Up, Keys.Down, Keys.Left, Keys.Right,
          Keys.W, Keys.A, Keys.S, Keys.D,
-         Keys.E, Keys.Q, Keys.R, Keys.F, Keys.X,
+         Keys.E, Keys.Q, Keys.R, Keys.F, Keys.C,
          Keys.LControlKey, Keys.LShiftKey, Keys.LMenu,
          //control keys:
          Keys.LWin, Keys.RControlKey,
@@ -220,7 +220,7 @@ namespace MouseXY
                         MiddleMouseWheelDown(wParam); //posun kolečkem myši dolů
                         return (IntPtr)1;
                      }
-                  case Keys.X:
+                  case Keys.C:
                      {
                         MiddleMouseDown(wParam); //kliknutí prostředním tlačítkem myši
                         return (IntPtr)1;
