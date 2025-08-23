@@ -51,7 +51,8 @@ Useful when your mouse or touchpad is malfunctioning.
 **Version 1.05** - Preview on exported files before import.
 
 ## Planned Features and Innovations
-- Settings and sets for basic functionality keys,
-- Custom user-defined sounds,
-- Multilingual support,
+- Customizable settings and key mappings for basic functionality
+- RPA-like actions with image recognition
+- Custom user-defined sounds
+- Multilingual support
 - Additional innovative features will be announced in future updates.
