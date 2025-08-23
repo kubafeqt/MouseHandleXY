@@ -13,12 +13,6 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 
 - Press **Left Control twice within 250 (or setted) milliseconds** to toggle keyboard mouse control on or off.
 
-**When mouse control by keyboard is enabled:**
-- Press **Left Shift** to enable or disable precise cursor control or slow down fast cursor control to normal cursor speed.
-- Press **Left Alt** to enable or disable fast cursor control or go back to latest mouse cursor speed.
-
-> **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
-
 ## Controls
 
 - **Move cursor**: Hold arrow keys or **W / A / S / D**
@@ -27,6 +21,12 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 - **Middle mouse click**: Hold and release **X** (simulates press and release)
 - **Middle mouse wheel scroll up**: Hold **R** (simulates scrolling up)
 - **Middle mouse wheel scroll down**: Hold **F** (simulates scrolling down)
+
+**When mouse control by keyboard is enabled:**
+- Press **Left Shift** to enable or disable precise cursor control or slow down fast cursor control to normal cursor speed.
+- Press **Left Alt** to enable or disable fast cursor control or go back to latest mouse cursor speed.
+
+> **Cursor step size**: Normal = 10px, Precise = 2px, Fast = 50px
 
 
 ## Use Case
