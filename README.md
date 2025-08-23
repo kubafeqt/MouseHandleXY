@@ -53,4 +53,4 @@ Useful when your mouse or touchpad is malfunctioning.
 - Settings and sets for basic functionality keys,
 - Custom user-defined sounds,
 - Multilingual support,
-- Additional innovative features are currently in development and will be announced in future updates.
+- Additional innovative features will be announced in future updates.
