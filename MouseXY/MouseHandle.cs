@@ -11,6 +11,7 @@ namespace MouseXY
       private const int WM_KEYUP = 0x0101;
       private const int WM_SYSKEYDOWN = 0x0104;
       private const int WM_SYSKEYUP = 0x0105;
+      private const int MOUSEEVENTF_WHEEL = 0x0800;
 
       public static LowLevelKeyboardProc _proc = HookCallback;
       public static IntPtr _hookID = IntPtr.Zero;
@@ -58,15 +59,15 @@ namespace MouseXY
       #endregion
 
       #region Mouse Control Methods
-      private static bool isLeftMouseDown = false;
+      private static bool isLeftMouseDown = false; //pro neopakování stisku levého tlačítka myši
       private static void LeftMouseDown(IntPtr wParam)
       {
-         if (wParam == (IntPtr)WM_KEYDOWN && !isLeftMouseDown) // Levé tlačítko myši dolů
+         if (wParam == WM_KEYDOWN && !isLeftMouseDown) // Levé tlačítko myši dolů
          {
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
             isLeftMouseDown = true;
          }
-         else if (wParam == (IntPtr)WM_KEYUP && isLeftMouseDown) // Levé tlačítko myši nahoru
+         else if (wParam == WM_KEYUP && isLeftMouseDown) // Levé tlačítko myši nahoru
          {
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
             isLeftMouseDown = false;
@@ -76,12 +77,12 @@ namespace MouseXY
       private static bool isRightMouseDown = false;
       private static void RightMouseDown(IntPtr wParam)
       {
-         if (wParam == (IntPtr)WM_KEYDOWN && !isRightMouseDown)
+         if (wParam == WM_KEYDOWN && !isRightMouseDown)
          {
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
             isRightMouseDown = true;
          }
-         else if (wParam == (IntPtr)WM_KEYUP && isRightMouseDown)
+         else if (wParam == WM_KEYUP && isRightMouseDown)
          {
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
             isRightMouseDown = false;
@@ -91,30 +92,48 @@ namespace MouseXY
       private static bool isMiddleMouseDown = false;
       private static void MiddleMouseDown(IntPtr wParam)
       {
-         if (wParam == (IntPtr)WM_KEYDOWN && !isMiddleMouseDown) // Stisk prostředního tlačítka myši
+         if (wParam == WM_KEYDOWN && !isMiddleMouseDown) // Stisk prostředního tlačítka myši
          {
             mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
             isMiddleMouseDown = true;
          }
-         else if (wParam == (IntPtr)WM_KEYUP && isMiddleMouseDown) // Uvolnění prostředního tlačítka myši
+         else if (wParam == WM_KEYUP && isMiddleMouseDown) // Uvolnění prostředního tlačítka myši
          {
             mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
             isMiddleMouseDown = false;
          }
       }
 
-      #endregion
+      private static void MiddleMouseWheelDown(IntPtr wParam)
+      {
+         //MidleMouseWheelDown:
+         if (wParam == WM_KEYDOWN)
+         {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, unchecked((uint)-120), UIntPtr.Zero); // -120: one notch down
+         }
 
-      #region Mouse Cursor Control by keyboard and Key Positioning set
+      }
+
+      private static void MiddleMouseWheelUp(IntPtr wParam)
+      {
+         //MidleMouseWheelUp:
+         if (wParam == WM_KEYDOWN)
+         {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 120, UIntPtr.Zero); // 120: one notch up
+         }
+      }
+         #endregion
+
+         #region Mouse Cursor Control by keyboard and Key Positioning set
       public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
       static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
       {
          Keys.Up, Keys.Down, Keys.Left, Keys.Right,
          Keys.W, Keys.A, Keys.S, Keys.D,
-         Keys.E, Keys.Q, Keys.R, Keys.F,
-         Keys.LControlKey, Keys.LShiftKey,
+         Keys.E, Keys.Q, Keys.R, Keys.F, Keys.X,
+         Keys.LControlKey, Keys.LShiftKey, Keys.LMenu,
          //control keys:
-         Keys.LMenu, Keys.LWin, Keys.RControlKey,
+         Keys.LWin, Keys.RControlKey,
          Keys.RShiftKey, Keys.RMenu, Keys.RWin,
          Keys.Space, Keys.Tab, Keys.Enter,
          Keys.Escape, Keys.Back, Keys.Delete,
@@ -191,15 +210,21 @@ namespace MouseXY
                         RightMouseDown(wParam); //kliknutí pravým tlačítkem myši
                         return (IntPtr)1;
                      }
-                  case Keys.R or Keys.F:
+                  case Keys.R:
                      {
-                        MiddleMouseDown(wParam); //držení prostředního tlačítka myši
+                        MiddleMouseWheelUp(wParam); //posun kolečkem myši nahoru
                         return (IntPtr)1;
                      }
-                  //case Keys.X:
-                  //{
-                  //   return (IntPtr)1;
-                  //}
+                  case Keys.F:
+                     {
+                        MiddleMouseWheelDown(wParam); //posun kolečkem myši dolů
+                        return (IntPtr)1;
+                     }
+                  case Keys.X:
+                     {
+                        MiddleMouseDown(wParam); //kliknutí prostředním tlačítkem myši
+                        return (IntPtr)1;
+                     }
                }
 
                if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
