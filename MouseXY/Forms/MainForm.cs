@@ -282,7 +282,7 @@ namespace MouseXY
       {
          showKeysPositions = !showKeysPositions;
          dgvShowKeysPositions.Visible = showKeysPositions;
-         ShowControlsOfTagInPanel(panelMain, "EditPos", onKeysPositions:true);
+         ShowControlsOfTagInPanel(panelMain, "EditPos", onKeysPositions: true);
          if (showKeysPositions)
          {
             Size = Settings.biggerFormSize;
@@ -688,6 +688,44 @@ namespace MouseXY
                tbPosY_Preview.Text = matches[1].Value;
             }
          }
+      }
+
+      #endregion
+
+
+      #region panelSwitching
+      private void btnMainPanels_Click(object sender, EventArgs e)
+      {
+         Panel mainPanel = lastPanel ?? panelMain;
+         SwitchPanels(mainPanel);
+      }
+
+      Panel? lastPanel;
+      private void btnSettings_Click(object sender, EventArgs e)
+      {
+         lastPanel = GetLastPanelVisible();
+         SwitchPanels(panelSettings);
+      }
+
+      private void SwitchPanels(Panel showPanel)
+      {     
+         foreach (Panel panel in Controls.OfType<Panel>())
+         {
+            panel.Hide();
+         }
+         showPanel.Show();
+      }
+
+      private Panel? GetLastPanelVisible()
+      {
+         foreach (Panel panel in Controls.OfType<Panel>())
+         {
+            if (panel.Visible && panel != panelSettings)
+            {
+               return panel;
+            }
+         }
+         return lastPanel;
       }
 
       #endregion

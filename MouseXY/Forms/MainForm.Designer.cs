@@ -75,6 +75,9 @@
          tbPosX_Preview = new TextBox();
          lbPosX_Preview = new Label();
          tbPosY_Preview = new TextBox();
+         btnMainPanels = new Button();
+         btnSettings = new Button();
+         panelSettings = new Panel();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          panelMain.SuspendLayout();
@@ -180,7 +183,7 @@
          lbSetKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetKeyPos.Location = new Point(268, 162);
          lbSetKeyPos.Name = "lbSetKeyPos";
-         lbSetKeyPos.Size = new Size(167, 19);
+         lbSetKeyPos.Size = new Size(155, 17);
          lbSetKeyPos.TabIndex = 8;
          lbSetKeyPos.Text = "setKeyPos open - X: , Y:";
          lbSetKeyPos.Visible = false;
@@ -230,7 +233,7 @@
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbKeyPos.Location = new Point(615, 138);
          lbKeyPos.Name = "lbKeyPos";
-         lbKeyPos.Size = new Size(38, 19);
+         lbKeyPos.Size = new Size(34, 17);
          lbKeyPos.TabIndex = 12;
          lbKeyPos.Tag = "EditPos";
          lbKeyPos.Text = "Key:";
@@ -260,7 +263,7 @@
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosX.Location = new Point(615, 162);
          lbPosX.Name = "lbPosX";
-         lbPosX.Size = new Size(22, 19);
+         lbPosX.Size = new Size(21, 17);
          lbPosX.TabIndex = 15;
          lbPosX.Tag = "EditPos";
          lbPosX.Text = "X:";
@@ -272,7 +275,7 @@
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosY.Location = new Point(681, 162);
          lbPosY.Name = "lbPosY";
-         lbPosY.Size = new Size(22, 19);
+         lbPosY.Size = new Size(20, 17);
          lbPosY.TabIndex = 16;
          lbPosY.Tag = "EditPos";
          lbPosY.Text = "Y:";
@@ -284,7 +287,7 @@
          lbSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetname.Location = new Point(503, 14);
          lbSetname.Name = "lbSetname";
-         lbSetname.Size = new Size(74, 19);
+         lbSetname.Size = new Size(67, 17);
          lbSetname.TabIndex = 17;
          lbSetname.Tag = "EditPos";
          lbSetname.Text = "SetName:";
@@ -374,7 +377,7 @@
          lbShowedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbShowedSetname.Location = new Point(490, 98);
          lbShowedSetname.Name = "lbShowedSetname";
-         lbShowedSetname.Size = new Size(128, 19);
+         lbShowedSetname.Size = new Size(117, 17);
          lbShowedSetname.TabIndex = 25;
          lbShowedSetname.Tag = "EditPos";
          lbShowedSetname.Text = "ShowedSetname: ";
@@ -386,7 +389,7 @@
          lbSelectedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSelectedSetname.Location = new Point(490, 115);
          lbSelectedSetname.Name = "lbSelectedSetname";
-         lbSelectedSetname.Size = new Size(132, 19);
+         lbSelectedSetname.Size = new Size(120, 17);
          lbSelectedSetname.TabIndex = 26;
          lbSelectedSetname.Tag = "EditPos";
          lbSelectedSetname.Text = "SelectedSetname: ";
@@ -460,9 +463,9 @@
          panelMain.Controls.Add(tbPosX);
          panelMain.Controls.Add(lbPosX);
          panelMain.Controls.Add(tbPosY);
-         panelMain.Location = new Point(16, 12);
+         panelMain.Location = new Point(12, 251);
          panelMain.Name = "panelMain";
-         panelMain.Size = new Size(857, 315);
+         panelMain.Size = new Size(154, 87);
          panelMain.TabIndex = 30;
          panelMain.Tag = "bigPanels";
          // 
@@ -509,7 +512,7 @@
          lbFileName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbFileName_Preview.Location = new Point(59, 31);
          lbFileName_Preview.Name = "lbFileName_Preview";
-         lbFileName_Preview.Size = new Size(80, 19);
+         lbFileName_Preview.Size = new Size(74, 17);
          lbFileName_Preview.TabIndex = 59;
          lbFileName_Preview.Tag = "";
          lbFileName_Preview.Text = "FileName: ";
@@ -568,7 +571,7 @@
          lbShowedSetName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbShowedSetName_Preview.Location = new Point(492, 54);
          lbShowedSetName_Preview.Name = "lbShowedSetName_Preview";
-         lbShowedSetName_Preview.Size = new Size(128, 19);
+         lbShowedSetName_Preview.Size = new Size(117, 17);
          lbShowedSetName_Preview.TabIndex = 54;
          lbShowedSetName_Preview.Tag = "";
          lbShowedSetName_Preview.Text = "ShowedSetname: ";
@@ -616,7 +619,7 @@
          lbSetName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetName_Preview.Location = new Point(492, 22);
          lbSetName_Preview.Name = "lbSetName_Preview";
-         lbSetName_Preview.Size = new Size(74, 19);
+         lbSetName_Preview.Size = new Size(67, 17);
          lbSetName_Preview.TabIndex = 47;
          lbSetName_Preview.Tag = "";
          lbSetName_Preview.Text = "SetName:";
@@ -627,7 +630,7 @@
          lbKeyPos_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbKeyPos_Preview.Location = new Point(20, 83);
          lbKeyPos_Preview.Name = "lbKeyPos_Preview";
-         lbKeyPos_Preview.Size = new Size(38, 19);
+         lbKeyPos_Preview.Size = new Size(34, 17);
          lbKeyPos_Preview.TabIndex = 42;
          lbKeyPos_Preview.Tag = "";
          lbKeyPos_Preview.Text = "Key:";
@@ -638,7 +641,7 @@
          lbPosY_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosY_Preview.Location = new Point(199, 84);
          lbPosY_Preview.Name = "lbPosY_Preview";
-         lbPosY_Preview.Size = new Size(22, 19);
+         lbPosY_Preview.Size = new Size(20, 17);
          lbPosY_Preview.TabIndex = 46;
          lbPosY_Preview.Tag = "";
          lbPosY_Preview.Text = "Y:";
@@ -658,7 +661,7 @@
          lbPosX_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosX_Preview.Location = new Point(133, 84);
          lbPosX_Preview.Name = "lbPosX_Preview";
-         lbPosX_Preview.Size = new Size(22, 19);
+         lbPosX_Preview.Size = new Size(21, 17);
          lbPosX_Preview.TabIndex = 45;
          lbPosX_Preview.Tag = "";
          lbPosX_Preview.Text = "X:";
@@ -672,11 +675,43 @@
          tbPosY_Preview.TabIndex = 44;
          tbPosY_Preview.Tag = "";
          // 
+         // btnMainPanels
+         // 
+         btnMainPanels.Location = new Point(25, 5);
+         btnMainPanels.Name = "btnMainPanels";
+         btnMainPanels.Size = new Size(75, 23);
+         btnMainPanels.TabIndex = 32;
+         btnMainPanels.Text = "main";
+         btnMainPanels.UseVisualStyleBackColor = true;
+         btnMainPanels.Click += btnMainPanels_Click;
+         // 
+         // btnSettings
+         // 
+         btnSettings.Location = new Point(118, 5);
+         btnSettings.Name = "btnSettings";
+         btnSettings.Size = new Size(75, 23);
+         btnSettings.TabIndex = 33;
+         btnSettings.Text = "settings";
+         btnSettings.UseVisualStyleBackColor = true;
+         btnSettings.Click += btnSettings_Click;
+         // 
+         // panelSettings
+         // 
+         panelSettings.Location = new Point(310, 122);
+         panelSettings.Name = "panelSettings";
+         panelSettings.Size = new Size(200, 100);
+         panelSettings.TabIndex = 34;
+         panelSettings.Tag = "bigPanels";
+         panelSettings.Visible = false;
+         // 
          // MainForm
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
-         ClientSize = new Size(900, 626);
+         ClientSize = new Size(1113, 738);
+         Controls.Add(panelSettings);
+         Controls.Add(btnSettings);
+         Controls.Add(btnMainPanels);
          Controls.Add(panelPreviewImport);
          Controls.Add(panelMain);
          FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -744,5 +779,8 @@
       private Button btnExit_Preview;
       private Button btnBackToPreview;
       private Label lbFileName_Preview;
+      private Button btnMainPanels;
+      private Button btnSettings;
+      private Panel panelSettings;
    }
 }
