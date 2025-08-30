@@ -3,11 +3,12 @@
 
 Control your mouse entirely using your keyboard - helpful when your touchpad isn't working.
 
-[ e.g. due to driver incompatibility on Windows 10 , mouse or touchpad malfunction]
+[ e.g. due to driver incompatibility on Windows 10 or mouse malfunction ]
 
 // Doesn't work when mouse is disconnected . : - ( , Probably need to simulate HID driver .
 
-// Need to run as administrator to work when some administrator level software or task manager is on selected desktop.
+> **Note:**  
+> You need to run this app as administrator for it to work when some administrator-level software, system settings, Task Manager or other protected Windows interfaces are active on the selected desktop.
 
 ## Activation
 
@@ -50,6 +51,8 @@ Useful when your mouse or touchpad is malfunctioning.
 **Version 1.05** - Preview on exported files before import.
 
 ## Planned Features and Innovations
+- Customizable settings and key mappings for basic functionality
+- Customizable RPA-like actions, with image recognition
 - Custom user-defined sounds
-- Multilingual support,
-- Additional innovative features are currently in development and will be announced in future updates.
+- Multilingual support
+- Additional innovative features will be announced in future updates.
