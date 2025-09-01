@@ -692,8 +692,7 @@ namespace MouseXY
 
       #endregion
 
-
-      #region panelSwitching
+      #region Panel Switching
       private void btnMainPanels_Click(object sender, EventArgs e)
       {
          Panel mainPanel = lastPanel ?? panelMain;
@@ -729,7 +728,6 @@ namespace MouseXY
       }
 
       #endregion
-
 
    }
 }

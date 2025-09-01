@@ -122,9 +122,9 @@ namespace MouseXY
             mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 120, UIntPtr.Zero); // 120: one notch up
          }
       }
-         #endregion
+      #endregion
 
-         #region Mouse Cursor Control by keyboard and Key Positioning set
+      #region Mouse Cursor Control by keyboard and Key Positioning set
       public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
       static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
       {
@@ -142,6 +142,21 @@ namespace MouseXY
          Keys.PageUp, Keys.PageDown, Keys.PrintScreen,
          Keys.NumLock
       };
+
+      public enum mouseActions
+      {
+         goUp,
+         goDown,
+         goLeft,
+         goRight,
+         leftMouseClick,
+         rightMouseClick,
+         middleMouseClick,
+         middleMouseWheelUp,
+         middleMouseWheelDown
+      }
+
+      public static Dictionary<Keys, mouseActions> KeyToActionsDict = new Dictionary<Keys, mouseActions>();
 
       static int step = Settings.normalSpeed;
       private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) //captures key presses
@@ -178,54 +193,103 @@ namespace MouseXY
 
             if (mouseCursorHandle) //when mouse control by keyboard is enabled
             {
-               switch ((Keys)vkCode)
+               KeyToActionsDict.Add(Keys.Up, mouseActions.goUp);
+               switch(KeyToActionsDict[(Keys)vkCode])
                {
-                  case Keys.Up or Keys.W:
+                  case mouseActions.goUp:
                      {
                         SetCursorPos(pos.X, pos.Y - step);
                         return (IntPtr)1; //Blokuje klávesu
                      }
-                  case Keys.Down or Keys.S:
+                  case mouseActions.goDown:
                      {
                         SetCursorPos(pos.X, pos.Y + step);
                         return (IntPtr)1;
                      }
-                  case Keys.Left or Keys.A:
+                  case mouseActions.goLeft:
                      {
                         SetCursorPos(pos.X - step, pos.Y);
                         return (IntPtr)1;
                      }
-                  case Keys.Right or Keys.D:
+                  case mouseActions.goRight:
                      {
                         SetCursorPos(pos.X + step, pos.Y);
                         return (IntPtr)1;
                      }
-                  case Keys.E:
+                  case mouseActions.leftMouseClick:
                      {
                         LeftMouseDown(wParam); //držení levého tlačítka myši
                         return (IntPtr)1;
                      }
-                  case Keys.Q:
+                  case mouseActions.rightMouseClick:
                      {
                         RightMouseDown(wParam); //kliknutí pravým tlačítkem myši
                         return (IntPtr)1;
                      }
-                  case Keys.R:
+                  case mouseActions.middleMouseWheelUp:
                      {
                         MiddleMouseWheelUp(wParam); //posun kolečkem myši nahoru
                         return (IntPtr)1;
                      }
-                  case Keys.F:
+                  case mouseActions.middleMouseWheelDown:
                      {
                         MiddleMouseWheelDown(wParam); //posun kolečkem myši dolů
                         return (IntPtr)1;
                      }
-                  case Keys.C:
+                  case mouseActions.middleMouseClick:
                      {
                         MiddleMouseDown(wParam); //kliknutí prostředním tlačítkem myši
                         return (IntPtr)1;
                      }
                }
+               //switch ((Keys)vkCode)
+               //{
+               //   case Keys.Up or Keys.W:
+               //      {
+               //         SetCursorPos(pos.X, pos.Y - step);
+               //         return (IntPtr)1; //Blokuje klávesu
+               //      }
+               //   case Keys.Down or Keys.S:
+               //      {
+               //         SetCursorPos(pos.X, pos.Y + step);
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.Left or Keys.A:
+               //      {
+               //         SetCursorPos(pos.X - step, pos.Y);
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.Right or Keys.D:
+               //      {
+               //         SetCursorPos(pos.X + step, pos.Y);
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.E:
+               //      {
+               //         LeftMouseDown(wParam); //držení levého tlačítka myši
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.Q:
+               //      {
+               //         RightMouseDown(wParam); //kliknutí pravým tlačítkem myši
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.R:
+               //      {
+               //         MiddleMouseWheelUp(wParam); //posun kolečkem myši nahoru
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.F:
+               //      {
+               //         MiddleMouseWheelDown(wParam); //posun kolečkem myši dolů
+               //         return (IntPtr)1;
+               //      }
+               //   case Keys.C:
+               //      {
+               //         MiddleMouseDown(wParam); //kliknutí prostředním tlačítkem myši
+               //         return (IntPtr)1;
+               //      }
+               //}
 
                if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey((Keys)vkCode)) // pokud je klávesa již v mapě, přesunout myš na její pozici
                {
