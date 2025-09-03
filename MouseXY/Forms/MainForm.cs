@@ -707,7 +707,7 @@ namespace MouseXY
       }
 
       private void SwitchPanels(Panel showPanel)
-      {     
+      {
          foreach (Panel panel in Controls.OfType<Panel>().OfTag("bigpanels"))
          {
             panel.Hide();
