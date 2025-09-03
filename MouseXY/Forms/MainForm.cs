@@ -695,7 +695,7 @@ namespace MouseXY
       #region Panel Switching
       private void btnMainPanels_Click(object sender, EventArgs e)
       {
-         Panel mainPanel = lastPanel ?? panelMain;
+         Panel mainPanel = lastPanel ?? panelMain; //determine if mainPanel was on preview import or main panel last time
          SwitchPanels(mainPanel);
       }
 
@@ -708,7 +708,7 @@ namespace MouseXY
 
       private void SwitchPanels(Panel showPanel)
       {     
-         foreach (Panel panel in Controls.OfType<Panel>())
+         foreach (Panel panel in Controls.OfType<Panel>().OfTag("bigpanels"))
          {
             panel.Hide();
          }
@@ -717,7 +717,7 @@ namespace MouseXY
 
       private Panel? GetLastPanelVisible()
       {
-         foreach (Panel panel in Controls.OfType<Panel>())
+         foreach (Panel panel in Controls.OfType<Panel>().OfTag("bigPanels"))
          {
             if (panel.Visible && panel != panelSettings)
             {

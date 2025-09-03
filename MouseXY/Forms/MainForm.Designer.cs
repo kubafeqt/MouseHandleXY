@@ -78,11 +78,34 @@
          btnMainPanels = new Button();
          btnSettings = new Button();
          panelSettings = new Panel();
+         label1 = new Label();
+         label2 = new Label();
+         label3 = new Label();
+         label4 = new Label();
+         label5 = new Label();
+         label6 = new Label();
+         label7 = new Label();
+         label8 = new Label();
+         label9 = new Label();
+         textBox1 = new TextBox();
+         textBox2 = new TextBox();
+         textBox3 = new TextBox();
+         textBox4 = new TextBox();
+         textBox5 = new TextBox();
+         textBox6 = new TextBox();
+         textBox7 = new TextBox();
+         textBox8 = new TextBox();
+         textBox9 = new TextBox();
+         comboBox1 = new ComboBox();
+         button1 = new Button();
+         button2 = new Button();
+         comboBox2 = new ComboBox();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          panelMain.SuspendLayout();
          panelPreviewImport.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions_Preview).BeginInit();
+         panelSettings.SuspendLayout();
          SuspendLayout();
          // 
          // cboxOnStartup
@@ -697,12 +720,232 @@
          // 
          // panelSettings
          // 
+         panelSettings.Controls.Add(comboBox2);
+         panelSettings.Controls.Add(button2);
+         panelSettings.Controls.Add(button1);
+         panelSettings.Controls.Add(comboBox1);
+         panelSettings.Controls.Add(textBox9);
+         panelSettings.Controls.Add(textBox8);
+         panelSettings.Controls.Add(textBox7);
+         panelSettings.Controls.Add(textBox6);
+         panelSettings.Controls.Add(textBox5);
+         panelSettings.Controls.Add(textBox4);
+         panelSettings.Controls.Add(textBox3);
+         panelSettings.Controls.Add(textBox2);
+         panelSettings.Controls.Add(textBox1);
+         panelSettings.Controls.Add(label9);
+         panelSettings.Controls.Add(label8);
+         panelSettings.Controls.Add(label7);
+         panelSettings.Controls.Add(label6);
+         panelSettings.Controls.Add(label5);
+         panelSettings.Controls.Add(label4);
+         panelSettings.Controls.Add(label3);
+         panelSettings.Controls.Add(label2);
+         panelSettings.Controls.Add(label1);
          panelSettings.Location = new Point(25, 52);
          panelSettings.Name = "panelSettings";
          panelSettings.Size = new Size(864, 576);
          panelSettings.TabIndex = 34;
          panelSettings.Tag = "bigPanels";
          panelSettings.Visible = false;
+         // 
+         // label1
+         // 
+         label1.AutoSize = true;
+         label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label1.Location = new Point(129, 49);
+         label1.Name = "label1";
+         label1.Size = new Size(72, 19);
+         label1.TabIndex = 60;
+         label1.Tag = "";
+         label1.Text = "Move up:";
+         // 
+         // label2
+         // 
+         label2.AutoSize = true;
+         label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label2.Location = new Point(109, 75);
+         label2.Name = "label2";
+         label2.Size = new Size(92, 19);
+         label2.TabIndex = 61;
+         label2.Tag = "";
+         label2.Text = "Move down:";
+         // 
+         // label3
+         // 
+         label3.AutoSize = true;
+         label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label3.Location = new Point(124, 102);
+         label3.Name = "label3";
+         label3.Size = new Size(77, 19);
+         label3.TabIndex = 62;
+         label3.Tag = "";
+         label3.Text = "Move left:";
+         // 
+         // label4
+         // 
+         label4.AutoSize = true;
+         label4.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label4.Location = new Point(114, 133);
+         label4.Name = "label4";
+         label4.Size = new Size(87, 19);
+         label4.TabIndex = 63;
+         label4.Tag = "";
+         label4.Text = "Move right:";
+         // 
+         // label5
+         // 
+         label5.AutoSize = true;
+         label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label5.Location = new Point(80, 160);
+         label5.Name = "label5";
+         label5.Size = new Size(121, 19);
+         label5.TabIndex = 64;
+         label5.Tag = "";
+         label5.Text = "Left mouse click:";
+         // 
+         // label6
+         // 
+         label6.AutoSize = true;
+         label6.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label6.Location = new Point(70, 192);
+         label6.Name = "label6";
+         label6.Size = new Size(131, 19);
+         label6.TabIndex = 65;
+         label6.Tag = "";
+         label6.Text = "Right mouse click:";
+         // 
+         // label7
+         // 
+         label7.AutoSize = true;
+         label7.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label7.Location = new Point(58, 227);
+         label7.Name = "label7";
+         label7.Size = new Size(143, 19);
+         label7.TabIndex = 66;
+         label7.Tag = "";
+         label7.Text = "Middle mouse click:";
+         // 
+         // label8
+         // 
+         label8.AutoSize = true;
+         label8.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label8.Location = new Point(9, 255);
+         label8.Name = "label8";
+         label8.Size = new Size(192, 19);
+         label8.TabIndex = 67;
+         label8.Tag = "";
+         label8.Text = "Middle mouse wheel down:";
+         // 
+         // label9
+         // 
+         label9.AutoSize = true;
+         label9.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         label9.Location = new Point(29, 285);
+         label9.Name = "label9";
+         label9.Size = new Size(172, 19);
+         label9.TabIndex = 68;
+         label9.Tag = "";
+         label9.Text = "Middle mouse wheel up:";
+         // 
+         // textBox1
+         // 
+         textBox1.Location = new Point(207, 49);
+         textBox1.Name = "textBox1";
+         textBox1.Size = new Size(37, 23);
+         textBox1.TabIndex = 69;
+         // 
+         // textBox2
+         // 
+         textBox2.Location = new Point(207, 76);
+         textBox2.Name = "textBox2";
+         textBox2.Size = new Size(37, 23);
+         textBox2.TabIndex = 70;
+         // 
+         // textBox3
+         // 
+         textBox3.Location = new Point(207, 102);
+         textBox3.Name = "textBox3";
+         textBox3.Size = new Size(37, 23);
+         textBox3.TabIndex = 71;
+         // 
+         // textBox4
+         // 
+         textBox4.Location = new Point(207, 132);
+         textBox4.Name = "textBox4";
+         textBox4.Size = new Size(37, 23);
+         textBox4.TabIndex = 72;
+         // 
+         // textBox5
+         // 
+         textBox5.Location = new Point(207, 161);
+         textBox5.Name = "textBox5";
+         textBox5.Size = new Size(37, 23);
+         textBox5.TabIndex = 73;
+         // 
+         // textBox6
+         // 
+         textBox6.Location = new Point(207, 192);
+         textBox6.Name = "textBox6";
+         textBox6.Size = new Size(37, 23);
+         textBox6.TabIndex = 74;
+         // 
+         // textBox7
+         // 
+         textBox7.Location = new Point(207, 227);
+         textBox7.Name = "textBox7";
+         textBox7.Size = new Size(37, 23);
+         textBox7.TabIndex = 75;
+         // 
+         // textBox8
+         // 
+         textBox8.Location = new Point(207, 256);
+         textBox8.Name = "textBox8";
+         textBox8.Size = new Size(37, 23);
+         textBox8.TabIndex = 76;
+         // 
+         // textBox9
+         // 
+         textBox9.Location = new Point(207, 285);
+         textBox9.Name = "textBox9";
+         textBox9.Size = new Size(37, 23);
+         textBox9.TabIndex = 77;
+         // 
+         // comboBox1
+         // 
+         comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+         comboBox1.FormattingEnabled = true;
+         comboBox1.Location = new Point(307, 51);
+         comboBox1.Name = "comboBox1";
+         comboBox1.Size = new Size(160, 23);
+         comboBox1.TabIndex = 78;
+         // 
+         // button1
+         // 
+         button1.Location = new Point(307, 97);
+         button1.Name = "button1";
+         button1.Size = new Size(77, 24);
+         button1.TabIndex = 79;
+         button1.Text = "button1";
+         button1.UseVisualStyleBackColor = true;
+         // 
+         // button2
+         // 
+         button2.Location = new Point(390, 97);
+         button2.Name = "button2";
+         button2.Size = new Size(77, 24);
+         button2.TabIndex = 80;
+         button2.Text = "button2";
+         button2.UseVisualStyleBackColor = true;
+         // 
+         // comboBox2
+         // 
+         comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+         comboBox2.FormattingEnabled = true;
+         comboBox2.Location = new Point(695, 27);
+         comboBox2.Name = "comboBox2";
+         comboBox2.Size = new Size(125, 23);
+         comboBox2.TabIndex = 81;
          // 
          // MainForm
          // 
@@ -726,6 +969,8 @@
          panelPreviewImport.ResumeLayout(false);
          panelPreviewImport.PerformLayout();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions_Preview).EndInit();
+         panelSettings.ResumeLayout(false);
+         panelSettings.PerformLayout();
          ResumeLayout(false);
       }
 
@@ -782,5 +1027,27 @@
       private Button btnMainPanels;
       private Button btnSettings;
       private Panel panelSettings;
+      private Label label8;
+      private Label label7;
+      private Label label6;
+      private Label label5;
+      private Label label4;
+      private Label label3;
+      private Label label2;
+      private Label label1;
+      private TextBox textBox9;
+      private TextBox textBox8;
+      private TextBox textBox7;
+      private TextBox textBox6;
+      private TextBox textBox5;
+      private TextBox textBox4;
+      private TextBox textBox3;
+      private TextBox textBox2;
+      private TextBox textBox1;
+      private Label label9;
+      private ComboBox comboBox2;
+      private Button button2;
+      private Button button1;
+      private ComboBox comboBox1;
    }
 }
