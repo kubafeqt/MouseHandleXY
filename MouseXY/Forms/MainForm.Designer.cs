@@ -78,6 +78,21 @@
          btnMainPanels = new Button();
          btnSettings = new Button();
          panelSettings = new Panel();
+         lbBaseKeysAlternative = new Label();
+         lbBaseKeysMain = new Label();
+         tbAltMiddleMouseWheelUp = new TextBox();
+         tbAltMiddleMouseWheelDown = new TextBox();
+         tbAltMiddleMouseClick = new TextBox();
+         tbAltRightMouseClick = new TextBox();
+         tbAltLeftMouseClick = new TextBox();
+         tbAltMoveRight = new TextBox();
+         tbAltMoveLeft = new TextBox();
+         tbAltMoveDown = new TextBox();
+         tbAltMoveUp = new TextBox();
+         btnDeleteBaseKeysSetname = new Button();
+         btnCreateBaseKeysSetname = new Button();
+         lbBaseKeysSetName = new Label();
+         tbBaseKeysSetName = new TextBox();
          cboxMiddleMouseWheelUp = new CheckBox();
          cboxMiddleMouseWheelDown = new CheckBox();
          cboxMiddleMouseClick = new CheckBox();
@@ -109,6 +124,7 @@
          lbMoveLeft = new Label();
          lbMoveDown = new Label();
          lbMoveUp = new Label();
+         lbSettingsType = new Label();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          panelMain.SuspendLayout();
@@ -495,9 +511,9 @@
          panelMain.Controls.Add(tbPosX);
          panelMain.Controls.Add(lbPosX);
          panelMain.Controls.Add(tbPosY);
-         panelMain.Location = new Point(927, 21);
+         panelMain.Location = new Point(916, 5);
          panelMain.Name = "panelMain";
-         panelMain.Size = new Size(117, 81);
+         panelMain.Size = new Size(186, 131);
          panelMain.TabIndex = 30;
          panelMain.Tag = "bigPanels";
          // 
@@ -531,9 +547,9 @@
          panelPreviewImport.Controls.Add(tbPosX_Preview);
          panelPreviewImport.Controls.Add(lbPosX_Preview);
          panelPreviewImport.Controls.Add(tbPosY_Preview);
-         panelPreviewImport.Location = new Point(927, 141);
+         panelPreviewImport.Location = new Point(796, 8);
          panelPreviewImport.Name = "panelPreviewImport";
-         panelPreviewImport.Size = new Size(150, 106);
+         panelPreviewImport.Size = new Size(114, 92);
          panelPreviewImport.TabIndex = 31;
          panelPreviewImport.Tag = "bigPanels";
          panelPreviewImport.Visible = false;
@@ -729,6 +745,22 @@
          // 
          // panelSettings
          // 
+         panelSettings.Controls.Add(lbSettingsType);
+         panelSettings.Controls.Add(lbBaseKeysAlternative);
+         panelSettings.Controls.Add(lbBaseKeysMain);
+         panelSettings.Controls.Add(tbAltMiddleMouseWheelUp);
+         panelSettings.Controls.Add(tbAltMiddleMouseWheelDown);
+         panelSettings.Controls.Add(tbAltMiddleMouseClick);
+         panelSettings.Controls.Add(tbAltRightMouseClick);
+         panelSettings.Controls.Add(tbAltLeftMouseClick);
+         panelSettings.Controls.Add(tbAltMoveRight);
+         panelSettings.Controls.Add(tbAltMoveLeft);
+         panelSettings.Controls.Add(tbAltMoveDown);
+         panelSettings.Controls.Add(tbAltMoveUp);
+         panelSettings.Controls.Add(btnDeleteBaseKeysSetname);
+         panelSettings.Controls.Add(btnCreateBaseKeysSetname);
+         panelSettings.Controls.Add(lbBaseKeysSetName);
+         panelSettings.Controls.Add(tbBaseKeysSetName);
          panelSettings.Controls.Add(cboxMiddleMouseWheelUp);
          panelSettings.Controls.Add(cboxMiddleMouseWheelDown);
          panelSettings.Controls.Add(cboxMiddleMouseClick);
@@ -762,10 +794,158 @@
          panelSettings.Controls.Add(lbMoveUp);
          panelSettings.Location = new Point(25, 52);
          panelSettings.Name = "panelSettings";
-         panelSettings.Size = new Size(845, 542);
+         panelSettings.Size = new Size(825, 496);
          panelSettings.TabIndex = 34;
          panelSettings.Tag = "bigPanels";
          panelSettings.Visible = false;
+         // 
+         // lbBaseKeysAlternative
+         // 
+         lbBaseKeysAlternative.AutoSize = true;
+         lbBaseKeysAlternative.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbBaseKeysAlternative.Location = new Point(353, 25);
+         lbBaseKeysAlternative.Name = "lbBaseKeysAlternative";
+         lbBaseKeysAlternative.Size = new Size(80, 17);
+         lbBaseKeysAlternative.TabIndex = 104;
+         lbBaseKeysAlternative.Tag = "";
+         lbBaseKeysAlternative.Text = "Alternative:";
+         // 
+         // lbBaseKeysMain
+         // 
+         lbBaseKeysMain.AutoSize = true;
+         lbBaseKeysMain.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbBaseKeysMain.Location = new Point(221, 26);
+         lbBaseKeysMain.Name = "lbBaseKeysMain";
+         lbBaseKeysMain.Size = new Size(43, 17);
+         lbBaseKeysMain.TabIndex = 61;
+         lbBaseKeysMain.Tag = "";
+         lbBaseKeysMain.Text = "Main:";
+         // 
+         // tbAltMiddleMouseWheelUp
+         // 
+         tbAltMiddleMouseWheelUp.Enabled = false;
+         tbAltMiddleMouseWheelUp.Location = new Point(353, 286);
+         tbAltMiddleMouseWheelUp.Name = "tbAltMiddleMouseWheelUp";
+         tbAltMiddleMouseWheelUp.Size = new Size(143, 23);
+         tbAltMiddleMouseWheelUp.TabIndex = 103;
+         tbAltMiddleMouseWheelUp.Tag = "BaseKeysSettingsTbs";
+         tbAltMiddleMouseWheelUp.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltMiddleMouseWheelDown
+         // 
+         tbAltMiddleMouseWheelDown.Enabled = false;
+         tbAltMiddleMouseWheelDown.Location = new Point(353, 257);
+         tbAltMiddleMouseWheelDown.Name = "tbAltMiddleMouseWheelDown";
+         tbAltMiddleMouseWheelDown.Size = new Size(143, 23);
+         tbAltMiddleMouseWheelDown.TabIndex = 102;
+         tbAltMiddleMouseWheelDown.Tag = "BaseKeysSettingsTbs";
+         tbAltMiddleMouseWheelDown.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltMiddleMouseClick
+         // 
+         tbAltMiddleMouseClick.Enabled = false;
+         tbAltMiddleMouseClick.Location = new Point(353, 228);
+         tbAltMiddleMouseClick.Name = "tbAltMiddleMouseClick";
+         tbAltMiddleMouseClick.Size = new Size(143, 23);
+         tbAltMiddleMouseClick.TabIndex = 101;
+         tbAltMiddleMouseClick.Tag = "BaseKeysSettingsTbs";
+         tbAltMiddleMouseClick.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltRightMouseClick
+         // 
+         tbAltRightMouseClick.Enabled = false;
+         tbAltRightMouseClick.Location = new Point(353, 196);
+         tbAltRightMouseClick.Name = "tbAltRightMouseClick";
+         tbAltRightMouseClick.Size = new Size(143, 23);
+         tbAltRightMouseClick.TabIndex = 100;
+         tbAltRightMouseClick.Tag = "BaseKeysSettingsTbs";
+         tbAltRightMouseClick.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltLeftMouseClick
+         // 
+         tbAltLeftMouseClick.Enabled = false;
+         tbAltLeftMouseClick.Location = new Point(353, 162);
+         tbAltLeftMouseClick.Name = "tbAltLeftMouseClick";
+         tbAltLeftMouseClick.Size = new Size(143, 23);
+         tbAltLeftMouseClick.TabIndex = 99;
+         tbAltLeftMouseClick.Tag = "BaseKeysSettingsTbs";
+         tbAltLeftMouseClick.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltMoveRight
+         // 
+         tbAltMoveRight.Enabled = false;
+         tbAltMoveRight.Location = new Point(353, 133);
+         tbAltMoveRight.Name = "tbAltMoveRight";
+         tbAltMoveRight.Size = new Size(143, 23);
+         tbAltMoveRight.TabIndex = 98;
+         tbAltMoveRight.Tag = "BaseKeysSettingsTbs";
+         tbAltMoveRight.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltMoveLeft
+         // 
+         tbAltMoveLeft.Enabled = false;
+         tbAltMoveLeft.Location = new Point(353, 103);
+         tbAltMoveLeft.Name = "tbAltMoveLeft";
+         tbAltMoveLeft.Size = new Size(143, 23);
+         tbAltMoveLeft.TabIndex = 97;
+         tbAltMoveLeft.Tag = "BaseKeysSettingsTbs";
+         tbAltMoveLeft.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltMoveDown
+         // 
+         tbAltMoveDown.Enabled = false;
+         tbAltMoveDown.Location = new Point(353, 77);
+         tbAltMoveDown.Name = "tbAltMoveDown";
+         tbAltMoveDown.Size = new Size(143, 23);
+         tbAltMoveDown.TabIndex = 96;
+         tbAltMoveDown.Tag = "BaseKeysSettingsTbs";
+         tbAltMoveDown.TextAlign = HorizontalAlignment.Center;
+         // 
+         // tbAltMoveUp
+         // 
+         tbAltMoveUp.Enabled = false;
+         tbAltMoveUp.Location = new Point(353, 50);
+         tbAltMoveUp.Name = "tbAltMoveUp";
+         tbAltMoveUp.Size = new Size(143, 23);
+         tbAltMoveUp.TabIndex = 95;
+         tbAltMoveUp.Tag = "BaseKeysSettingsTbs";
+         tbAltMoveUp.TextAlign = HorizontalAlignment.Center;
+         // 
+         // btnDeleteBaseKeysSetname
+         // 
+         btnDeleteBaseKeysSetname.Location = new Point(695, 225);
+         btnDeleteBaseKeysSetname.Name = "btnDeleteBaseKeysSetname";
+         btnDeleteBaseKeysSetname.Size = new Size(77, 24);
+         btnDeleteBaseKeysSetname.TabIndex = 94;
+         btnDeleteBaseKeysSetname.Text = "delete";
+         btnDeleteBaseKeysSetname.UseVisualStyleBackColor = true;
+         // 
+         // btnCreateBaseKeysSetname
+         // 
+         btnCreateBaseKeysSetname.Location = new Point(612, 225);
+         btnCreateBaseKeysSetname.Name = "btnCreateBaseKeysSetname";
+         btnCreateBaseKeysSetname.Size = new Size(77, 24);
+         btnCreateBaseKeysSetname.TabIndex = 93;
+         btnCreateBaseKeysSetname.Text = "create";
+         btnCreateBaseKeysSetname.UseVisualStyleBackColor = true;
+         // 
+         // lbBaseKeysSetName
+         // 
+         lbBaseKeysSetName.AutoSize = true;
+         lbBaseKeysSetName.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbBaseKeysSetName.Location = new Point(612, 174);
+         lbBaseKeysSetName.Name = "lbBaseKeysSetName";
+         lbBaseKeysSetName.Size = new Size(65, 17);
+         lbBaseKeysSetName.TabIndex = 92;
+         lbBaseKeysSetName.Tag = "";
+         lbBaseKeysSetName.Text = "Setname:";
+         // 
+         // tbBaseKeysSetName
+         // 
+         tbBaseKeysSetName.Location = new Point(612, 196);
+         tbBaseKeysSetName.Name = "tbBaseKeysSetName";
+         tbBaseKeysSetName.Size = new Size(160, 23);
+         tbBaseKeysSetName.TabIndex = 91;
          // 
          // cboxMiddleMouseWheelUp
          // 
@@ -773,10 +953,11 @@
          cboxMiddleMouseWheelUp.Checked = true;
          cboxMiddleMouseWheelUp.CheckState = CheckState.Checked;
          cboxMiddleMouseWheelUp.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMiddleMouseWheelUp.Location = new Point(250, 286);
+         cboxMiddleMouseWheelUp.Location = new Point(502, 290);
          cboxMiddleMouseWheelUp.Name = "cboxMiddleMouseWheelUp";
          cboxMiddleMouseWheelUp.Size = new Size(67, 21);
          cboxMiddleMouseWheelUp.TabIndex = 90;
+         cboxMiddleMouseWheelUp.Tag = "baseKeysCheckbox";
          cboxMiddleMouseWheelUp.Text = "enable";
          cboxMiddleMouseWheelUp.UseVisualStyleBackColor = true;
          // 
@@ -786,10 +967,11 @@
          cboxMiddleMouseWheelDown.Checked = true;
          cboxMiddleMouseWheelDown.CheckState = CheckState.Checked;
          cboxMiddleMouseWheelDown.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMiddleMouseWheelDown.Location = new Point(250, 256);
+         cboxMiddleMouseWheelDown.Location = new Point(502, 260);
          cboxMiddleMouseWheelDown.Name = "cboxMiddleMouseWheelDown";
          cboxMiddleMouseWheelDown.Size = new Size(67, 21);
          cboxMiddleMouseWheelDown.TabIndex = 89;
+         cboxMiddleMouseWheelDown.Tag = "baseKeysCheckbox";
          cboxMiddleMouseWheelDown.Text = "enable";
          cboxMiddleMouseWheelDown.UseVisualStyleBackColor = true;
          // 
@@ -799,10 +981,11 @@
          cboxMiddleMouseClick.Checked = true;
          cboxMiddleMouseClick.CheckState = CheckState.Checked;
          cboxMiddleMouseClick.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMiddleMouseClick.Location = new Point(250, 228);
+         cboxMiddleMouseClick.Location = new Point(502, 232);
          cboxMiddleMouseClick.Name = "cboxMiddleMouseClick";
          cboxMiddleMouseClick.Size = new Size(67, 21);
          cboxMiddleMouseClick.TabIndex = 88;
+         cboxMiddleMouseClick.Tag = "baseKeysCheckbox";
          cboxMiddleMouseClick.Text = "enable";
          cboxMiddleMouseClick.UseVisualStyleBackColor = true;
          // 
@@ -812,10 +995,11 @@
          cboxRightMouseClick.Checked = true;
          cboxRightMouseClick.CheckState = CheckState.Checked;
          cboxRightMouseClick.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxRightMouseClick.Location = new Point(250, 194);
+         cboxRightMouseClick.Location = new Point(502, 198);
          cboxRightMouseClick.Name = "cboxRightMouseClick";
          cboxRightMouseClick.Size = new Size(67, 21);
          cboxRightMouseClick.TabIndex = 87;
+         cboxRightMouseClick.Tag = "baseKeysCheckbox";
          cboxRightMouseClick.Text = "enable";
          cboxRightMouseClick.UseVisualStyleBackColor = true;
          // 
@@ -825,10 +1009,11 @@
          cboxLeftMouseClick.Checked = true;
          cboxLeftMouseClick.CheckState = CheckState.Checked;
          cboxLeftMouseClick.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxLeftMouseClick.Location = new Point(250, 163);
+         cboxLeftMouseClick.Location = new Point(502, 167);
          cboxLeftMouseClick.Name = "cboxLeftMouseClick";
          cboxLeftMouseClick.Size = new Size(67, 21);
          cboxLeftMouseClick.TabIndex = 86;
+         cboxLeftMouseClick.Tag = "baseKeysCheckbox";
          cboxLeftMouseClick.Text = "enable";
          cboxLeftMouseClick.UseVisualStyleBackColor = true;
          // 
@@ -838,10 +1023,11 @@
          cboxMoveLeft.Checked = true;
          cboxMoveLeft.CheckState = CheckState.Checked;
          cboxMoveLeft.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMoveLeft.Location = new Point(250, 104);
+         cboxMoveLeft.Location = new Point(502, 108);
          cboxMoveLeft.Name = "cboxMoveLeft";
          cboxMoveLeft.Size = new Size(67, 21);
          cboxMoveLeft.TabIndex = 85;
+         cboxMoveLeft.Tag = "baseKeysCheckbox";
          cboxMoveLeft.Text = "enable";
          cboxMoveLeft.UseVisualStyleBackColor = true;
          // 
@@ -851,10 +1037,11 @@
          cboxMoveRight.Checked = true;
          cboxMoveRight.CheckState = CheckState.Checked;
          cboxMoveRight.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMoveRight.Location = new Point(250, 133);
+         cboxMoveRight.Location = new Point(502, 137);
          cboxMoveRight.Name = "cboxMoveRight";
          cboxMoveRight.Size = new Size(67, 21);
          cboxMoveRight.TabIndex = 84;
+         cboxMoveRight.Tag = "baseKeysCheckbox";
          cboxMoveRight.Text = "enable";
          cboxMoveRight.UseVisualStyleBackColor = true;
          // 
@@ -864,10 +1051,11 @@
          cboxMoveDown.Checked = true;
          cboxMoveDown.CheckState = CheckState.Checked;
          cboxMoveDown.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMoveDown.Location = new Point(250, 76);
+         cboxMoveDown.Location = new Point(502, 80);
          cboxMoveDown.Name = "cboxMoveDown";
          cboxMoveDown.Size = new Size(67, 21);
          cboxMoveDown.TabIndex = 83;
+         cboxMoveDown.Tag = "baseKeysCheckbox";
          cboxMoveDown.Text = "enable";
          cboxMoveDown.UseVisualStyleBackColor = true;
          // 
@@ -877,10 +1065,11 @@
          cboxMoveUp.Checked = true;
          cboxMoveUp.CheckState = CheckState.Checked;
          cboxMoveUp.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-         cboxMoveUp.Location = new Point(250, 50);
+         cboxMoveUp.Location = new Point(502, 54);
          cboxMoveUp.Name = "cboxMoveUp";
          cboxMoveUp.Size = new Size(67, 21);
          cboxMoveUp.TabIndex = 82;
+         cboxMoveUp.Tag = "baseKeysCheckbox";
          cboxMoveUp.Text = "enable";
          cboxMoveUp.UseVisualStyleBackColor = true;
          // 
@@ -888,14 +1077,14 @@
          // 
          cmbSelectSettingsType.DropDownStyle = ComboBoxStyle.DropDownList;
          cmbSelectSettingsType.FormattingEnabled = true;
-         cmbSelectSettingsType.Location = new Point(695, 27);
+         cmbSelectSettingsType.Location = new Point(681, 13);
          cmbSelectSettingsType.Name = "cmbSelectSettingsType";
-         cmbSelectSettingsType.Size = new Size(125, 23);
+         cmbSelectSettingsType.Size = new Size(148, 23);
          cmbSelectSettingsType.TabIndex = 81;
          // 
          // btnSaveBaseKeySet
          // 
-         btnSaveBaseKeySet.Location = new Point(568, 78);
+         btnSaveBaseKeySet.Location = new Point(695, 139);
          btnSaveBaseKeySet.Name = "btnSaveBaseKeySet";
          btnSaveBaseKeySet.Size = new Size(77, 24);
          btnSaveBaseKeySet.TabIndex = 80;
@@ -904,7 +1093,7 @@
          // 
          // btnSelectBaseKeySet
          // 
-         btnSelectBaseKeySet.Location = new Point(485, 78);
+         btnSelectBaseKeySet.Location = new Point(612, 139);
          btnSelectBaseKeySet.Name = "btnSelectBaseKeySet";
          btnSelectBaseKeySet.Size = new Size(77, 24);
          btnSelectBaseKeySet.TabIndex = 79;
@@ -915,73 +1104,100 @@
          // 
          cmbBaseKeysSets.DropDownStyle = ComboBoxStyle.DropDownList;
          cmbBaseKeysSets.FormattingEnabled = true;
-         cmbBaseKeysSets.Location = new Point(485, 32);
+         cmbBaseKeysSets.Location = new Point(612, 103);
          cmbBaseKeysSets.Name = "cmbBaseKeysSets";
          cmbBaseKeysSets.Size = new Size(160, 23);
          cmbBaseKeysSets.TabIndex = 78;
          // 
          // tbMiddleMouseWheelUp
          // 
+         tbMiddleMouseWheelUp.Enabled = false;
          tbMiddleMouseWheelUp.Location = new Point(204, 285);
          tbMiddleMouseWheelUp.Name = "tbMiddleMouseWheelUp";
-         tbMiddleMouseWheelUp.Size = new Size(37, 23);
+         tbMiddleMouseWheelUp.Size = new Size(143, 23);
          tbMiddleMouseWheelUp.TabIndex = 77;
+         tbMiddleMouseWheelUp.Tag = "BaseKeysSettingsTbs";
+         tbMiddleMouseWheelUp.TextAlign = HorizontalAlignment.Center;
          // 
          // tbMiddleMouseWheelDown
          // 
+         tbMiddleMouseWheelDown.Enabled = false;
          tbMiddleMouseWheelDown.Location = new Point(204, 256);
          tbMiddleMouseWheelDown.Name = "tbMiddleMouseWheelDown";
-         tbMiddleMouseWheelDown.Size = new Size(37, 23);
+         tbMiddleMouseWheelDown.Size = new Size(143, 23);
          tbMiddleMouseWheelDown.TabIndex = 76;
+         tbMiddleMouseWheelDown.Tag = "BaseKeysSettingsTbs";
+         tbMiddleMouseWheelDown.TextAlign = HorizontalAlignment.Center;
          // 
          // tbMiddleMouseClick
          // 
+         tbMiddleMouseClick.Enabled = false;
          tbMiddleMouseClick.Location = new Point(204, 227);
          tbMiddleMouseClick.Name = "tbMiddleMouseClick";
-         tbMiddleMouseClick.Size = new Size(37, 23);
+         tbMiddleMouseClick.Size = new Size(143, 23);
          tbMiddleMouseClick.TabIndex = 75;
+         tbMiddleMouseClick.Tag = "BaseKeysSettingsTbs";
+         tbMiddleMouseClick.TextAlign = HorizontalAlignment.Center;
          // 
          // tbRightMouseClick
          // 
-         tbRightMouseClick.Location = new Point(204, 192);
+         tbRightMouseClick.Enabled = false;
+         tbRightMouseClick.Location = new Point(204, 196);
          tbRightMouseClick.Name = "tbRightMouseClick";
-         tbRightMouseClick.Size = new Size(37, 23);
+         tbRightMouseClick.Size = new Size(143, 23);
          tbRightMouseClick.TabIndex = 74;
+         tbRightMouseClick.Tag = "BaseKeysSettingsTbs";
+         tbRightMouseClick.TextAlign = HorizontalAlignment.Center;
          // 
          // tbLeftMouseClick
          // 
+         tbLeftMouseClick.Enabled = false;
          tbLeftMouseClick.Location = new Point(204, 161);
          tbLeftMouseClick.Name = "tbLeftMouseClick";
-         tbLeftMouseClick.Size = new Size(37, 23);
+         tbLeftMouseClick.Size = new Size(143, 23);
          tbLeftMouseClick.TabIndex = 73;
+         tbLeftMouseClick.Tag = "BaseKeysSettingsTbs";
+         tbLeftMouseClick.TextAlign = HorizontalAlignment.Center;
          // 
          // tbMoveRight
          // 
+         tbMoveRight.Enabled = false;
          tbMoveRight.Location = new Point(204, 132);
          tbMoveRight.Name = "tbMoveRight";
-         tbMoveRight.Size = new Size(37, 23);
+         tbMoveRight.Size = new Size(143, 23);
          tbMoveRight.TabIndex = 72;
+         tbMoveRight.Tag = "BaseKeysSettingsTbs";
+         tbMoveRight.TextAlign = HorizontalAlignment.Center;
          // 
          // tbMoveLeft
          // 
+         tbMoveLeft.Enabled = false;
          tbMoveLeft.Location = new Point(204, 102);
          tbMoveLeft.Name = "tbMoveLeft";
-         tbMoveLeft.Size = new Size(37, 23);
+         tbMoveLeft.Size = new Size(143, 23);
          tbMoveLeft.TabIndex = 71;
+         tbMoveLeft.Tag = "BaseKeysSettingsTbs";
+         tbMoveLeft.TextAlign = HorizontalAlignment.Center;
          // 
          // tbMoveDown
          // 
+         tbMoveDown.Enabled = false;
          tbMoveDown.Location = new Point(204, 76);
          tbMoveDown.Name = "tbMoveDown";
-         tbMoveDown.Size = new Size(37, 23);
+         tbMoveDown.Size = new Size(143, 23);
          tbMoveDown.TabIndex = 70;
+         tbMoveDown.Tag = "BaseKeysSettingsTbs";
+         tbMoveDown.TextAlign = HorizontalAlignment.Center;
          // 
          // tbMoveUp
          // 
+         tbMoveUp.Enabled = false;
          tbMoveUp.Location = new Point(204, 49);
          tbMoveUp.Name = "tbMoveUp";
-         tbMoveUp.Size = new Size(37, 23);
+         tbMoveUp.Size = new Size(143, 23);
          tbMoveUp.TabIndex = 69;
+         tbMoveUp.Tag = "BaseKeysSettingsTbs";
+         tbMoveUp.TextAlign = HorizontalAlignment.Center;
          // 
          // lbMiddleMouseWheelUp
          // 
@@ -1064,7 +1280,7 @@
          // 
          lbMoveDown.AutoSize = true;
          lbMoveDown.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbMoveDown.Location = new Point(109, 75);
+         lbMoveDown.Location = new Point(111, 76);
          lbMoveDown.Name = "lbMoveDown";
          lbMoveDown.Size = new Size(84, 17);
          lbMoveDown.TabIndex = 61;
@@ -1081,6 +1297,17 @@
          lbMoveUp.TabIndex = 60;
          lbMoveUp.Tag = "";
          lbMoveUp.Text = "Move up:";
+         // 
+         // lbSettingsType
+         // 
+         lbSettingsType.AutoSize = true;
+         lbSettingsType.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbSettingsType.Location = new Point(612, 15);
+         lbSettingsType.Name = "lbSettingsType";
+         lbSettingsType.Size = new Size(62, 17);
+         lbSettingsType.TabIndex = 105;
+         lbSettingsType.Tag = "";
+         lbSettingsType.Text = "Settings:";
          // 
          // MainForm
          // 
@@ -1193,5 +1420,21 @@
       private CheckBox cboxMoveRight;
       private CheckBox cboxMoveDown;
       private CheckBox cboxMoveUp;
+      private Label lbBaseKeysSetName;
+      private TextBox tbBaseKeysSetName;
+      private Button btnDeleteBaseKeysSetname;
+      private Button btnCreateBaseKeysSetname;
+      private Label lbBaseKeysAlternative;
+      private Label lbBaseKeysMain;
+      private TextBox tbAltMiddleMouseWheelUp;
+      private TextBox tbAltMiddleMouseWheelDown;
+      private TextBox tbAltMiddleMouseClick;
+      private TextBox tbAltRightMouseClick;
+      private TextBox tbAltLeftMouseClick;
+      private TextBox tbAltMoveRight;
+      private TextBox tbAltMoveLeft;
+      private TextBox tbAltMoveDown;
+      private TextBox tbAltMoveUp;
+      private Label lbSettingsType;
    }
 }

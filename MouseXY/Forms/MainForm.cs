@@ -34,7 +34,7 @@ namespace MouseXY
          Resize += OnResize;
 
          // Skryj okno po startu
-         Load += (s, e) => this.Hide();
+         Load += (s, e) => Hide();
          FormClosing += OnFormClosing;
 
          timer.Interval = 50;
@@ -126,6 +126,15 @@ namespace MouseXY
          dgvShowKeysPositions_Preview.AllowUserToAddRows = false;
          dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
          dgvShowKeysPositions_Preview.ReadOnly = true;
+
+         foreach (var ctrl in panelSettings.Controls.OfType<CheckBox>().OfTag("baseKeysCheckbox"))
+         {
+            ctrl.CheckedChanged += BaseKeysCheckBoxes_CheckedChanged;
+         }
+         cmbBaseKeysSets.Items.Add("default");
+         cmbBaseKeysSets.SelectedIndex = 0;
+         cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds" });
+         cmbSelectSettingsType.SelectedIndex = 0;
       }
 
       private void LoadComboBoxSetNames()
@@ -236,6 +245,26 @@ namespace MouseXY
          trayIcon.Visible = false;
       }
 
+      private void ResizeMainForm(bool bigger = true, bool latestSize = false, bool saveLatestFormSize = true)
+      {
+         if (bigger && !latestSize)
+         {
+            Size = Settings.biggerFormSize;
+         }
+         else if (!latestSize)
+         {
+            Size = Settings.defaultFormSize;
+         }
+         if (latestSize)
+         {
+            Size = Settings.latestSize != Size.Empty ? Settings.latestSize : Settings.defaultFormSize;
+         }
+         if (saveLatestFormSize)
+         {
+            Settings.latestSize = Size;
+         }
+      }
+
       #endregion
 
       #region General Controls
@@ -285,17 +314,13 @@ namespace MouseXY
          ShowControlsOfTagInPanel(panelMain, "EditPos", onKeysPositions: true);
          if (showKeysPositions)
          {
-            Size = Settings.biggerFormSize;
-            Settings.latestSize = Size;
+            ResizeMainForm();
             btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Show", "hide", StringComparison.OrdinalIgnoreCase);
-
          }
          else
          {
-            Size = Settings.defaultFormSize;
-            Settings.latestSize = Size;
+            ResizeMainForm(false);
             btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Hide", "show", StringComparison.OrdinalIgnoreCase);
-
          }
       }
 
@@ -696,6 +721,7 @@ namespace MouseXY
       private void btnMainPanels_Click(object sender, EventArgs e)
       {
          Panel mainPanel = lastPanel ?? panelMain; //determine if mainPanel was on preview import or main panel last time
+         ResizeMainForm(latestSize: true, saveLatestFormSize: false);
          SwitchPanels(mainPanel);
       }
 
@@ -703,6 +729,7 @@ namespace MouseXY
       private void btnSettings_Click(object sender, EventArgs e)
       {
          lastPanel = GetLastPanelVisible();
+         ResizeMainForm(bigger: true, saveLatestFormSize: false);
          SwitchPanels(panelSettings);
       }
 
@@ -725,6 +752,21 @@ namespace MouseXY
             }
          }
          return lastPanel;
+      }
+
+      #endregion
+
+      #region BaseKeys Settings
+      private void BaseKeysCheckBoxes_CheckedChanged(object sender, EventArgs e)
+      {
+         CheckBox chk = sender as CheckBox;
+         if (chk != null)
+         {
+            string name = chk.Name;
+            bool stav = chk.Checked;
+
+            MessageBox.Show($"Změnil se {name}, nový stav: {stav}");
+         }
       }
 
       #endregion
