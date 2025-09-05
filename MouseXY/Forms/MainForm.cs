@@ -135,6 +135,7 @@ namespace MouseXY
          cmbBaseKeysSets.SelectedIndex = 0;
          cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds" });
          cmbSelectSettingsType.SelectedIndex = 0;
+         FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
       }
 
       private void LoadComboBoxSetNames()
@@ -766,6 +767,47 @@ namespace MouseXY
             bool stav = chk.Checked;
 
             MessageBox.Show($"Změnil se {name}, nový stav: {stav}");
+         }
+      }
+
+      private void FillKeybindTextBoxes()
+      {
+         // 1) Keys → Actions už máte v KeyToActionsDict
+         //    teď si uděláme Action → Keys[]
+         var actionToKeysDict = MouseHandle.KeyToActionsDict
+             .GroupBy(kvp => kvp.Value)
+             .ToDictionary(g => g.Key, g => g.Select(kvp => kvp.Key).ToList());
+
+         // 2) Mapování akcí na textboxy
+         var actionToTextBoxes = new Dictionary<MouseHandle.mouseActions, (TextBox Primary, TextBox Alt)>
+          {
+              { MouseHandle.mouseActions.goUp, (tbMoveUp, tbAltMoveUp) },
+              { MouseHandle.mouseActions.goDown, (tbMoveDown, tbAltMoveDown) },
+              { MouseHandle.mouseActions.goLeft, (tbMoveLeft, tbAltMoveLeft) },
+              { MouseHandle.mouseActions.goRight, (tbMoveRight, tbAltMoveRight) },
+              { MouseHandle.mouseActions.leftMouseClick, (tbLeftMouseClick, tbAltLeftMouseClick) },
+              { MouseHandle.mouseActions.rightMouseClick, (tbRightMouseClick, tbAltRightMouseClick) },
+              { MouseHandle.mouseActions.middleMouseWheelUp, (tbMiddleMouseWheelUp, tbAltMiddleMouseWheelUp) },
+              { MouseHandle.mouseActions.middleMouseWheelDown, (tbMiddleMouseWheelDown, tbAltMiddleMouseWheelDown) },
+              { MouseHandle.mouseActions.middleMouseClick, (tbMiddleMouseClick, tbAltMiddleMouseClick) }
+          };
+
+         // 3) Naplnění textbox
+         foreach (var kvp in actionToTextBoxes)
+         {
+            var action = kvp.Key;
+            var (primary, alt) = kvp.Value;
+
+            if (actionToKeysDict.TryGetValue(action, out var keys))
+            {
+               primary.Text = keys.ElementAtOrDefault(0).ToString() ?? "";
+               alt.Text = keys.ElementAtOrDefault(1).ToString() ?? "";
+            }
+            else
+            {
+               primary.Text = "";
+               alt.Text = "";
+            }
          }
       }
 

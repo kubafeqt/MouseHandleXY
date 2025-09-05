@@ -174,6 +174,7 @@ namespace MouseXY
          { Keys.C, mouseActions.middleMouseClick }
       };
 
+
       public static Dictionary<mouseActions, bool> KeyActionsEnabled = new Dictionary<mouseActions, bool>()
       {
          { mouseActions.goUp, true },
