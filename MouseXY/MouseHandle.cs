@@ -156,38 +156,6 @@ namespace MouseXY
          middleMouseWheelDown
       }
 
-      //then load it from db or use this default settings:
-      public static Dictionary<Keys, mouseActions> KeyToActionsDict = new Dictionary<Keys, mouseActions>()
-      {
-         { Keys.W, mouseActions.goUp },
-         { Keys.S, mouseActions.goDown },
-         { Keys.A, mouseActions.goLeft },
-         { Keys.D, mouseActions.goRight },
-         { Keys.Up, mouseActions.goUp },
-         { Keys.Down, mouseActions.goDown },
-         { Keys.Left, mouseActions.goLeft },
-         { Keys.Right, mouseActions.goRight },
-         { Keys.E, mouseActions.leftMouseClick },
-         { Keys.Q, mouseActions.rightMouseClick },
-         { Keys.R, mouseActions.middleMouseWheelUp },
-         { Keys.F, mouseActions.middleMouseWheelDown },
-         { Keys.C, mouseActions.middleMouseClick }
-      };
-
-
-      public static Dictionary<mouseActions, bool> KeyActionsEnabled = new Dictionary<mouseActions, bool>()
-      {
-         { mouseActions.goUp, true },
-         { mouseActions.goDown, true },
-         { mouseActions.goLeft, true },
-         { mouseActions.goRight, true },
-         { mouseActions.leftMouseClick, true },
-         { mouseActions.rightMouseClick, true },
-         { mouseActions.middleMouseClick, true },
-         { mouseActions.middleMouseWheelUp, true },
-         { mouseActions.middleMouseWheelDown, true }
-      };
-
       static int step = Settings.normalSpeed;
       private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) //captures key presses
       {
@@ -222,9 +190,11 @@ namespace MouseXY
                }
             }
 
-            if (mouseCursorHandle && KeyToActionsDict.ContainsKey(key) && KeyActionsEnabled[KeyToActionsDict[key]]) //when mouse control by keyboard is enabled
+
+            var KTAD = BaseKeys.selected?.KeyToActionsDict;
+            if (mouseCursorHandle && BaseKeys.selected != null && KTAD.ContainsKey(key) && BaseKeys.selected.KeyActionsEnabledDict[KTAD[key]]) //when mouse control by keyboard is enabled
             {
-               switch(KeyToActionsDict[key])
+               switch (KTAD[key])
                {
                   case mouseActions.goUp:
                      {
@@ -272,18 +242,19 @@ namespace MouseXY
                         return (IntPtr)1;
                      }
                }
+            }
 
-               if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey(key)) // pokud je klávesa již v mapě, přesunout myš na její pozici
+            if (KeyPos.KeysPositionDict.Count > 0 && KeyPos.KeysPositionDict.ContainsKey(key)) // pokud je klávesa již v mapě, přesunout myš na její pozici
+            {
+               KeyPos? k = KeyPos.KeyPositionsList.Find(k => k.Key == (key).ToString());
+               if (k != null && k.IsActive) // pokud je klávesa aktivní
                {
-                  KeyPos? k = KeyPos.KeyPositionsList.Find(k => k.Key == (key).ToString());
-                  if (k != null && k.IsActive) // pokud je klávesa aktivní
-                  {
-                     Point keyPos = KeyPos.KeysPositionDict[key];
-                     SetCursorPos(keyPos.X, keyPos.Y);
-                     return (IntPtr)1; // Blokuje klávesu
-                  }
+                  Point keyPos = KeyPos.KeysPositionDict[key];
+                  SetCursorPos(keyPos.X, keyPos.Y);
+                  return (IntPtr)1; // Blokuje klávesu
                }
             }
+
             else //save position of key to mouse cursor
             {
                if (setKeyToPos && ((vkCode >= 0x30 && vkCode <= 0x39) || !registeredKeys.Contains(key))) // čísla 0-9 nebo jiné klávesy, které nejsou registrovány

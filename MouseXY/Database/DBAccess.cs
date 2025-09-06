@@ -398,5 +398,133 @@ namespace MouseXY
 
       #endregion
 
+      #region BaseKeysSettingsTable
+      //Save - onExit, onPanelChange
+      //public static void SaveBaseKeysSettings()
+      //{
+      //   using (SqlConnection connection = new SqlConnection(connectionString))
+      //   {
+      //      try
+      //      {
+      //         connection.Open();
+      //         string sql = @"IF EXISTS (SELECT Type, SetName FROM BaseKeysSettingsTable WHERE Type = @Type AND SetName = @SetName)
+      //            BEGIN
+      //                UPDATE BaseKeysSettingsTable
+      //                SET Value = @Value, AltValue = @AltValue, Enabled = @Enabled;
+      //            END
+      //            ELSE
+      //            BEGIN
+      //                INSERT INTO BaseKeysSettingsTable (Type, Value, AltValue, Enabled, SetName)
+      //                VALUES (@Type, @Value, @AltValue, @Enabled, @SetName);
+      //            END";
+      //         using (SqlCommand command = new SqlCommand(sql, connection))
+      //         {
+      //            command.Parameters.AddWithValue("@isUseBaseKeys", BaseKeysSettings.isUseBaseKeys);
+      //            command.Parameters.AddWithValue("@baseKeys", string.Join(",", BaseKeysSettings.baseKeys));
+      //            command.ExecuteNonQuery();
+      //         }
+      //      }
+      //      catch (SqlException ex)
+      //      {
+      //         MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+      //      }
+      //   }
+      //}
+
+      //public static void LoadBaseKeysSettings()
+      //{
+      //   using (SqlConnection connection = new SqlConnection(connectionString))
+      //   {
+      //      try
+      //      {
+      //         connection.Open();
+      //         string sql = "SELECT IsUseBaseKeys, BaseKeys FROM BaseKeysSettingsTable";
+      //         using (SqlCommand command = new SqlCommand(sql, connection))
+      //         {
+      //            using (SqlDataReader reader = command.ExecuteReader())
+      //            {
+      //               if (reader.Read())
+      //               {
+      //                  BaseKeysSettings.isUseBaseKeys = reader.GetBoolean(reader.GetOrdinal("IsUseBaseKeys"));
+      //                  string baseKeysStr = reader["BaseKeys"]?.ToString() ?? "";
+      //                  BaseKeysSettings.baseKeys = baseKeysStr.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+      //               }
+      //            }
+      //         }
+      //      }
+      //      catch (SqlException ex)
+      //      {
+      //         MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+      //      }
+      //   }
+      //}
+
+      public static void SaveKeysActionsEnabledDict(string setName, string action, bool enabled)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = @"IF EXISTS (SELECT 1 FROM BaseKeysSettingsTable WHERE SetName = @SetName AND ActionType = @ActionType)
+                  BEGIN
+                      UPDATE BaseKeysSettingsTable
+                      SET Enabled = @Enabled
+                      WHERE SetName = @SetName AND ActionType = @ActionType;
+                  END
+                  ELSE
+                  BEGIN
+                      INSERT INTO BaseKeysSettingsTable (SetName, ActionType, Enabled)
+                      VALUES (@SetName, @ActionType, @Enabled);
+                  END";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@SetName", setName);
+                  command.Parameters.AddWithValue("@ActionType", action);
+                  command.Parameters.AddWithValue("@Enabled", enabled);
+                  command.ExecuteNonQuery();
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static bool LoadKeysActionsEnabledDict(string setName, string action)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT Enabled FROM BaseKeysSettingsTable WHERE SetName = @SetName AND ActionType = @ActionType";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@SetName", setName);
+                  command.Parameters.AddWithValue("@ActionType", action);
+                  using (SqlDataReader reader = command.ExecuteReader())
+                  {
+                     while (reader.Read())
+                     {
+                        bool enabled = reader.GetBoolean(reader.GetOrdinal("Enabled"));
+                        return enabled;
+                     }
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+            }
+            return true;
+         }
+      }
+
+
+
+      #endregion
+
    }
 }

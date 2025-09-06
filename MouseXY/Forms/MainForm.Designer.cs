@@ -78,6 +78,7 @@
          btnMainPanels = new Button();
          btnSettings = new Button();
          panelSettings = new Panel();
+         lbSettingsType = new Label();
          lbBaseKeysAlternative = new Label();
          lbBaseKeysMain = new Label();
          tbAltMiddleMouseWheelUp = new TextBox();
@@ -124,7 +125,8 @@
          lbMoveLeft = new Label();
          lbMoveDown = new Label();
          lbMoveUp = new Label();
-         lbSettingsType = new Label();
+         cmbCreateSetFrom = new ComboBox();
+         lbCreateSetFrom = new Label();
          ((System.ComponentModel.ISupportInitialize)nmDelayMs).BeginInit();
          ((System.ComponentModel.ISupportInitialize)dgvShowKeysPositions).BeginInit();
          panelMain.SuspendLayout();
@@ -745,6 +747,8 @@
          // 
          // panelSettings
          // 
+         panelSettings.Controls.Add(lbCreateSetFrom);
+         panelSettings.Controls.Add(cmbCreateSetFrom);
          panelSettings.Controls.Add(lbSettingsType);
          panelSettings.Controls.Add(lbBaseKeysAlternative);
          panelSettings.Controls.Add(lbBaseKeysMain);
@@ -798,6 +802,17 @@
          panelSettings.TabIndex = 34;
          panelSettings.Tag = "bigPanels";
          panelSettings.Visible = false;
+         // 
+         // lbSettingsType
+         // 
+         lbSettingsType.AutoSize = true;
+         lbSettingsType.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbSettingsType.Location = new Point(612, 15);
+         lbSettingsType.Name = "lbSettingsType";
+         lbSettingsType.Size = new Size(62, 17);
+         lbSettingsType.TabIndex = 105;
+         lbSettingsType.Tag = "";
+         lbSettingsType.Text = "Settings:";
          // 
          // lbBaseKeysAlternative
          // 
@@ -913,7 +928,7 @@
          // 
          // btnDeleteBaseKeysSetname
          // 
-         btnDeleteBaseKeysSetname.Location = new Point(695, 225);
+         btnDeleteBaseKeysSetname.Location = new Point(713, 200);
          btnDeleteBaseKeysSetname.Name = "btnDeleteBaseKeysSetname";
          btnDeleteBaseKeysSetname.Size = new Size(77, 24);
          btnDeleteBaseKeysSetname.TabIndex = 94;
@@ -922,7 +937,7 @@
          // 
          // btnCreateBaseKeysSetname
          // 
-         btnCreateBaseKeysSetname.Location = new Point(612, 225);
+         btnCreateBaseKeysSetname.Location = new Point(630, 200);
          btnCreateBaseKeysSetname.Name = "btnCreateBaseKeysSetname";
          btnCreateBaseKeysSetname.Size = new Size(77, 24);
          btnCreateBaseKeysSetname.TabIndex = 93;
@@ -933,7 +948,7 @@
          // 
          lbBaseKeysSetName.AutoSize = true;
          lbBaseKeysSetName.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbBaseKeysSetName.Location = new Point(612, 174);
+         lbBaseKeysSetName.Location = new Point(630, 149);
          lbBaseKeysSetName.Name = "lbBaseKeysSetName";
          lbBaseKeysSetName.Size = new Size(65, 17);
          lbBaseKeysSetName.TabIndex = 92;
@@ -942,7 +957,7 @@
          // 
          // tbBaseKeysSetName
          // 
-         tbBaseKeysSetName.Location = new Point(612, 196);
+         tbBaseKeysSetName.Location = new Point(630, 171);
          tbBaseKeysSetName.Name = "tbBaseKeysSetName";
          tbBaseKeysSetName.Size = new Size(160, 23);
          tbBaseKeysSetName.TabIndex = 91;
@@ -1084,7 +1099,7 @@
          // 
          // btnSaveBaseKeySet
          // 
-         btnSaveBaseKeySet.Location = new Point(695, 139);
+         btnSaveBaseKeySet.Location = new Point(713, 114);
          btnSaveBaseKeySet.Name = "btnSaveBaseKeySet";
          btnSaveBaseKeySet.Size = new Size(77, 24);
          btnSaveBaseKeySet.TabIndex = 80;
@@ -1093,7 +1108,7 @@
          // 
          // btnSelectBaseKeySet
          // 
-         btnSelectBaseKeySet.Location = new Point(612, 139);
+         btnSelectBaseKeySet.Location = new Point(630, 114);
          btnSelectBaseKeySet.Name = "btnSelectBaseKeySet";
          btnSelectBaseKeySet.Size = new Size(77, 24);
          btnSelectBaseKeySet.TabIndex = 79;
@@ -1104,7 +1119,7 @@
          // 
          cmbBaseKeysSets.DropDownStyle = ComboBoxStyle.DropDownList;
          cmbBaseKeysSets.FormattingEnabled = true;
-         cmbBaseKeysSets.Location = new Point(612, 103);
+         cmbBaseKeysSets.Location = new Point(630, 78);
          cmbBaseKeysSets.Name = "cmbBaseKeysSets";
          cmbBaseKeysSets.Size = new Size(160, 23);
          cmbBaseKeysSets.TabIndex = 78;
@@ -1298,16 +1313,25 @@
          lbMoveUp.Tag = "";
          lbMoveUp.Text = "Move up:";
          // 
-         // lbSettingsType
+         // cmbCreateSetFrom
          // 
-         lbSettingsType.AutoSize = true;
-         lbSettingsType.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSettingsType.Location = new Point(612, 15);
-         lbSettingsType.Name = "lbSettingsType";
-         lbSettingsType.Size = new Size(62, 17);
-         lbSettingsType.TabIndex = 105;
-         lbSettingsType.Tag = "";
-         lbSettingsType.Text = "Settings:";
+         cmbCreateSetFrom.DropDownStyle = ComboBoxStyle.DropDownList;
+         cmbCreateSetFrom.FormattingEnabled = true;
+         cmbCreateSetFrom.Location = new Point(630, 249);
+         cmbCreateSetFrom.Name = "cmbCreateSetFrom";
+         cmbCreateSetFrom.Size = new Size(160, 23);
+         cmbCreateSetFrom.TabIndex = 106;
+         // 
+         // lbCreateSetFrom
+         // 
+         lbCreateSetFrom.AutoSize = true;
+         lbCreateSetFrom.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbCreateSetFrom.Location = new Point(630, 227);
+         lbCreateSetFrom.Name = "lbCreateSetFrom";
+         lbCreateSetFrom.Size = new Size(107, 17);
+         lbCreateSetFrom.TabIndex = 107;
+         lbCreateSetFrom.Tag = "";
+         lbCreateSetFrom.Text = "Create set from:";
          // 
          // MainForm
          // 
@@ -1436,5 +1460,7 @@
       private TextBox tbAltMoveDown;
       private TextBox tbAltMoveUp;
       private Label lbSettingsType;
+      private Label lbCreateSetFrom;
+      private ComboBox cmbCreateSetFrom;
    }
 }

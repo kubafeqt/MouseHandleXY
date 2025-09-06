@@ -127,15 +127,24 @@ namespace MouseXY
          dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
          dgvShowKeysPositions_Preview.ReadOnly = true;
 
+         #region BaseKeys and Settings Panel loading
          foreach (var ctrl in panelSettings.Controls.OfType<CheckBox>().OfTag("baseKeysCheckbox"))
          {
             ctrl.CheckedChanged += BaseKeysCheckBoxes_CheckedChanged;
          }
          cmbBaseKeysSets.Items.Add("default");
          cmbBaseKeysSets.SelectedIndex = 0;
+         cmbCreateSetFrom.Items.Add("default");
+         cmbCreateSetFrom.SelectedIndex = 0;
          cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds" });
          cmbSelectSettingsType.SelectedIndex = 0;
+         new BaseKeys("default"); // inicializace default baseKeys
+         BaseKeys.ChangeSelectedBaseKeys("default");
          FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
+         BaseKeys.LoadDefaultKeyActionsEnabledDict(); // load default enabled actions
+         ChangeBaseKeysCheckBoxesCheckedState(); // change checkboxes checked state according to loaded enabled actions
+
+         #endregion
       }
 
       private void LoadComboBoxSetNames()
@@ -760,23 +769,65 @@ namespace MouseXY
       #region BaseKeys Settings
       private void BaseKeysCheckBoxes_CheckedChanged(object sender, EventArgs e)
       {
-         CheckBox chk = sender as CheckBox;
-         if (chk != null)
+         CheckBox? cbox = sender as CheckBox;
+         Dictionary<CheckBox, MouseHandle.mouseActions> checkBoxToMouseActionsDict = new Dictionary<CheckBox, MouseHandle.mouseActions>
          {
-            string name = chk.Name;
-            bool stav = chk.Checked;
+            { cboxMoveUp, MouseHandle.mouseActions.goUp },
+            { cboxMoveDown, MouseHandle.mouseActions.goDown },
+            { cboxMoveLeft, MouseHandle.mouseActions.goLeft },
+            { cboxMoveRight, MouseHandle.mouseActions.goRight },
+            { cboxLeftMouseClick, MouseHandle.mouseActions.leftMouseClick },
+            { cboxRightMouseClick, MouseHandle.mouseActions.rightMouseClick },
+            { cboxMiddleMouseClick, MouseHandle.mouseActions.middleMouseClick },
+            { cboxMiddleMouseWheelUp, MouseHandle.mouseActions.middleMouseWheelUp },
+            { cboxMiddleMouseWheelDown, MouseHandle.mouseActions.middleMouseWheelDown },
+         };
 
-            MessageBox.Show($"Změnil se {name}, nový stav: {stav}");
+         if (cbox != null && BaseKeys.selected != null)
+         {
+            BaseKeys.selected.KeyActionsEnabledDict[checkBoxToMouseActionsDict[cbox]] = cbox.Checked;
+            DBAccess.SaveKeysActionsEnabledDict(BaseKeys.selected.SetName, checkBoxToMouseActionsDict[cbox].ToString(), cbox.Checked);
+         }
+      }
+
+      private void ChangeBaseKeysCheckBoxesCheckedState()
+      {
+         if (BaseKeys.selected == null) return;
+         var mouseActionsToCheckBoxDict = new Dictionary<MouseHandle.mouseActions, CheckBox>
+         {
+            { MouseHandle.mouseActions.goUp, cboxMoveUp },
+            { MouseHandle.mouseActions.goDown, cboxMoveDown },
+            { MouseHandle.mouseActions.goLeft, cboxMoveLeft },
+            { MouseHandle.mouseActions.goRight, cboxMoveRight },
+            { MouseHandle.mouseActions.leftMouseClick, cboxLeftMouseClick },
+            { MouseHandle.mouseActions.rightMouseClick, cboxRightMouseClick },
+            { MouseHandle.mouseActions.middleMouseClick, cboxMiddleMouseClick },
+            { MouseHandle.mouseActions.middleMouseWheelUp, cboxMiddleMouseWheelUp },
+            { MouseHandle.mouseActions.middleMouseWheelDown, cboxMiddleMouseWheelDown },
+         };
+         foreach (var kvp in mouseActionsToCheckBoxDict)
+         {
+            var action = kvp.Key;
+            var checkBox = kvp.Value;
+            if (BaseKeys.selected.KeyActionsEnabledDict.TryGetValue(action, out bool isEnabled))
+            {
+               checkBox.Checked = isEnabled;
+            }
+            else
+            {
+               checkBox.Checked = false; // nebo nějaká výchozí hodnota
+            }
          }
       }
 
       private void FillKeybindTextBoxes()
       {
+         if (BaseKeys.selected == null) return;
          // 1) Keys → Actions už máte v KeyToActionsDict
-         //    teď si uděláme Action → Keys[]
-         var actionToKeysDict = MouseHandle.KeyToActionsDict
-             .GroupBy(kvp => kvp.Value)
-             .ToDictionary(g => g.Key, g => g.Select(kvp => kvp.Key).ToList());
+         //    teď si uděláme Action → Keys[] List
+         var actionToKeysDict = BaseKeys.selected.KeyToActionsDict
+                .GroupBy(kvp => kvp.Value)
+                .ToDictionary(g => g.Key, g => g.Select(kvp => kvp.Key).ToList());
 
          // 2) Mapování akcí na textboxy
          var actionToTextBoxes = new Dictionary<MouseHandle.mouseActions, (TextBox Primary, TextBox Alt)>
