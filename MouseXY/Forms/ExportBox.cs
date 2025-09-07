@@ -78,7 +78,31 @@ namespace MouseXY
             if (listBox.SelectedItem != null && (string.IsNullOrWhiteSpace(textBox.Text) || listBox.Items.Contains(textBox.Text) || listBox.Items.Contains($"{textBox.Text}.json")))
             {
                textBox.Text = Path.GetFileNameWithoutExtension(listBox.SelectedItem.ToString());
+               textBox.SelectionStart = textBox.Text.Length; // kurzor na konec
             }
+         };
+
+         // Událost při změně textu v TextBoxu – zruší výběr v ListBoxu, pokud se liší
+         textBox.TextChanged += (sender, e) =>
+         {
+            textBox.Text = textBox.Text.TrimStart();
+            string textBoxContent = textBox.Text.Trim();
+            if (listBox.SelectedItem != null)
+            {
+               string selectedFile = listBox.SelectedItem.ToString();
+               string selectedNameWithoutExt = Path.GetFileNameWithoutExtension(selectedFile);
+               if (!string.Equals(textBoxContent, selectedNameWithoutExt, StringComparison.OrdinalIgnoreCase))
+               {
+                  listBox.ClearSelected();
+               }
+            }
+            if (listBox.Items.Contains(textBoxContent) || listBox.Items.Contains($"{textBoxContent}.json")) // pokud existuje, vyber ho
+            {
+               listBox.SelectedItem = listBox.Items.Cast<string>().FirstOrDefault(item =>
+                   string.Equals(Path.GetFileNameWithoutExtension(item), textBoxContent, StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(item, $"{textBoxContent}", StringComparison.OrdinalIgnoreCase));
+            }
+            buttonOk.Enabled = !string.IsNullOrWhiteSpace(textBoxContent);
          };
 
          // RENAME tlačítko - přejmenuje soubor

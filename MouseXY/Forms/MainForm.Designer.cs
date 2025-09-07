@@ -1032,6 +1032,7 @@
          // 
          // btnCreateBaseKeysSetname
          // 
+         btnCreateBaseKeysSetname.Enabled = false;
          btnCreateBaseKeysSetname.Location = new Point(630, 171);
          btnCreateBaseKeysSetname.Name = "btnCreateBaseKeysSetname";
          btnCreateBaseKeysSetname.Size = new Size(77, 24);

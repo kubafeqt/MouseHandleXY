@@ -39,6 +39,12 @@ namespace MouseXY
          form.AcceptButton = buttonOk;
          form.CancelButton = buttonCancel;
 
+         textBox.TextChanged += (sender, e) =>
+         {
+            textBox.Text = textBox.Text.TrimStart();
+            buttonOk.Enabled = !string.IsNullOrWhiteSpace(textBox.Text);
+         };
+
          DialogResult dialogResult = form.ShowDialog();
          if (nullable && dialogResult == DialogResult.Cancel)
          {

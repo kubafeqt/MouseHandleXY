@@ -568,6 +568,7 @@ namespace MouseXY
       string? latestSelecedItem = null;
       private void tbSetname_TextChanged(object sender, EventArgs e)
       {
+         tbSetname.Text = tbSetname.Text.TrimStart();
          string setName = tbSetname.Text.Trim().ToLower();
          if (setName != "default" && cmbSelectSetname.Items.Contains(setName))
          {
@@ -900,16 +901,37 @@ namespace MouseXY
       private void tbBaseKeysSetName_TextChanged(object sender, EventArgs e)
       {
          //edit when have same name -> change name of selected base keys set
-
+         tbBaseKeysSetName.Text = tbBaseKeysSetName.Text.TrimStart();
+         if (tbBaseKeysSetName.Text.Trim().Equals("default", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(tbBaseKeysSetName.Text)) 
+         {
+            btnCreateBaseKeysSetname.Enabled = false;
+            return;
+         }
+         else
+         {
+            btnCreateBaseKeysSetname.Enabled = true;
+         }
+         if (BaseKeys.BaseKeysList.Any(p => p.SetName == tbBaseKeysSetName.Text.Trim()))
+         {
+            btnCreateBaseKeysSetname.Text = "edit";
+         }
+         else
+         {
+            btnCreateBaseKeysSetname.Text = "create";
+         }
       }
 
       private void btnDeleteBaseKeysSetname_Click(object sender, EventArgs e)
       {
 
+
+
       }
 
       private void cmbBaseKeysSets_SelectedIndexChanged(object sender, EventArgs e)
       {
+
+
 
       }
 

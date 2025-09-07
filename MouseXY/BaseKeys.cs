@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace MouseXY
 {
+   /// <summary>
+   /// Přepíše klasický setNames
+   /// 
+   /// </summary>
    internal class BaseKeys
    {
       public static BaseKeys? selected; // the currently selected set of keys
@@ -31,7 +35,6 @@ namespace MouseXY
          { Keys.F, MouseHandle.mouseActions.middleMouseWheelDown },
          { Keys.C, MouseHandle.mouseActions.middleMouseClick }
       };
-
 
       private static Dictionary<MouseHandle.mouseActions, bool> DefaultKeyActionsEnabledDict = new Dictionary<MouseHandle.mouseActions, bool>()
       {
