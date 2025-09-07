@@ -466,15 +466,15 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = @"IF EXISTS (SELECT 1 FROM BaseKeysSettingsTable WHERE SetName = @SetName AND ActionType = @ActionType)
+               string sql = @"IF EXISTS (SELECT 1 FROM BaseKeysTable WHERE SetName = @SetName AND ActionType = @ActionType)
                   BEGIN
-                      UPDATE BaseKeysSettingsTable
+                      UPDATE BaseKeysTable
                       SET Enabled = @Enabled
                       WHERE SetName = @SetName AND ActionType = @ActionType;
                   END
                   ELSE
                   BEGIN
-                      INSERT INTO BaseKeysSettingsTable (SetName, ActionType, Enabled)
+                      INSERT INTO BaseKeysTable (SetName, ActionType, Enabled)
                       VALUES (@SetName, @ActionType, @Enabled);
                   END";
                using (SqlCommand command = new SqlCommand(sql, connection))
@@ -499,7 +499,7 @@ namespace MouseXY
             try
             {
                connection.Open();
-               string sql = "SELECT Enabled FROM BaseKeysSettingsTable WHERE SetName = @SetName AND ActionType = @ActionType";
+               string sql = "SELECT Enabled FROM BaseKeysTable WHERE SetName = @SetName AND ActionType = @ActionType";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@SetName", setName);

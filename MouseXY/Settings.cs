@@ -9,6 +9,9 @@ namespace MouseXY
       public static readonly Size panelSize = new(845, 650);
       public static readonly Point panelLocation = new(7, 27);
 
+      public static readonly Point settingsSubPanelLocation = new(25, 39);
+      public static readonly Size settingsSubPanelSize = new(810, 362);
+
       //dynamic:
       public static Size latestSize = new();
 

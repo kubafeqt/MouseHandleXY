@@ -112,6 +112,7 @@ namespace MouseXY
          #endregion
 
          ResizeAndLocationControlsOfTag("bigPanels", Settings.panelSize, Settings.panelLocation);
+         ResizeAndLocationControlsOfTag("settingsPanels", Settings.settingsSubPanelSize, Settings.settingsSubPanelLocation, panelSettings);
          LoadComboBoxSetNames(); // Načtení názvů setNames do ComboBoxu
          dgvShowKeysPositions.AllowUserToAddRows = false;
          dgvShowKeysPositions.AllowUserToDeleteRows = false;
@@ -134,12 +135,13 @@ namespace MouseXY
          }
          cmbBaseKeysSets.Items.Add("default");
          cmbBaseKeysSets.SelectedIndex = 0;
+         cmbCreateSetFrom.Items.Add("none");
          cmbCreateSetFrom.Items.Add("default");
          cmbCreateSetFrom.SelectedIndex = 0;
-         cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds" });
+         cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds", "Other Settings" });
          cmbSelectSettingsType.SelectedIndex = 0;
          new BaseKeys("default"); // inicializace default baseKeys
-         BaseKeys.ChangeSelectedBaseKeys("default");
+         BaseKeys.ChangeSelectedBaseKeys("default"); //then load this from db
          FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
          BaseKeys.LoadDefaultKeyActionsEnabledDict(); // load default enabled actions
          ChangeBaseKeysCheckBoxesCheckedState(); // change checkboxes checked state according to loaded enabled actions
@@ -210,9 +212,11 @@ namespace MouseXY
          }
       }
 
-      private void ResizeAndLocationControlsOfTag(string tag, Size? size = null, Point? location = null)
+      private void ResizeAndLocationControlsOfTag(string tag, Size? size = null, Point? location = null, Panel? parentPanel = null)
       {
-         var matchingControls = Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
+         var matchingControls = parentPanel == null ?
+            Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0) :
+            parentPanel.Controls.OfType<Control>().Where(c => c.Tag is string s && s.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0);
          foreach (var control in matchingControls)
          {
             control.Size = size ?? control.Size;
@@ -764,6 +768,31 @@ namespace MouseXY
          return lastPanel;
       }
 
+      //Settings panel:
+      private void cmbSelectSettingsType_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         Dictionary<string, Panel> settingsTypeToPanelDict = new Dictionary<string, Panel>
+         {
+            { "", panelBaseKeysSettings }, //default
+            { "Base Keys", panelBaseKeysSettings },
+            { "Sounds", panelSoundsSettings },
+            { "Other Settings", panelOtherSettings }
+         };
+         if (cmbSelectSettingsType.SelectedItem != null && settingsTypeToPanelDict.ContainsKey(cmbSelectSettingsType.SelectedItem.ToString() ?? ""))
+         {
+            SwitchSettingsPanel(settingsTypeToPanelDict[cmbSelectSettingsType.SelectedItem.ToString() ?? ""]);
+         }
+      }
+
+      private void SwitchSettingsPanel(Panel showPanel)
+      {
+         foreach (Panel panel in panelSettings.Controls.OfType<Panel>().OfTag("settingsPanels"))
+         {
+            panel.Hide();
+         }
+         showPanel.Show();
+      }
+
       #endregion
 
       #region BaseKeys Settings
@@ -862,7 +891,40 @@ namespace MouseXY
          }
       }
 
+      private void btnCreateBaseKeysSetname_Click(object sender, EventArgs e)
+      {
+
+
+      }
+
+      private void tbBaseKeysSetName_TextChanged(object sender, EventArgs e)
+      {
+         //edit when have same name -> change name of selected base keys set
+
+      }
+
+      private void btnDeleteBaseKeysSetname_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void cmbBaseKeysSets_SelectedIndexChanged(object sender, EventArgs e)
+      {
+
+      }
+
+      private void btnSelectBaseKeySet_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void btnSaveBaseKeySet_Click(object sender, EventArgs e)
+      {
+
+      }
+
       #endregion
+
 
    }
 }
