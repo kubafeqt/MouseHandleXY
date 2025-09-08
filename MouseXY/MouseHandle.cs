@@ -191,7 +191,7 @@ namespace MouseXY
             }
 
 
-            var KTAD = BaseKeys.selected?.KeyToActionsDict;
+            var KTAD = BaseKeys.selected?.KeysToActionDict;
             if (mouseCursorHandle && BaseKeys.selected != null && KTAD.ContainsKey(key) && BaseKeys.selected.KeyActionsEnabledDict[KTAD[key]]) //when mouse control by keyboard is enabled
             {
                switch (KTAD[key])

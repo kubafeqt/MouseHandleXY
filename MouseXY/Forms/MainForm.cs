@@ -133,7 +133,12 @@ namespace MouseXY
          {
             ctrl.CheckedChanged += BaseKeysCheckBoxes_CheckedChanged;
          }
+         foreach (var ctrl in panelSettings.Controls.OfType<TextBox>().OfTag("BaseKeysSettingsTbs"))
+         {
+            ctrl.KeyDown += BaseKeysTextBoxes_KeyDown;
+         }
          cmbBaseKeysSets.Items.Add("default");
+         cmbBaseKeysSets.Items.Add("second");
          cmbBaseKeysSets.SelectedIndex = 0;
          cmbCreateSetFrom.Items.Add("none");
          cmbCreateSetFrom.Items.Add("default");
@@ -141,7 +146,9 @@ namespace MouseXY
          cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds", "Other Settings" });
          cmbSelectSettingsType.SelectedIndex = 0;
          new BaseKeys("default"); // inicializace default baseKeys
+         new BaseKeys("second"); // inicializace second baseKeys
          BaseKeys.ChangeSelectedBaseKeys("default"); //then load this from db
+         BaseKeys.ChangeShowedBaseKeys("default"); //then load this from db
          FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
          BaseKeys.LoadDefaultKeyActionsEnabledDict(); // load default enabled actions
          ChangeBaseKeysCheckBoxesCheckedState(); // change checkboxes checked state according to loaded enabled actions
@@ -813,16 +820,16 @@ namespace MouseXY
             { cboxMiddleMouseWheelDown, MouseHandle.mouseActions.middleMouseWheelDown },
          };
 
-         if (cbox != null && BaseKeys.selected != null)
+         if (cbox != null && BaseKeys.showed != null)
          {
-            BaseKeys.selected.KeyActionsEnabledDict[checkBoxToMouseActionsDict[cbox]] = cbox.Checked;
-            DBAccess.SaveKeysActionsEnabledDict(BaseKeys.selected.SetName, checkBoxToMouseActionsDict[cbox].ToString(), cbox.Checked);
+            BaseKeys.showed.KeyActionsEnabledDict[checkBoxToMouseActionsDict[cbox]] = cbox.Checked;
+            DBAccess.SaveKeysActionsEnabledDict(BaseKeys.showed.SetName, checkBoxToMouseActionsDict[cbox].ToString(), cbox.Checked);
          }
       }
 
       private void ChangeBaseKeysCheckBoxesCheckedState()
       {
-         if (BaseKeys.selected == null) return;
+         if (BaseKeys.showed == null) return;
          var mouseActionsToCheckBoxDict = new Dictionary<MouseHandle.mouseActions, CheckBox>
          {
             { MouseHandle.mouseActions.goUp, cboxMoveUp },
@@ -839,23 +846,107 @@ namespace MouseXY
          {
             var action = kvp.Key;
             var checkBox = kvp.Value;
-            if (BaseKeys.selected.KeyActionsEnabledDict.TryGetValue(action, out bool isEnabled))
+            if (BaseKeys.showed.KeyActionsEnabledDict.TryGetValue(action, out bool isEnabled))
             {
                checkBox.Checked = isEnabled;
             }
             else
             {
-               checkBox.Checked = false; // nebo nějaká výchozí hodnota
+               checkBox.Checked = true; // nebo nějaká výchozí hodnota
             }
+         }
+      }
+
+      private void BaseKeysTextBoxes_KeyDown(object sender, KeyEventArgs e)
+      {
+         Dictionary<TextBox, MouseHandle.mouseActions> textBoxToMouseActionsDict = new Dictionary<TextBox, MouseHandle.mouseActions>
+         {
+            { tbMoveUp, MouseHandle.mouseActions.goUp },
+            { tbMoveDown, MouseHandle.mouseActions.goDown },
+            { tbMoveLeft, MouseHandle.mouseActions.goLeft },
+            { tbMoveRight, MouseHandle.mouseActions.goRight },
+            { tbLeftMouseClick, MouseHandle.mouseActions.leftMouseClick },
+            { tbRightMouseClick, MouseHandle.mouseActions.rightMouseClick },
+            { tbMiddleMouseWheelUp, MouseHandle.mouseActions.middleMouseWheelUp },
+            { tbMiddleMouseWheelDown, MouseHandle.mouseActions.middleMouseWheelDown },
+            { tbMiddleMouseClick, MouseHandle.mouseActions.middleMouseClick },
+            { tbAltMoveUp, MouseHandle.mouseActions.goUp },
+            { tbAltMoveDown, MouseHandle.mouseActions.goDown },
+            { tbAltMoveLeft, MouseHandle.mouseActions.goLeft },
+            { tbAltMoveRight, MouseHandle.mouseActions.goRight },
+            { tbAltLeftMouseClick, MouseHandle.mouseActions.leftMouseClick },
+            { tbAltRightMouseClick, MouseHandle.mouseActions.rightMouseClick },
+            { tbAltMiddleMouseWheelUp, MouseHandle.mouseActions.middleMouseWheelUp },
+            { tbAltMiddleMouseWheelDown, MouseHandle.mouseActions.middleMouseWheelDown },
+            { tbAltMiddleMouseClick, MouseHandle.mouseActions.middleMouseClick }
+         };
+
+         if (BaseKeys.showed == null) return;
+
+         if (e.KeyCode == Keys.Delete)
+         {
+            Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), (sender as TextBox).Text, true);
+            (sender as TextBox).Text = ""; //Clear the TextBox when delete is pressed
+            BaseKeys.showed.KeysToActionDict.Remove(keyToRemove);
+            e.SuppressKeyPress = true; //Prevent the "ding" sound
+            return;
+         }
+         if (e.KeyCode == Keys.Tab || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu)
+         {
+            return; //Ignore Tab, Shift, Ctrl, and Alt keys - basic
+         }
+
+         TextBox? tb = sender as TextBox;
+         if (tb != null)
+         {
+            Keys pressedKey = e.KeyCode;
+            if (tb.Text.Equals(pressedKey.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+               return; //If the same key is pressed, do nothing
+            }
+            //Check if the key is already assigned to another action
+            if (BaseKeys.showed.KeysToActionDict.TryGetValue(pressedKey, out MouseHandle.mouseActions existingAction))
+            {
+               if (existingAction != textBoxToMouseActionsDict[tb])
+               {
+                  var confirm = MessageBox.Show($"Tato klávesa je již přiřazena k akci '{existingAction}'. Opravdu chcete změnit přiřazení?", "Potvrzení změny přiřazení", MessageBoxButtons.YesNo);
+                  if (confirm != DialogResult.Yes) //If user selects No, do nothing
+                  {
+                     return;
+                  }
+                  //Remove the existing assignment
+                  //buď filltextboxy znovu, nebo najít textbox s tímto action a vyčistit ho
+                  var mouseActionsToTextBoxDict = textBoxToMouseActionsDict.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+                  if (mouseActionsToTextBoxDict.TryGetValue(existingAction, out TextBox existingTb))
+                  {
+                     if (existingTb == mouseActionsToTextBoxDict[existingAction]) //if primary textbox, clear it
+                     {
+                        existingTb.Text = "";
+                     }
+                     else if (existingTb == mouseActionsToTextBoxDict[existingAction + 1]) //if alt textbox, clear it
+                     {
+                        existingTb.Text = "";
+                     }
+                  }
+                  BaseKeys.showed.KeysToActionDict.Remove(pressedKey);
+                  BaseKeys.showed.KeysToActionDict.Add(pressedKey, textBoxToMouseActionsDict[tb]);
+                  tb.Text = pressedKey.ToString();
+               }
+               else
+               {
+                  tb.Text = pressedKey.ToString();
+               }
+            }
+            
          }
       }
 
       private void FillKeybindTextBoxes()
       {
-         if (BaseKeys.selected == null) return;
+         if (BaseKeys.showed == null) return;
          // 1) Keys → Actions už máte v KeyToActionsDict
          //    teď si uděláme Action → Keys[] List
-         var actionToKeysDict = BaseKeys.selected.KeyToActionsDict
+         var actionToKeysDict = BaseKeys.showed.KeysToActionDict
                 .GroupBy(kvp => kvp.Value)
                 .ToDictionary(g => g.Key, g => g.Select(kvp => kvp.Key).ToList());
 
@@ -930,14 +1021,27 @@ namespace MouseXY
 
       private void cmbBaseKeysSets_SelectedIndexChanged(object sender, EventArgs e)
       {
+         string setName = cmbBaseKeysSets.SelectedItem?.ToString() ?? "default";
+         BaseKeys.ChangeShowedBaseKeys(setName);
+         ChangeBaseKeysSet();
 
+      }
 
-
+      private void ChangeBaseKeysSet()
+      {
+         //enable textboxes
+         //naplnit textboxes
+         //change checkboxes
+         if (BaseKeys.showed == null) return;
+         EnableDisableControlsOfTagInPanel(panelBaseKeysSettings, "BaseKeysSettingsTbs", !BaseKeys.showed.SetName.Equals("default", StringComparison.OrdinalIgnoreCase));
+         FillKeybindTextBoxes();
+         ChangeBaseKeysCheckBoxesCheckedState();
       }
 
       private void btnSelectBaseKeySet_Click(object sender, EventArgs e)
       {
-
+         string setName = cmbBaseKeysSets.SelectedItem?.ToString() ?? "default";
+         BaseKeys.ChangeSelectedBaseKeys(setName);
       }
 
       private void btnSaveBaseKeySet_Click(object sender, EventArgs e)

@@ -13,13 +13,15 @@ namespace MouseXY
    /// </summary>
    internal class BaseKeys
    {
-      public static BaseKeys? selected; // the currently selected set of keys
+      public static BaseKeys? selected; // the currently selected set of base keys
+      public static BaseKeys? showed; // the currently showed set of base keys
       public static List<BaseKeys> BaseKeysList = new(); // for displaying data
       public static string actualSelectedSetName = "default"; // for manipulation with keys - stores the name of the set of keys
+      public static string actualShowedSetName = "default";
       public string SetName { get; set; }
 
       //then load it from db or use this default settings:
-      private static Dictionary<Keys, MouseHandle.mouseActions> DefaultKeyToActionsDict = new Dictionary<Keys, MouseHandle.mouseActions>()
+      private static Dictionary<Keys, MouseHandle.mouseActions> DefaultKeysToActionDict = new Dictionary<Keys, MouseHandle.mouseActions>()
       {
          { Keys.W, MouseHandle.mouseActions.goUp },
          { Keys.S, MouseHandle.mouseActions.goDown },
@@ -49,7 +51,8 @@ namespace MouseXY
          { MouseHandle.mouseActions.middleMouseWheelDown, true }
       };
 
-      public Dictionary<Keys, MouseHandle.mouseActions> KeyToActionsDict { get; set; }
+      public Dictionary<Keys, MouseHandle.mouseActions> KeysToActionDict { get; set; }
+      public Dictionary<MouseHandle.mouseActions, List<Keys>> ActionsToKeysDict { get; set; }
       public Dictionary<MouseHandle.mouseActions, bool> KeyActionsEnabledDict { get; set; }
 
       public BaseKeys(string setname)
@@ -65,12 +68,23 @@ namespace MouseXY
          selected = BaseKeysList.Find(bk => bk.SetName == setName);
       }
 
+      public static void ChangeShowedBaseKeys(string setName)
+      {
+         actualShowedSetName = setName;
+         showed = BaseKeysList.Find(bk => bk.SetName == setName);
+      }
+
       public static void AddNewBaseKeysDictionaries(BaseKeys bk)
       {
          if (bk.SetName == "default")
          {
-            bk.KeyToActionsDict = DefaultKeyToActionsDict;
-            bk.KeyActionsEnabledDict = DefaultKeyActionsEnabledDict; //then load this from db
+            bk.KeysToActionDict = DefaultKeysToActionDict;
+            bk.KeyActionsEnabledDict = DefaultKeyActionsEnabledDict;
+         }
+         else //basic, then load from db
+         {             
+            bk.KeysToActionDict = new Dictionary<Keys, MouseHandle.mouseActions>();
+            bk.KeyActionsEnabledDict = new Dictionary<MouseHandle.mouseActions, bool>();
          }
       }
 
@@ -79,6 +93,32 @@ namespace MouseXY
          foreach (var action in DefaultKeyActionsEnabledDict.Keys.ToList())
          {
             DefaultKeyActionsEnabledDict[action] = DBAccess.LoadKeysActionsEnabledDict("default", action.ToString());
+         }
+      }
+
+      public static void LoadKeyActionsEnabled()
+      {
+         foreach (var basekeys in BaseKeysList.Where(p => !p.SetName.Equals("default", StringComparison.OrdinalIgnoreCase)).ToList())
+         {
+            foreach (var action in basekeys.KeyActionsEnabledDict.Keys.ToList())
+            {
+               basekeys.KeyActionsEnabledDict[action] = DBAccess.LoadKeysActionsEnabledDict(basekeys.SetName, action.ToString());
+            }
+         }
+      }
+
+      public static void LoadActionsToKeysDict()
+      {
+         foreach (var basekeys in BaseKeysList)
+         {
+            basekeys.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys>>();
+            foreach (var action in Enum.GetValues(typeof(MouseHandle.mouseActions)).Cast<MouseHandle.mouseActions>())
+            {
+               basekeys.ActionsToKeysDict[action] = basekeys.KeysToActionDict
+                  .Where(kvp => kvp.Value == action)
+                  .Select(kvp => kvp.Key)
+                  .ToList();
+            }
          }
       }
 
