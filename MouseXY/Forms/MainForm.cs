@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace MouseXY
 {
@@ -111,23 +112,6 @@ namespace MouseXY
 
          #endregion
 
-         ResizeAndLocationControlsOfTag("bigPanels", Settings.panelSize, Settings.panelLocation);
-         ResizeAndLocationControlsOfTag("settingsPanels", Settings.settingsSubPanelSize, Settings.settingsSubPanelLocation, panelSettings);
-         LoadComboBoxSetNames(); // Načtení názvů setNames do ComboBoxu
-         dgvShowKeysPositions.AllowUserToAddRows = false;
-         dgvShowKeysPositions.AllowUserToDeleteRows = false;
-         UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
-         foreach (DataGridViewColumn column in dgvShowKeysPositions.Columns)
-         {
-            if (column.Name != "IsActive")
-            {
-               column.ReadOnly = true; //nastaví všechny sloupce který se nejmenujou IsActive na readonly
-            }
-         }
-         dgvShowKeysPositions_Preview.AllowUserToAddRows = false;
-         dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
-         dgvShowKeysPositions_Preview.ReadOnly = true;
-
          #region BaseKeys and Settings Panel loading
          foreach (var ctrl in panelBaseKeysSettings.Controls.OfType<CheckBox>().OfTag("baseKeysCheckbox"))
          {
@@ -155,6 +139,23 @@ namespace MouseXY
          ChangeBaseKeysCheckBoxesCheckedState(); // change checkboxes checked state according to loaded enabled actions
 
          #endregion
+
+         ResizeAndLocationControlsOfTag("bigPanels", Settings.panelSize, Settings.panelLocation);
+         ResizeAndLocationControlsOfTag("settingsPanels", Settings.settingsSubPanelSize, Settings.settingsSubPanelLocation, panelSettings);
+         LoadComboBoxSetNames(); // Načtení názvů setNames do ComboBoxu
+         dgvShowKeysPositions.AllowUserToAddRows = false;
+         dgvShowKeysPositions.AllowUserToDeleteRows = false;
+         UpdateDataGridView(); // Aktualizace DataGridView s pozicemi kláves
+         foreach (DataGridViewColumn column in dgvShowKeysPositions.Columns)
+         {
+            if (column.Name != "IsActive")
+            {
+               column.ReadOnly = true; //nastaví všechny sloupce který se nejmenujou IsActive na readonly
+            }
+         }
+         dgvShowKeysPositions_Preview.AllowUserToAddRows = false;
+         dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
+         dgvShowKeysPositions_Preview.ReadOnly = true;
       }
 
       private void LoadComboBoxSetNames()
@@ -185,7 +186,21 @@ namespace MouseXY
          {
             dgvShowKeysPositions.CurrentCell = dgvShowKeysPositions.Rows[selectedRowIndex].Cells[0]; // Nastaví aktuální buňku na vybraný řádek
          }
-
+         foreach (DataGridViewRow row in dgvShowKeysPositions.Rows)
+         {
+            string keyString = row.Cells["Key"].Value.ToString();
+            Keys key = (Keys)Enum.Parse(typeof(Keys), keyString);
+            if (BaseKeys.selected.CheckAssignedKeyEnabled(key))
+            {
+               row.DefaultCellStyle.BackColor = Color.FromArgb(255, 212, 2, 2);
+               row.DefaultCellStyle.ForeColor = Color.White;
+            }
+            else
+            {
+               row.DefaultCellStyle.BackColor = Color.White;
+               row.DefaultCellStyle.ForeColor = Color.Black;
+            }
+         } 
       }
 
       private void UpdatePreviewDataGridView()
@@ -338,6 +353,7 @@ namespace MouseXY
          if (showKeysPositions)
          {
             ResizeMainForm();
+            UpdateDataGridView();
             btnShowKeysPositions.Text = btnShowKeysPositions.Text.Replace("Show", "hide", StringComparison.OrdinalIgnoreCase);
          }
          else
@@ -747,6 +763,7 @@ namespace MouseXY
          Panel mainPanel = lastPanel ?? panelMain; //determine if mainPanel was on preview import or main panel last time
          ResizeMainForm(latestSize: true, saveLatestFormSize: false);
          SwitchPanels(mainPanel);
+         UpdateDataGridView();
       }
 
       Panel? lastPanel;

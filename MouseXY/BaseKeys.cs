@@ -122,6 +122,15 @@ namespace MouseXY
          }
       }
 
+      public bool CheckAssignedKeyEnabled(Keys key)
+      {
+         if (KeysToActionDict.TryGetValue(key, out MouseHandle.mouseActions action))
+         {
+            return KeyActionsEnabledDict.TryGetValue(action, out bool isEnabled) && isEnabled;
+         }
+         return false;
+      }
+
 
    }
 }
