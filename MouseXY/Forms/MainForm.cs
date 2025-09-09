@@ -185,6 +185,7 @@ namespace MouseXY
          {
             dgvShowKeysPositions.CurrentCell = dgvShowKeysPositions.Rows[selectedRowIndex].Cells[0]; // Nastaví aktuální buňku na vybraný řádek
          }
+
       }
 
       private void UpdatePreviewDataGridView()
@@ -920,7 +921,7 @@ namespace MouseXY
          }
          if (e.KeyCode == Keys.Tab || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu)
          {
-            return; //Ignore Tab, Shift, Ctrl, and Alt keys - basic
+            return; //ignore Tab, Shift, Ctrl, and Alt keys - basic
          }
 
          TextBox? tb = sender as TextBox;
@@ -942,8 +943,7 @@ namespace MouseXY
                   {
                      return;
                   }
-                  //Remove the existing assignment
-                  //najít textbox s tímto action a vyčistit ho
+                  //Find textbox with the existing assignment and clear it
                   var mouseActionsToTextBoxDict = textBoxToMouseActionsDict.GroupBy(kvp => kvp.Value).ToDictionary(g => g.Key, g => g.Select(x => x.Key).ToList()); //mouseAction na všechny textboxy - [0] primary, [1] alt
                   if (mouseActionsToTextBoxDict.TryGetValue(existingAction, out List<TextBox> existingTbList))
                   {
@@ -953,46 +953,45 @@ namespace MouseXY
                         textbox.Text = "";
                      }
                   }
-                  //BaseKeys.showed.KeysToActionDict.Remove(pressedKey);
-                  //BaseKeys.showed.KeysToActionDict.Add(pressedKey, textBoxToMouseActionsDict[tb]);
                   BaseKeys.showed.KeysToActionDict[pressedKey] = textBoxToMouseActionsDict[tb];
                   tb.Text = pressedKey.ToString();
                }
                else //it exist in the same textbox group (primary/alt)
                {
                   var sameAction = textBoxToMouseActionsDict[tb];
-
-                  // najdi všechny textboxy pro tenhle action
+                  //najdi všechny textboxy pro tenhle action
                   var siblings = textBoxToMouseActionsDict
                       .Where(kvp => kvp.Value == sameAction)
                       .Select(kvp => kvp.Key)
                       .ToList();
-
-                  // najdi "druhý" textbox (alt/primary)
+                  //najdi "druhý" textbox (alt/primary)
                   var otherTb = siblings.FirstOrDefault(x => x != tb);
 
                   if (otherTb != null)
                   {
                      if (otherTb.Text.Equals(pressedKey.ToString(), StringComparison.OrdinalIgnoreCase))
                      {
-                        // swap
+                        //swap
                         var oldValue = tb.Text;
                         tb.Text = pressedKey.ToString();
                         otherTb.Text = oldValue;
                      }
                      else
                      {
-                        // běžné chování – smaže alt
-                        otherTb.Text = "";
+                        otherTb.Text = ""; //běžné chování – smaže alt
                         tb.Text = pressedKey.ToString();
                      }
                   }
-
                   e.SuppressKeyPress = true;
                }
             }
             else
             {
+               if (!string.IsNullOrWhiteSpace(tb.Text)) //something is in textbox
+               {
+                  Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), tb.Text, true);
+                  BaseKeys.showed.KeysToActionDict.Remove(keyToRemove);
+               }
                tb.Text = pressedKey.ToString();
                e.SuppressKeyPress = true;
                var mouseAction = textBoxToMouseActionsDict[tb];
@@ -1075,7 +1074,6 @@ namespace MouseXY
 
       private void btnDeleteBaseKeysSetname_Click(object sender, EventArgs e)
       {
-
 
 
       }
