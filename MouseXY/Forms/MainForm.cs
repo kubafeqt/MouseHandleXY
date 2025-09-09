@@ -129,11 +129,11 @@ namespace MouseXY
          dgvShowKeysPositions_Preview.ReadOnly = true;
 
          #region BaseKeys and Settings Panel loading
-         foreach (var ctrl in panelSettings.Controls.OfType<CheckBox>().OfTag("baseKeysCheckbox"))
+         foreach (var ctrl in panelBaseKeysSettings.Controls.OfType<CheckBox>().OfTag("baseKeysCheckbox"))
          {
             ctrl.CheckedChanged += BaseKeysCheckBoxes_CheckedChanged;
          }
-         foreach (var ctrl in panelSettings.Controls.OfType<TextBox>().OfTag("BaseKeysSettingsTbs"))
+         foreach (var ctrl in panelBaseKeysSettings.Controls.OfType<TextBox>().OfTag("BaseKeysSettingsTbs"))
          {
             ctrl.KeyDown += BaseKeysTextBoxes_KeyDown;
          }
@@ -151,6 +151,7 @@ namespace MouseXY
          BaseKeys.ChangeShowedBaseKeys("default"); //then load this from db
          FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
          BaseKeys.LoadDefaultKeyActionsEnabledDict(); // load default enabled actions
+         BaseKeys.LoadKeyActionsEnabled();
          ChangeBaseKeysCheckBoxesCheckedState(); // change checkboxes checked state according to loaded enabled actions
 
          #endregion
@@ -266,11 +267,11 @@ namespace MouseXY
          trayIcon.Visible = false;
       }
 
-      private void ResizeMainForm(bool bigger = true, bool latestSize = false, bool saveLatestFormSize = true)
+      private void ResizeMainForm(bool bigger = true, bool latestSize = false, bool saveLatestFormSize = true, Size? definedBiggerFormSize = null)
       {
          if (bigger && !latestSize)
          {
-            Size = Settings.biggerFormSize;
+            Size = definedBiggerFormSize ?? Settings.biggerFormSize;
          }
          else if (!latestSize)
          {
@@ -751,7 +752,7 @@ namespace MouseXY
       private void btnSettings_Click(object sender, EventArgs e)
       {
          lastPanel = GetLastPanelVisible();
-         ResizeMainForm(bigger: true, saveLatestFormSize: false);
+         ResizeMainForm(bigger: true, saveLatestFormSize: false, definedBiggerFormSize: Settings.settingsFormSize);
          SwitchPanels(panelSettings);
       }
 
@@ -881,6 +882,32 @@ namespace MouseXY
             { tbAltMiddleMouseClick, MouseHandle.mouseActions.middleMouseClick }
          };
 
+         Dictionary<MouseHandle.mouseActions, string> mouseActionsToNamesDict = new Dictionary<MouseHandle.mouseActions, string>()
+         {
+            { MouseHandle.mouseActions.goUp, "move up" },
+            { MouseHandle.mouseActions.goDown, "move down" },
+            { MouseHandle.mouseActions.goLeft, "move left" },
+            { MouseHandle.mouseActions.goRight, "move right" },
+            { MouseHandle.mouseActions.leftMouseClick, "left mouse click" },
+            { MouseHandle.mouseActions.rightMouseClick, "right mouse click" },
+            { MouseHandle.mouseActions.middleMouseClick, "middle mouse click" },
+            { MouseHandle.mouseActions.middleMouseWheelUp, "middle mouse wheel up" },
+            { MouseHandle.mouseActions.middleMouseWheelDown, "middle mouse wheel down" },
+         };
+
+         var mouseActionsToCheckBoxDict = new Dictionary<MouseHandle.mouseActions, CheckBox>
+         {
+            { MouseHandle.mouseActions.goUp, cboxMoveUp },
+            { MouseHandle.mouseActions.goDown, cboxMoveDown },
+            { MouseHandle.mouseActions.goLeft, cboxMoveLeft },
+            { MouseHandle.mouseActions.goRight, cboxMoveRight },
+            { MouseHandle.mouseActions.leftMouseClick, cboxLeftMouseClick },
+            { MouseHandle.mouseActions.rightMouseClick, cboxRightMouseClick },
+            { MouseHandle.mouseActions.middleMouseClick, cboxMiddleMouseClick },
+            { MouseHandle.mouseActions.middleMouseWheelUp, cboxMiddleMouseWheelUp },
+            { MouseHandle.mouseActions.middleMouseWheelDown, cboxMiddleMouseWheelDown },
+         };
+
          if (BaseKeys.showed == null) return;
 
          if (e.KeyCode == Keys.Delete)
@@ -904,40 +931,74 @@ namespace MouseXY
             {
                return; //If the same key is pressed, do nothing
             }
+
             //Check if the key is already assigned to another action
             if (BaseKeys.showed.KeysToActionDict.TryGetValue(pressedKey, out MouseHandle.mouseActions existingAction))
             {
-               if (existingAction != textBoxToMouseActionsDict[tb])
+               if (existingAction != textBoxToMouseActionsDict[tb]) //existingAction is not the same textBox group
                {
-                  var confirm = MessageBox.Show($"Tato klávesa je již přiřazena k akci '{existingAction}'. Opravdu chcete změnit přiřazení?", "Potvrzení změny přiřazení", MessageBoxButtons.YesNo);
+                  var confirm = MessageBox.Show($"Tato klávesa je již přiřazena k akci '{mouseActionsToNamesDict[existingAction]}'. Opravdu chcete změnit přiřazení?", "Potvrzení změny přiřazení", MessageBoxButtons.YesNo);
                   if (confirm != DialogResult.Yes) //If user selects No, do nothing
                   {
                      return;
                   }
                   //Remove the existing assignment
-                  //buď filltextboxy znovu, nebo najít textbox s tímto action a vyčistit ho
-                  var mouseActionsToTextBoxDict = textBoxToMouseActionsDict.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
-                  if (mouseActionsToTextBoxDict.TryGetValue(existingAction, out TextBox existingTb))
+                  //najít textbox s tímto action a vyčistit ho
+                  var mouseActionsToTextBoxDict = textBoxToMouseActionsDict.GroupBy(kvp => kvp.Value).ToDictionary(g => g.Key, g => g.Select(x => x.Key).ToList()); //mouseAction na všechny textboxy - [0] primary, [1] alt
+                  if (mouseActionsToTextBoxDict.TryGetValue(existingAction, out List<TextBox> existingTbList))
                   {
-                     if (existingTb == mouseActionsToTextBoxDict[existingAction]) //if primary textbox, clear it
+                     if (existingTbList.Any(p => p.Text.Equals(pressedKey.ToString(), StringComparison.OrdinalIgnoreCase)))
                      {
-                        existingTb.Text = "";
-                     }
-                     else if (existingTb == mouseActionsToTextBoxDict[existingAction + 1]) //if alt textbox, clear it
-                     {
-                        existingTb.Text = "";
+                        TextBox textbox = existingTbList.Find(p => p.Text.Equals(pressedKey.ToString(), StringComparison.OrdinalIgnoreCase));
+                        textbox.Text = "";
                      }
                   }
-                  BaseKeys.showed.KeysToActionDict.Remove(pressedKey);
-                  BaseKeys.showed.KeysToActionDict.Add(pressedKey, textBoxToMouseActionsDict[tb]);
+                  //BaseKeys.showed.KeysToActionDict.Remove(pressedKey);
+                  //BaseKeys.showed.KeysToActionDict.Add(pressedKey, textBoxToMouseActionsDict[tb]);
+                  BaseKeys.showed.KeysToActionDict[pressedKey] = textBoxToMouseActionsDict[tb];
                   tb.Text = pressedKey.ToString();
                }
-               else
+               else //it exist in the same textbox group (primary/alt)
                {
-                  tb.Text = pressedKey.ToString();
+                  var sameAction = textBoxToMouseActionsDict[tb];
+
+                  // najdi všechny textboxy pro tenhle action
+                  var siblings = textBoxToMouseActionsDict
+                      .Where(kvp => kvp.Value == sameAction)
+                      .Select(kvp => kvp.Key)
+                      .ToList();
+
+                  // najdi "druhý" textbox (alt/primary)
+                  var otherTb = siblings.FirstOrDefault(x => x != tb);
+
+                  if (otherTb != null)
+                  {
+                     if (otherTb.Text.Equals(pressedKey.ToString(), StringComparison.OrdinalIgnoreCase))
+                     {
+                        // swap
+                        var oldValue = tb.Text;
+                        tb.Text = pressedKey.ToString();
+                        otherTb.Text = oldValue;
+                     }
+                     else
+                     {
+                        // běžné chování – smaže alt
+                        otherTb.Text = "";
+                        tb.Text = pressedKey.ToString();
+                     }
+                  }
+
+                  e.SuppressKeyPress = true;
                }
             }
-            
+            else
+            {
+               tb.Text = pressedKey.ToString();
+               e.SuppressKeyPress = true;
+               var mouseAction = textBoxToMouseActionsDict[tb];
+               BaseKeys.showed.KeysToActionDict.Add(pressedKey, mouseAction);
+               BaseKeys.showed.KeyActionsEnabledDict[mouseAction] = mouseActionsToCheckBoxDict[mouseAction].Checked;
+            }
          }
       }
 
@@ -993,7 +1054,7 @@ namespace MouseXY
       {
          //edit when have same name -> change name of selected base keys set
          tbBaseKeysSetName.Text = tbBaseKeysSetName.Text.TrimStart();
-         if (tbBaseKeysSetName.Text.Trim().Equals("default", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(tbBaseKeysSetName.Text)) 
+         if (tbBaseKeysSetName.Text.Trim().Equals("default", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(tbBaseKeysSetName.Text))
          {
             btnCreateBaseKeysSetname.Enabled = false;
             return;
@@ -1050,7 +1111,6 @@ namespace MouseXY
       }
 
       #endregion
-
 
    }
 }

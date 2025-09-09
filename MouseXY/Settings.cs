@@ -6,6 +6,7 @@ namespace MouseXY
       //readonly:
       public static readonly Size defaultFormSize = new(462, 358); // default size of the form
       public static readonly Size biggerFormSize = new(870, 725);
+      public static readonly Size settingsFormSize = new(880, 500);
       public static readonly Size panelSize = new(845, 650);
       public static readonly Point panelLocation = new(7, 27);
 

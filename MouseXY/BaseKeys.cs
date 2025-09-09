@@ -100,7 +100,7 @@ namespace MouseXY
       {
          foreach (var basekeys in BaseKeysList.Where(p => !p.SetName.Equals("default", StringComparison.OrdinalIgnoreCase)).ToList())
          {
-            foreach (var action in basekeys.KeyActionsEnabledDict.Keys.ToList())
+            foreach (MouseHandle.mouseActions action in Enum.GetValues(typeof(MouseHandle.mouseActions)))
             {
                basekeys.KeyActionsEnabledDict[action] = DBAccess.LoadKeysActionsEnabledDict(basekeys.SetName, action.ToString());
             }
