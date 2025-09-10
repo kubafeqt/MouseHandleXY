@@ -876,6 +876,7 @@ namespace MouseXY
          }
       }
 
+ 
       private void BaseKeysTextBoxes_KeyDown(object sender, KeyEventArgs e)
       {
          Dictionary<TextBox, MouseHandle.mouseActions> textBoxToMouseActionsDict = new Dictionary<TextBox, MouseHandle.mouseActions>
@@ -926,6 +927,8 @@ namespace MouseXY
             { MouseHandle.mouseActions.middleMouseWheelDown, cboxMiddleMouseWheelDown },
          };
 
+
+
          if (BaseKeys.showed == null) return;
 
          if (e.KeyCode == Keys.Delete)
@@ -950,7 +953,7 @@ namespace MouseXY
                return; //If the same key is pressed, do nothing
             }
 
-            //Check if the key is already assigned to another action
+            //the key is already assigned to another action
             if (BaseKeys.showed.KeysToActionDict.TryGetValue(pressedKey, out MouseHandle.mouseActions existingAction))
             {
                if (existingAction != textBoxToMouseActionsDict[tb]) //existingAction is not the same textBox group
@@ -970,6 +973,9 @@ namespace MouseXY
                         textbox.Text = "";
                      }
                   }
+                  tb.Clear(); //Clear the current TextBox before assigning the new key
+                  MainTbFromAltTb(ref tb, textBoxToMouseActionsDict); //if main is empty, write to main textbox
+
                   BaseKeys.showed.KeysToActionDict[pressedKey] = textBoxToMouseActionsDict[tb];
                   tb.Text = pressedKey.ToString();
                }
@@ -977,10 +983,7 @@ namespace MouseXY
                {
                   var sameAction = textBoxToMouseActionsDict[tb];
                   //najdi všechny textboxy pro tenhle action
-                  var siblings = textBoxToMouseActionsDict
-                      .Where(kvp => kvp.Value == sameAction)
-                      .Select(kvp => kvp.Key)
-                      .ToList();
+                  var siblings = textBoxToMouseActionsDict.Where(kvp => kvp.Value == sameAction).Select(kvp => kvp.Key).ToList();
                   //najdi "druhý" textbox (alt/primary)
                   var otherTb = siblings.FirstOrDefault(x => x != tb);
 
@@ -1002,8 +1005,9 @@ namespace MouseXY
                   e.SuppressKeyPress = true;
                }
             }
-            else
+            else //not assigned yet
             {
+               MainTbFromAltTb(ref tb, textBoxToMouseActionsDict); //if main is empty, write to main textbox
                if (!string.IsNullOrWhiteSpace(tb.Text)) //something is in textbox
                {
                   Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), tb.Text, true);
@@ -1015,6 +1019,25 @@ namespace MouseXY
                BaseKeys.showed.KeysToActionDict.Add(pressedKey, mouseAction);
                BaseKeys.showed.KeyActionsEnabledDict[mouseAction] = mouseActionsToCheckBoxDict[mouseAction].Checked;
             }
+         }
+      }
+
+      private void MainTbFromAltTb(ref TextBox tb, Dictionary<TextBox, MouseHandle.mouseActions> textBoxToMouseActionsDict)
+      {
+         //Pokud zapisujeme do ALT a MAIN je pro stejnou akci prázdný, přepiš cíl na MAIN
+         var sameAction = textBoxToMouseActionsDict[tb];
+
+         //Najdi oba textboxy pro stejnou akci a vytvoř list
+         var siblings = textBoxToMouseActionsDict.Where(kvp => kvp.Value == sameAction).Select(kvp => kvp.Key).ToList();
+
+         //Urči MAIN a ALT – jednoduché pravidlo podle názvu (tbAlt* je ALT)
+         var mainTb = siblings.FirstOrDefault(x => !x.Name.StartsWith("tbAlt", StringComparison.OrdinalIgnoreCase));
+         var altTb = siblings.FirstOrDefault(x => x != mainTb);
+
+         // Pokud jsme v ALT a MAIN je prázdný, zapisuj do MAIN
+         if (ReferenceEquals(tb, altTb) && mainTb != null && string.IsNullOrWhiteSpace(mainTb.Text))
+         {
+            tb = mainTb;
          }
       }
 
