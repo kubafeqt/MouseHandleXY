@@ -1198,6 +1198,7 @@
          // 
          // btnSaveBaseKeySet
          // 
+         btnSaveBaseKeySet.Enabled = false;
          btnSaveBaseKeySet.Location = new Point(713, 85);
          btnSaveBaseKeySet.Name = "btnSaveBaseKeySet";
          btnSaveBaseKeySet.Size = new Size(77, 24);

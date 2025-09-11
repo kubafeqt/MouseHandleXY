@@ -2,8 +2,8 @@
 
 namespace MouseXY
 {
-    class DBAccess
-    {
+   class DBAccess
+   {
       static readonly string binDir = AppDomain.CurrentDomain.BaseDirectory; // Běhový adresář (např. bin\Debug\net8.0)
       static readonly string projectDir = Directory.GetParent(binDir).Parent.Parent.Parent.FullName; // Projektová složka = 3 úrovně výš z bin\Debug\netX
       static readonly string dbFilePath = Path.Combine(projectDir, @"mssql_dbFile.mdf");
@@ -30,7 +30,7 @@ namespace MouseXY
             }
          }
       }
-      
+
       /// <summary>
       /// Loads Keys Positions, SetNames, Settings
       /// </summary>
@@ -39,6 +39,7 @@ namespace MouseXY
          LoadKeysPositions();
          LoadSetNames();
          LoadSettings();
+         LoadBaseKeysFromDB();
       }
 
       #region KeysPosTable
@@ -138,7 +139,7 @@ namespace MouseXY
                            string[] posParts = positionStr.Split(',');
                            if (posParts.Length == 2 && int.TryParse(posParts[0], out int x) && int.TryParse(posParts[1], out int y))
                            {
-                               pos = new Point(x, y);
+                              pos = new Point(x, y);
                            }
                         }
                         string setname = reader["SetName"]?.ToString() ?? "default";
@@ -345,7 +346,7 @@ namespace MouseXY
          try
          {
             Settings.delayMs = LoadDelayMs();
-            Settings.showDgvAfterSetKeyPos = LoadShowDgvAfterSetKeyPos(); 
+            Settings.showDgvAfterSetKeyPos = LoadShowDgvAfterSetKeyPos();
             LoadLatestSelectedSetName(); // načtení posledního vybraného setName z databáze
          }
          catch (Exception ex)
@@ -399,65 +400,90 @@ namespace MouseXY
       #endregion
 
       #region BaseKeysSettingsTable
-      //Save - onExit, onPanelChange
-      //public static void SaveBaseKeysSettings()
-      //{
-      //   using (SqlConnection connection = new SqlConnection(connectionString))
-      //   {
-      //      try
-      //      {
-      //         connection.Open();
-      //         string sql = @"IF EXISTS (SELECT Type, SetName FROM BaseKeysSettingsTable WHERE Type = @Type AND SetName = @SetName)
-      //            BEGIN
-      //                UPDATE BaseKeysSettingsTable
-      //                SET Value = @Value, AltValue = @AltValue, Enabled = @Enabled;
-      //            END
-      //            ELSE
-      //            BEGIN
-      //                INSERT INTO BaseKeysSettingsTable (Type, Value, AltValue, Enabled, SetName)
-      //                VALUES (@Type, @Value, @AltValue, @Enabled, @SetName);
-      //            END";
-      //         using (SqlCommand command = new SqlCommand(sql, connection))
-      //         {
-      //            command.Parameters.AddWithValue("@isUseBaseKeys", BaseKeysSettings.isUseBaseKeys);
-      //            command.Parameters.AddWithValue("@baseKeys", string.Join(",", BaseKeysSettings.baseKeys));
-      //            command.ExecuteNonQuery();
-      //         }
-      //      }
-      //      catch (SqlException ex)
-      //      {
-      //         MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
-      //      }
-      //   }
-      //}
+      //Save - onExit, onPanelChange, onSaveSetButton
+      public static void SaveBaseKeysToDB(string action, string keyValue, string altKeyValue, bool enabled, string setName)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = @"IF EXISTS (SELECT ActionType, SetName FROM BaseKeysTable WHERE ActionType = @ActionType AND SetName = @SetName)
+                  BEGIN
+                      UPDATE BaseKeysTable
+                      SET KeyValue = @KeyValue, AltKeyValue = @AltKeyValue, Enabled = @Enabled;
+                  END
+                  ELSE
+                  BEGIN
+                      INSERT INTO BaseTable (ActionType, KeyValue, AltKeyValue, Enabled, SetName)
+                      VALUES (@ActionType, @KeyValue, @AltKeyValue, @Enabled, @SetName);
+                  END";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@ActionType", action);
+                  command.Parameters.AddWithValue("@KeyValue", keyValue);
+                  command.Parameters.AddWithValue("@AltKeyValue", altKeyValue);
+                  command.Parameters.AddWithValue("@Enabled", enabled);
+                  command.Parameters.AddWithValue("@SetName", setName);
+                  command.ExecuteNonQuery();
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
 
-      //public static void LoadBaseKeysSettings()
-      //{
-      //   using (SqlConnection connection = new SqlConnection(connectionString))
-      //   {
-      //      try
-      //      {
-      //         connection.Open();
-      //         string sql = "SELECT IsUseBaseKeys, BaseKeys FROM BaseKeysSettingsTable";
-      //         using (SqlCommand command = new SqlCommand(sql, connection))
-      //         {
-      //            using (SqlDataReader reader = command.ExecuteReader())
-      //            {
-      //               if (reader.Read())
-      //               {
-      //                  BaseKeysSettings.isUseBaseKeys = reader.GetBoolean(reader.GetOrdinal("IsUseBaseKeys"));
-      //                  string baseKeysStr = reader["BaseKeys"]?.ToString() ?? "";
-      //                  BaseKeysSettings.baseKeys = baseKeysStr.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-      //               }
-      //            }
-      //         }
-      //      }
-      //      catch (SqlException ex)
-      //      {
-      //         MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
-      //      }
-      //   }
-      //}
+      public static void LoadBaseKeysFromDB()
+      {
+         try
+         {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+               connection.Open();
+               string sql = @"SELECT ActionType, KeyValue, AltKeyValue, SetName FROM BaseKeysTable WHERE SetName <> 'default'";
+               using (SqlCommand cmd = new SqlCommand(sql, connection))
+               using (SqlDataReader reader = cmd.ExecuteReader())
+               {
+                  while (reader.Read())
+                  {
+                     string setName = reader["SetName"]?.ToString() ?? string.Empty;
+                     Enum.TryParse<MouseHandle.mouseActions>(reader["ActionType"]?.ToString(), out MouseHandle.mouseActions actionType);
+                     string keyValueStr = reader["KeyValue"]?.ToString() ?? string.Empty;
+                     Keys keyValue = keyValueStr == string.Empty ? Keys.None : (Keys)Enum.Parse(typeof(Keys), keyValueStr, true);
+                     string altKeyValueStr = reader["AltKeyValue"]?.ToString() ?? string.Empty;
+                     Keys altKeyValue = altKeyValueStr == string.Empty ? Keys.None : (Keys)Enum.Parse(typeof(Keys), altKeyValueStr, true);
+
+                     if (!BaseKeys.BaseKeysList.Any(bk => bk.SetName == setName))
+                     {
+                        BaseKeys baseKeys = new BaseKeys(setName);
+                        LoadBaseKeysDictValues(baseKeys, actionType, keyValue, altKeyValue);
+                     }
+                     else //is already with current setname on the object list
+                     {
+                        BaseKeys? baseKeys = BaseKeys.BaseKeysList.Find(bk => bk.SetName == setName);
+                        LoadBaseKeysDictValues(baseKeys, actionType, keyValue, altKeyValue);
+                     }
+                  }
+               }
+            }
+         }
+         catch (SqlException ex)
+         {
+            MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+         }
+      }
+
+      private static void LoadBaseKeysDictValues(BaseKeys? baseKeys, MouseHandle.mouseActions actionType, Keys keyValue, Keys altKeyValue)
+      {
+         if (baseKeys != null)
+         {
+            baseKeys.KeysToActionDict[keyValue] = actionType;
+            baseKeys.KeysToActionDict[altKeyValue] = actionType;
+            baseKeys.ActionsToKeysDict[actionType] = new List<Keys> { keyValue, altKeyValue };
+         }
+      }
 
       public static void SaveKeysActionsEnabledDict(string setName, string action, bool enabled)
       {

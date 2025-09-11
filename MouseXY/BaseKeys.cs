@@ -20,6 +20,8 @@ namespace MouseXY
       public static string actualShowedSetName = "default";
       public string SetName { get; set; }
 
+      public bool Changed { get; set; } = false;
+
       //then load it from db or use this default settings:
       private static Dictionary<Keys, MouseHandle.mouseActions> DefaultKeysToActionDict = new Dictionary<Keys, MouseHandle.mouseActions>()
       {
@@ -85,6 +87,7 @@ namespace MouseXY
          {             
             bk.KeysToActionDict = new Dictionary<Keys, MouseHandle.mouseActions>();
             bk.KeyActionsEnabledDict = new Dictionary<MouseHandle.mouseActions, bool>();
+            bk.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys>>();
          }
       }
 
@@ -107,20 +110,17 @@ namespace MouseXY
          }
       }
 
-      public static void LoadActionsToKeysDict()
-      {
-         foreach (var basekeys in BaseKeysList)
-         {
-            basekeys.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys>>();
-            foreach (var action in Enum.GetValues(typeof(MouseHandle.mouseActions)).Cast<MouseHandle.mouseActions>())
-            {
-               basekeys.ActionsToKeysDict[action] = basekeys.KeysToActionDict
-                  .Where(kvp => kvp.Value == action)
-                  .Select(kvp => kvp.Key)
-                  .ToList();
-            }
-         }
-      }
+      //public static void LoadActionsToKeysDict()
+      //{
+      //   foreach (var basekeys in BaseKeysList)
+      //   {
+      //      basekeys.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys>>();
+      //      foreach (var action in Enum.GetValues(typeof(MouseHandle.mouseActions)).Cast<MouseHandle.mouseActions>())
+      //      {
+      //         basekeys.ActionsToKeysDict[action] = basekeys.KeysToActionDict.Where(kvp => kvp.Value == action).Select(kvp => kvp.Key).ToList();
+      //      }
+      //   }
+      //}
 
       public bool CheckAssignedKeyEnabled(Keys key)
       {
@@ -131,6 +131,14 @@ namespace MouseXY
          return false;
       }
 
+      public void SaveBaseKeysToDB()
+      {
+         Changed = false;
+         foreach (var kvp in ActionsToKeysDict)
+         {
+           DBAccess.SaveBaseKeysToDB(kvp.Key.ToString(), kvp.Value[0].ToString(), kvp.Value[1].ToString(), KeyActionsEnabledDict[kvp.Key], SetName);
+         }
+      }
 
    }
 }
