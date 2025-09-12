@@ -1122,8 +1122,14 @@ namespace MouseXY
 
       private void btnCreateBaseKeysSetname_Click(object sender, EventArgs e)
       {
+         if (btnCreateBaseKeysSetname.Text == "create")
+         {
 
-
+         }
+         else if (btnCreateBaseKeysSetname.Text == "edit")
+         {
+            string newSetName = InputBox.Show($"Zadejte nový název pro {BaseKeys.showed.SetName}:", "Změnit název base keys setname", nullable: true);
+         }
       }
 
       private void tbBaseKeysSetName_TextChanged(object sender, EventArgs e)

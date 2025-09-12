@@ -110,18 +110,6 @@ namespace MouseXY
          }
       }
 
-      //public static void LoadActionsToKeysDict()
-      //{
-      //   foreach (var basekeys in BaseKeysList)
-      //   {
-      //      basekeys.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys>>();
-      //      foreach (var action in Enum.GetValues(typeof(MouseHandle.mouseActions)).Cast<MouseHandle.mouseActions>())
-      //      {
-      //         basekeys.ActionsToKeysDict[action] = basekeys.KeysToActionDict.Where(kvp => kvp.Value == action).Select(kvp => kvp.Key).ToList();
-      //      }
-      //   }
-      //}
-
       public bool CheckAssignedKeyEnabled(Keys key)
       {
          if (KeysToActionDict.TryGetValue(key, out MouseHandle.mouseActions action))
