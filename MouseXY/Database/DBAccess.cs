@@ -415,7 +415,7 @@ namespace MouseXY
                   END
                   ELSE
                   BEGIN
-                      INSERT INTO BaseTable (ActionType, KeyValue, AltKeyValue, Enabled, SetName)
+                      INSERT INTO BaseKeysTable (ActionType, KeyValue, AltKeyValue, Enabled, SetName)
                       VALUES (@ActionType, @KeyValue, @AltKeyValue, @Enabled, @SetName);
                   END";
                using (SqlCommand command = new SqlCommand(sql, connection))
@@ -451,16 +451,16 @@ namespace MouseXY
                      string setName = reader["SetName"]?.ToString() ?? string.Empty;
                      Enum.TryParse<MouseHandle.mouseActions>(reader["ActionType"]?.ToString(), out MouseHandle.mouseActions actionType);
                      string keyValueStr = reader["KeyValue"]?.ToString() ?? string.Empty;
-                     Keys keyValue = keyValueStr == string.Empty ? Keys.None : (Keys)Enum.Parse(typeof(Keys), keyValueStr, true);
+                     Keys? keyValue = keyValueStr == string.Empty ? null : (Keys)Enum.Parse(typeof(Keys), keyValueStr, true);
                      string altKeyValueStr = reader["AltKeyValue"]?.ToString() ?? string.Empty;
-                     Keys altKeyValue = altKeyValueStr == string.Empty ? Keys.None : (Keys)Enum.Parse(typeof(Keys), altKeyValueStr, true);
+                     Keys? altKeyValue = altKeyValueStr == string.Empty ? null : (Keys)Enum.Parse(typeof(Keys), altKeyValueStr, true);
 
-                     if (!BaseKeys.BaseKeysList.Any(bk => bk.SetName == setName))
+                     if (!BaseKeys.BaseKeysList.Any(bk => bk.SetName == setName)) //it is not exist with current set name - create new object
                      {
                         BaseKeys baseKeys = new BaseKeys(setName);
                         LoadBaseKeysDictValues(baseKeys, actionType, keyValue, altKeyValue);
                      }
-                     else //is already with current setname on the object list
+                     else //it already with current setname on the object list - get the object by setName
                      {
                         BaseKeys? baseKeys = BaseKeys.BaseKeysList.Find(bk => bk.SetName == setName);
                         LoadBaseKeysDictValues(baseKeys, actionType, keyValue, altKeyValue);
@@ -475,13 +475,19 @@ namespace MouseXY
          }
       }
 
-      private static void LoadBaseKeysDictValues(BaseKeys? baseKeys, MouseHandle.mouseActions actionType, Keys keyValue, Keys altKeyValue)
+      private static void LoadBaseKeysDictValues(BaseKeys? baseKeys, MouseHandle.mouseActions actionType, Keys? keyValue, Keys? altKeyValue)
       {
          if (baseKeys != null)
          {
-            baseKeys.KeysToActionDict[keyValue] = actionType;
-            baseKeys.KeysToActionDict[altKeyValue] = actionType;
-            baseKeys.ActionsToKeysDict[actionType] = new List<Keys> { keyValue, altKeyValue };
+            if (keyValue != null)
+            {
+               baseKeys.KeysToActionDict[keyValue] = actionType;
+            }
+            if (altKeyValue != null)
+            {
+               baseKeys.KeysToActionDict[altKeyValue] = actionType;
+            }
+            baseKeys.ActionsToKeysDict[actionType] = new List<Keys?> { keyValue, altKeyValue };
          }
       }
 

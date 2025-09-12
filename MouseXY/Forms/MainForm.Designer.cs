@@ -84,6 +84,7 @@
          panelSoundsSettings = new Panel();
          lbSoundsSettings = new Label();
          panelBaseKeysSettings = new Panel();
+         lbSelectedBaseKeysSetname = new Label();
          lbBaseKeysSettings = new Label();
          lbCreateSetFrom = new Label();
          cmbCreateSetFrom = new ComboBox();
@@ -243,7 +244,7 @@
          lbSetKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetKeyPos.Location = new Point(268, 162);
          lbSetKeyPos.Name = "lbSetKeyPos";
-         lbSetKeyPos.Size = new Size(155, 17);
+         lbSetKeyPos.Size = new Size(167, 19);
          lbSetKeyPos.TabIndex = 8;
          lbSetKeyPos.Text = "setKeyPos open - X: , Y:";
          lbSetKeyPos.Visible = false;
@@ -293,7 +294,7 @@
          lbKeyPos.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbKeyPos.Location = new Point(615, 138);
          lbKeyPos.Name = "lbKeyPos";
-         lbKeyPos.Size = new Size(34, 17);
+         lbKeyPos.Size = new Size(38, 19);
          lbKeyPos.TabIndex = 12;
          lbKeyPos.Tag = "EditPos";
          lbKeyPos.Text = "Key:";
@@ -323,7 +324,7 @@
          lbPosX.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosX.Location = new Point(615, 162);
          lbPosX.Name = "lbPosX";
-         lbPosX.Size = new Size(21, 17);
+         lbPosX.Size = new Size(22, 19);
          lbPosX.TabIndex = 15;
          lbPosX.Tag = "EditPos";
          lbPosX.Text = "X:";
@@ -335,7 +336,7 @@
          lbPosY.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosY.Location = new Point(681, 162);
          lbPosY.Name = "lbPosY";
-         lbPosY.Size = new Size(20, 17);
+         lbPosY.Size = new Size(22, 19);
          lbPosY.TabIndex = 16;
          lbPosY.Tag = "EditPos";
          lbPosY.Text = "Y:";
@@ -347,7 +348,7 @@
          lbSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetname.Location = new Point(503, 14);
          lbSetname.Name = "lbSetname";
-         lbSetname.Size = new Size(67, 17);
+         lbSetname.Size = new Size(74, 19);
          lbSetname.TabIndex = 17;
          lbSetname.Tag = "EditPos";
          lbSetname.Text = "SetName:";
@@ -437,7 +438,7 @@
          lbShowedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbShowedSetname.Location = new Point(490, 98);
          lbShowedSetname.Name = "lbShowedSetname";
-         lbShowedSetname.Size = new Size(117, 17);
+         lbShowedSetname.Size = new Size(128, 19);
          lbShowedSetname.TabIndex = 25;
          lbShowedSetname.Tag = "EditPos";
          lbShowedSetname.Text = "ShowedSetname: ";
@@ -449,7 +450,7 @@
          lbSelectedSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSelectedSetname.Location = new Point(490, 115);
          lbSelectedSetname.Name = "lbSelectedSetname";
-         lbSelectedSetname.Size = new Size(120, 17);
+         lbSelectedSetname.Size = new Size(132, 19);
          lbSelectedSetname.TabIndex = 26;
          lbSelectedSetname.Tag = "EditPos";
          lbSelectedSetname.Text = "SelectedSetname: ";
@@ -572,7 +573,7 @@
          lbFileName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbFileName_Preview.Location = new Point(59, 31);
          lbFileName_Preview.Name = "lbFileName_Preview";
-         lbFileName_Preview.Size = new Size(74, 17);
+         lbFileName_Preview.Size = new Size(80, 19);
          lbFileName_Preview.TabIndex = 59;
          lbFileName_Preview.Tag = "";
          lbFileName_Preview.Text = "FileName: ";
@@ -631,7 +632,7 @@
          lbShowedSetName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbShowedSetName_Preview.Location = new Point(492, 54);
          lbShowedSetName_Preview.Name = "lbShowedSetName_Preview";
-         lbShowedSetName_Preview.Size = new Size(117, 17);
+         lbShowedSetName_Preview.Size = new Size(128, 19);
          lbShowedSetName_Preview.TabIndex = 54;
          lbShowedSetName_Preview.Tag = "";
          lbShowedSetName_Preview.Text = "ShowedSetname: ";
@@ -679,7 +680,7 @@
          lbSetName_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSetName_Preview.Location = new Point(492, 22);
          lbSetName_Preview.Name = "lbSetName_Preview";
-         lbSetName_Preview.Size = new Size(67, 17);
+         lbSetName_Preview.Size = new Size(74, 19);
          lbSetName_Preview.TabIndex = 47;
          lbSetName_Preview.Tag = "";
          lbSetName_Preview.Text = "SetName:";
@@ -690,7 +691,7 @@
          lbKeyPos_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbKeyPos_Preview.Location = new Point(20, 83);
          lbKeyPos_Preview.Name = "lbKeyPos_Preview";
-         lbKeyPos_Preview.Size = new Size(34, 17);
+         lbKeyPos_Preview.Size = new Size(38, 19);
          lbKeyPos_Preview.TabIndex = 42;
          lbKeyPos_Preview.Tag = "";
          lbKeyPos_Preview.Text = "Key:";
@@ -701,7 +702,7 @@
          lbPosY_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosY_Preview.Location = new Point(199, 84);
          lbPosY_Preview.Name = "lbPosY_Preview";
-         lbPosY_Preview.Size = new Size(20, 17);
+         lbPosY_Preview.Size = new Size(22, 19);
          lbPosY_Preview.TabIndex = 46;
          lbPosY_Preview.Tag = "";
          lbPosY_Preview.Text = "Y:";
@@ -721,7 +722,7 @@
          lbPosX_Preview.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbPosX_Preview.Location = new Point(133, 84);
          lbPosX_Preview.Name = "lbPosX_Preview";
-         lbPosX_Preview.Size = new Size(21, 17);
+         lbPosX_Preview.Size = new Size(22, 19);
          lbPosX_Preview.TabIndex = 45;
          lbPosX_Preview.Tag = "";
          lbPosX_Preview.Text = "X:";
@@ -795,7 +796,7 @@
          lbOtherSettings.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbOtherSettings.Location = new Point(19, 20);
          lbOtherSettings.Name = "lbOtherSettings";
-         lbOtherSettings.Size = new Size(101, 17);
+         lbOtherSettings.Size = new Size(108, 19);
          lbOtherSettings.TabIndex = 106;
          lbOtherSettings.Tag = "";
          lbOtherSettings.Text = "Other Settings:";
@@ -816,13 +817,14 @@
          lbSoundsSettings.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSoundsSettings.Location = new Point(9, 20);
          lbSoundsSettings.Name = "lbSoundsSettings";
-         lbSoundsSettings.Size = new Size(111, 17);
+         lbSoundsSettings.Size = new Size(118, 19);
          lbSoundsSettings.TabIndex = 106;
          lbSoundsSettings.Tag = "";
          lbSoundsSettings.Text = "Sounds Settings:";
          // 
          // panelBaseKeysSettings
          // 
+         panelBaseKeysSettings.Controls.Add(lbSelectedBaseKeysSetname);
          panelBaseKeysSettings.Controls.Add(lbBaseKeysSettings);
          panelBaseKeysSettings.Controls.Add(lbCreateSetFrom);
          panelBaseKeysSettings.Controls.Add(cmbCreateSetFrom);
@@ -877,13 +879,24 @@
          panelBaseKeysSettings.TabIndex = 106;
          panelBaseKeysSettings.Tag = "settingsPanels";
          // 
+         // lbSelectedBaseKeysSetname
+         // 
+         lbSelectedBaseKeysSetname.AutoSize = true;
+         lbSelectedBaseKeysSetname.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+         lbSelectedBaseKeysSetname.Location = new Point(589, 20);
+         lbSelectedBaseKeysSetname.Name = "lbSelectedBaseKeysSetname";
+         lbSelectedBaseKeysSetname.Size = new Size(130, 19);
+         lbSelectedBaseKeysSetname.TabIndex = 156;
+         lbSelectedBaseKeysSetname.Tag = "";
+         lbSelectedBaseKeysSetname.Text = "Selected setname:";
+         // 
          // lbBaseKeysSettings
          // 
          lbBaseKeysSettings.AutoSize = true;
          lbBaseKeysSettings.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbBaseKeysSettings.Location = new Point(9, 1);
          lbBaseKeysSettings.Name = "lbBaseKeysSettings";
-         lbBaseKeysSettings.Size = new Size(68, 17);
+         lbBaseKeysSettings.Size = new Size(75, 19);
          lbBaseKeysSettings.TabIndex = 155;
          lbBaseKeysSettings.Tag = "";
          lbBaseKeysSettings.Text = "BaseKeys:";
@@ -894,7 +907,7 @@
          lbCreateSetFrom.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbCreateSetFrom.Location = new Point(630, 198);
          lbCreateSetFrom.Name = "lbCreateSetFrom";
-         lbCreateSetFrom.Size = new Size(107, 17);
+         lbCreateSetFrom.Size = new Size(117, 19);
          lbCreateSetFrom.TabIndex = 154;
          lbCreateSetFrom.Tag = "";
          lbCreateSetFrom.Text = "Create set from:";
@@ -914,7 +927,7 @@
          lbBaseKeysAlternative.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbBaseKeysAlternative.Location = new Point(353, 21);
          lbBaseKeysAlternative.Name = "lbBaseKeysAlternative";
-         lbBaseKeysAlternative.Size = new Size(80, 17);
+         lbBaseKeysAlternative.Size = new Size(87, 19);
          lbBaseKeysAlternative.TabIndex = 152;
          lbBaseKeysAlternative.Tag = "";
          lbBaseKeysAlternative.Text = "Alternative:";
@@ -925,7 +938,7 @@
          lbBaseKeysMain.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbBaseKeysMain.Location = new Point(221, 22);
          lbBaseKeysMain.Name = "lbBaseKeysMain";
-         lbBaseKeysMain.Size = new Size(43, 17);
+         lbBaseKeysMain.Size = new Size(46, 19);
          lbBaseKeysMain.TabIndex = 109;
          lbBaseKeysMain.Tag = "";
          lbBaseKeysMain.Text = "Main:";
@@ -1056,7 +1069,7 @@
          lbBaseKeysSetName.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbBaseKeysSetName.Location = new Point(630, 120);
          lbBaseKeysSetName.Name = "lbBaseKeysSetName";
-         lbBaseKeysSetName.Size = new Size(65, 17);
+         lbBaseKeysSetName.Size = new Size(71, 19);
          lbBaseKeysSetName.TabIndex = 140;
          lbBaseKeysSetName.Tag = "";
          lbBaseKeysSetName.Text = "Setname:";
@@ -1078,7 +1091,7 @@
          cboxMiddleMouseWheelUp.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMiddleMouseWheelUp.Location = new Point(502, 286);
          cboxMiddleMouseWheelUp.Name = "cboxMiddleMouseWheelUp";
-         cboxMiddleMouseWheelUp.Size = new Size(67, 21);
+         cboxMiddleMouseWheelUp.Size = new Size(69, 23);
          cboxMiddleMouseWheelUp.TabIndex = 138;
          cboxMiddleMouseWheelUp.Tag = "baseKeysCheckbox";
          cboxMiddleMouseWheelUp.Text = "enable";
@@ -1092,7 +1105,7 @@
          cboxMiddleMouseWheelDown.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMiddleMouseWheelDown.Location = new Point(502, 256);
          cboxMiddleMouseWheelDown.Name = "cboxMiddleMouseWheelDown";
-         cboxMiddleMouseWheelDown.Size = new Size(67, 21);
+         cboxMiddleMouseWheelDown.Size = new Size(69, 23);
          cboxMiddleMouseWheelDown.TabIndex = 137;
          cboxMiddleMouseWheelDown.Tag = "baseKeysCheckbox";
          cboxMiddleMouseWheelDown.Text = "enable";
@@ -1106,7 +1119,7 @@
          cboxMiddleMouseClick.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMiddleMouseClick.Location = new Point(502, 228);
          cboxMiddleMouseClick.Name = "cboxMiddleMouseClick";
-         cboxMiddleMouseClick.Size = new Size(67, 21);
+         cboxMiddleMouseClick.Size = new Size(69, 23);
          cboxMiddleMouseClick.TabIndex = 136;
          cboxMiddleMouseClick.Tag = "baseKeysCheckbox";
          cboxMiddleMouseClick.Text = "enable";
@@ -1120,7 +1133,7 @@
          cboxRightMouseClick.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxRightMouseClick.Location = new Point(502, 194);
          cboxRightMouseClick.Name = "cboxRightMouseClick";
-         cboxRightMouseClick.Size = new Size(67, 21);
+         cboxRightMouseClick.Size = new Size(69, 23);
          cboxRightMouseClick.TabIndex = 135;
          cboxRightMouseClick.Tag = "baseKeysCheckbox";
          cboxRightMouseClick.Text = "enable";
@@ -1134,7 +1147,7 @@
          cboxLeftMouseClick.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxLeftMouseClick.Location = new Point(502, 163);
          cboxLeftMouseClick.Name = "cboxLeftMouseClick";
-         cboxLeftMouseClick.Size = new Size(67, 21);
+         cboxLeftMouseClick.Size = new Size(69, 23);
          cboxLeftMouseClick.TabIndex = 134;
          cboxLeftMouseClick.Tag = "baseKeysCheckbox";
          cboxLeftMouseClick.Text = "enable";
@@ -1148,7 +1161,7 @@
          cboxMoveLeft.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMoveLeft.Location = new Point(502, 104);
          cboxMoveLeft.Name = "cboxMoveLeft";
-         cboxMoveLeft.Size = new Size(67, 21);
+         cboxMoveLeft.Size = new Size(69, 23);
          cboxMoveLeft.TabIndex = 133;
          cboxMoveLeft.Tag = "baseKeysCheckbox";
          cboxMoveLeft.Text = "enable";
@@ -1162,7 +1175,7 @@
          cboxMoveRight.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMoveRight.Location = new Point(502, 133);
          cboxMoveRight.Name = "cboxMoveRight";
-         cboxMoveRight.Size = new Size(67, 21);
+         cboxMoveRight.Size = new Size(69, 23);
          cboxMoveRight.TabIndex = 132;
          cboxMoveRight.Tag = "baseKeysCheckbox";
          cboxMoveRight.Text = "enable";
@@ -1176,7 +1189,7 @@
          cboxMoveDown.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMoveDown.Location = new Point(502, 76);
          cboxMoveDown.Name = "cboxMoveDown";
-         cboxMoveDown.Size = new Size(67, 21);
+         cboxMoveDown.Size = new Size(69, 23);
          cboxMoveDown.TabIndex = 131;
          cboxMoveDown.Tag = "baseKeysCheckbox";
          cboxMoveDown.Text = "enable";
@@ -1190,7 +1203,7 @@
          cboxMoveUp.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
          cboxMoveUp.Location = new Point(502, 50);
          cboxMoveUp.Name = "cboxMoveUp";
-         cboxMoveUp.Size = new Size(67, 21);
+         cboxMoveUp.Size = new Size(69, 23);
          cboxMoveUp.TabIndex = 130;
          cboxMoveUp.Tag = "baseKeysCheckbox";
          cboxMoveUp.Text = "enable";
@@ -1332,7 +1345,7 @@
          lbMiddleMouseWheelUp.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMiddleMouseWheelUp.Location = new Point(29, 281);
          lbMiddleMouseWheelUp.Name = "lbMiddleMouseWheelUp";
-         lbMiddleMouseWheelUp.Size = new Size(160, 17);
+         lbMiddleMouseWheelUp.Size = new Size(172, 19);
          lbMiddleMouseWheelUp.TabIndex = 117;
          lbMiddleMouseWheelUp.Tag = "";
          lbMiddleMouseWheelUp.Text = "Middle mouse wheel up:";
@@ -1343,7 +1356,7 @@
          lbMiddleMouseWheelDown.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMiddleMouseWheelDown.Location = new Point(9, 251);
          lbMiddleMouseWheelDown.Name = "lbMiddleMouseWheelDown";
-         lbMiddleMouseWheelDown.Size = new Size(178, 17);
+         lbMiddleMouseWheelDown.Size = new Size(192, 19);
          lbMiddleMouseWheelDown.TabIndex = 116;
          lbMiddleMouseWheelDown.Tag = "";
          lbMiddleMouseWheelDown.Text = "Middle mouse wheel down:";
@@ -1354,7 +1367,7 @@
          lbMiddleMouseClick.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMiddleMouseClick.Location = new Point(58, 223);
          lbMiddleMouseClick.Name = "lbMiddleMouseClick";
-         lbMiddleMouseClick.Size = new Size(132, 17);
+         lbMiddleMouseClick.Size = new Size(143, 19);
          lbMiddleMouseClick.TabIndex = 115;
          lbMiddleMouseClick.Tag = "";
          lbMiddleMouseClick.Text = "Middle mouse click:";
@@ -1365,7 +1378,7 @@
          lbRightMouseClick.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbRightMouseClick.Location = new Point(70, 188);
          lbRightMouseClick.Name = "lbRightMouseClick";
-         lbRightMouseClick.Size = new Size(122, 17);
+         lbRightMouseClick.Size = new Size(131, 19);
          lbRightMouseClick.TabIndex = 114;
          lbRightMouseClick.Tag = "";
          lbRightMouseClick.Text = "Right mouse click:";
@@ -1376,7 +1389,7 @@
          lbLeftMouseClick.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbLeftMouseClick.Location = new Point(80, 156);
          lbLeftMouseClick.Name = "lbLeftMouseClick";
-         lbLeftMouseClick.Size = new Size(113, 17);
+         lbLeftMouseClick.Size = new Size(121, 19);
          lbLeftMouseClick.TabIndex = 113;
          lbLeftMouseClick.Tag = "";
          lbLeftMouseClick.Text = "Left mouse click:";
@@ -1387,7 +1400,7 @@
          lbMoveRight.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMoveRight.Location = new Point(114, 129);
          lbMoveRight.Name = "lbMoveRight";
-         lbMoveRight.Size = new Size(80, 17);
+         lbMoveRight.Size = new Size(87, 19);
          lbMoveRight.TabIndex = 112;
          lbMoveRight.Tag = "";
          lbMoveRight.Text = "Move right:";
@@ -1398,7 +1411,7 @@
          lbMoveLeft.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMoveLeft.Location = new Point(124, 98);
          lbMoveLeft.Name = "lbMoveLeft";
-         lbMoveLeft.Size = new Size(71, 17);
+         lbMoveLeft.Size = new Size(77, 19);
          lbMoveLeft.TabIndex = 111;
          lbMoveLeft.Tag = "";
          lbMoveLeft.Text = "Move left:";
@@ -1409,7 +1422,7 @@
          lbMoveDown.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMoveDown.Location = new Point(111, 72);
          lbMoveDown.Name = "lbMoveDown";
-         lbMoveDown.Size = new Size(84, 17);
+         lbMoveDown.Size = new Size(92, 19);
          lbMoveDown.TabIndex = 110;
          lbMoveDown.Tag = "";
          lbMoveDown.Text = "Move down:";
@@ -1420,7 +1433,7 @@
          lbMoveUp.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbMoveUp.Location = new Point(129, 45);
          lbMoveUp.Name = "lbMoveUp";
-         lbMoveUp.Size = new Size(66, 17);
+         lbMoveUp.Size = new Size(72, 19);
          lbMoveUp.TabIndex = 108;
          lbMoveUp.Tag = "";
          lbMoveUp.Text = "Move up:";
@@ -1431,7 +1444,7 @@
          lbSettingsType.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
          lbSettingsType.Location = new Point(608, 10);
          lbSettingsType.Name = "lbSettingsType";
-         lbSettingsType.Size = new Size(62, 17);
+         lbSettingsType.Size = new Size(66, 19);
          lbSettingsType.TabIndex = 105;
          lbSettingsType.Tag = "";
          lbSettingsType.Text = "Settings:";
@@ -1588,5 +1601,6 @@
       private Label lbOtherSettings;
       private Label lbSoundsSettings;
       private Label lbBaseKeysSettings;
+      private Label lbSelectedBaseKeysSetname;
    }
 }

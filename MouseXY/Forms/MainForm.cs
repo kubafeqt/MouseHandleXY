@@ -133,6 +133,7 @@ namespace MouseXY
          new BaseKeys("second"); // inicializace second baseKeys
          BaseKeys.ChangeSelectedBaseKeys("default"); //then load this from db
          BaseKeys.ChangeShowedBaseKeys("default"); //then load this from db
+         lbSelectedBaseKeysSetname.Text = $"Selected setname: {BaseKeys.selected.SetName}";
          FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
          BaseKeys.LoadDefaultKeyActionsEnabledDict(); // load default enabled actions
          BaseKeys.LoadKeyActionsEnabled();
@@ -1021,7 +1022,7 @@ namespace MouseXY
                      //Vzhledem nastavení, že se vždy první key propisuje do main už není potřeba řešit případ, kdy je v druhém textboxu stejná hodnota 
                      //else //pokud není v druhém textboxu, smaž alt a napiš do aktuálního
                      //{
-                     //   otherTb.Text = ""; //běžné chování – smaže alt
+                     //   otherTb.Text = ""; //běžné choaavání – smaže alt
                      //   tb.Text = pressedKey.ToString();
                      //}
                   }
@@ -1030,7 +1031,7 @@ namespace MouseXY
             }
             else //the key is not assigned yet
             {
-               GetMainTbFromAltTb(ref tb, textBoxToMouseActionsDict); //if main is empty, write to main textbox
+               bool mainTb = GetMainTbFromAltTb(ref tb, textBoxToMouseActionsDict); //if main is empty, write to main textbox
                if (!string.IsNullOrWhiteSpace(tb.Text)) //something is in textbox
                {
                   Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), tb.Text, true);
@@ -1041,14 +1042,14 @@ namespace MouseXY
 
                var mouseAction = textBoxToMouseActionsDict[tb];
                BaseKeys.showed.KeysToActionDict.Add(pressedKey, mouseAction);
-               int primaryAltActionKey = BaseKeys.showed.ActionsToKeysDict.ContainsKey(mouseAction) ? 1 : 0; //1 = alt, 0 = main
+               int primaryAltActionKey = mainTb ? 0 : 1; //0 = main, 1 = alt
                if (BaseKeys.showed.ActionsToKeysDict.ContainsKey(mouseAction))
                {
                   BaseKeys.showed.ActionsToKeysDict[mouseAction][primaryAltActionKey] = pressedKey; //update ActionsToKeysDict
                }
                else
                {
-                  BaseKeys.showed.ActionsToKeysDict.Add(mouseAction, new List<Keys> { primaryAltActionKey == 0 ? pressedKey : Keys.None, primaryAltActionKey == 1 ? pressedKey : Keys.None });
+                  BaseKeys.showed.ActionsToKeysDict.Add(mouseAction, new List<Keys?> { primaryAltActionKey == 0 ? pressedKey : null, primaryAltActionKey == 1 ? pressedKey : null });
                }
                BaseKeys.showed.KeyActionsEnabledDict[mouseAction] = mouseActionsToCheckBoxDict[mouseAction].Checked;
                BaseKeys.showed.Changed = true;
@@ -1057,7 +1058,7 @@ namespace MouseXY
          btnSaveBaseKeySet.Enabled = BaseKeys.showed.Changed;
       }
 
-      private void GetMainTbFromAltTb(ref TextBox tb, Dictionary<TextBox, MouseHandle.mouseActions> textBoxToMouseActionsDict)
+      private bool GetMainTbFromAltTb(ref TextBox tb, Dictionary<TextBox, MouseHandle.mouseActions> textBoxToMouseActionsDict)
       {
          //Pokud zapisujeme do ALT a MAIN je pro stejnou akci prázdný, přepiš cíl na MAIN
          var sameAction = textBoxToMouseActionsDict[tb];
@@ -1074,6 +1075,7 @@ namespace MouseXY
          {
             tb = mainTb;
          }
+         return tb == mainTb;
       }
 
       private void FillKeybindTextBoxes()
@@ -1179,6 +1181,7 @@ namespace MouseXY
       private void btnSelectBaseKeySet_Click(object sender, EventArgs e)
       {
          string setName = cmbBaseKeysSets.SelectedItem?.ToString() ?? "default";
+         lbSelectedBaseKeysSetname.Text = $"Selected setname: {setName}";
          BaseKeys.ChangeSelectedBaseKeys(setName);
       }
 
