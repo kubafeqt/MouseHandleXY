@@ -1056,12 +1056,6 @@ namespace MouseXY
                         BaseKeys.showed.ActionsToKeysDict[sameAction][otherTbPrimaryAltActionKey] = (Keys)Enum.Parse(typeof(Keys), otherTb.Text, true); //update ActionsToKeysDict
                         BaseKeys.showed.Changed = true;
                      }
-                     //Vzhledem nastavení, že se vždy první key propisuje do main už není potřeba řešit případ, kdy je v druhém textboxu stejná hodnota 
-                     //else //pokud není v druhém textboxu, smaž alt a napiš do aktuálního
-                     //{
-                     //   otherTb.Text = ""; //běžné choaavání – smaže alt
-                     //   tb.Text = pressedKey.ToString();
-                     //}
                   }
                   e.SuppressKeyPress = true;
                }
