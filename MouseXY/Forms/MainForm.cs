@@ -103,6 +103,8 @@ namespace MouseXY
          cboxOnStartup.Checked = StartupManager.IsInStartup(appName); // Nastaví CheckBox podle toho jestli je aplikace zapsaná v registrech pro spouštění
          lbDescriptionControl.Text = "double left control to open/close mouse control by keyboard\nleft shift to change speed of mouse step to slower\nleft alt to change speed of mouse step to faster";
 
+         new BaseKeys("default"); // inicializace default baseKeys
+
          #region DB_loading
          //DBAccess.ConnectionTest();
          DBAccess.LoadAll(); // Načte všechny klávesy a jejich pozice, setNames a Settings z databáze
@@ -121,18 +123,18 @@ namespace MouseXY
          {
             ctrl.KeyDown += BaseKeysTextBoxes_KeyDown;
          }
-         cmbBaseKeysSets.Items.Add("default");
-         cmbBaseKeysSets.Items.Add("second");
-         cmbBaseKeysSets.SelectedIndex = 0;
+         //cmbBaseKeysSets.Items.Add("default");
+         //cmbBaseKeysSets.Items.Add("second");
          cmbCreateSetFrom.Items.Add("none");
-         cmbCreateSetFrom.Items.Add("default");
+         foreach (BaseKeys baseKeys in BaseKeys.BaseKeysList)
+         {
+            cmbBaseKeysSets.Items.Add(baseKeys.SetName);
+            cmbCreateSetFrom.Items.Add(baseKeys.SetName);
+         }
+         cmbBaseKeysSets.SelectedIndex = cmbBaseKeysSets.Items.IndexOf(BaseKeys.showed.SetName);
          cmbCreateSetFrom.SelectedIndex = 0;
          cmbSelectSettingsType.Items.AddRange(new string[] { "Base Keys", "Sounds", "Other Settings" });
          cmbSelectSettingsType.SelectedIndex = 0;
-         new BaseKeys("default"); // inicializace default baseKeys
-         new BaseKeys("second"); // inicializace second baseKeys
-         BaseKeys.ChangeSelectedBaseKeys("default"); //then load this from db
-         BaseKeys.ChangeShowedBaseKeys("default"); //then load this from db
          lbSelectedBaseKeysSetname.Text = $"Selected setname: {BaseKeys.selected.SetName}";
          FillKeybindTextBoxes(); // basic method for fill text boxes with keybinds
          BaseKeys.LoadDefaultKeyActionsEnabledDict(); // load default enabled actions
@@ -201,7 +203,7 @@ namespace MouseXY
                row.DefaultCellStyle.BackColor = Color.White;
                row.DefaultCellStyle.ForeColor = Color.Black;
             }
-         } 
+         }
       }
 
       private void UpdatePreviewDataGridView()
@@ -275,12 +277,40 @@ namespace MouseXY
 
       private void OnExit(object sender, EventArgs e)
       {
+         //if (BaseKeys.BaseKeysList.Any(p => p.Changed))
+         //{
+         //   BaseKeys bk = BaseKeys.BaseKeysList.Find(p => p.Changed);
+         //   var confirm = MessageBox.Show($"BaseKeys setname - {bk.SetName} má neuložený hodnoty. Opravdu ukončit program?", "Ukončit program?", MessageBoxButtons.YesNo);
+         //   if (confirm == DialogResult.No)
+         //   {
+         //      return;
+         //   }
+         //}
          trayIcon.Visible = false;
          Application.Exit();
       }
 
       private void OnFormClosing(object sender, FormClosingEventArgs e)
       {
+         if (BaseKeys.BaseKeysList.Any(p => p.Changed))
+         {
+            BaseKeys bk = BaseKeys.BaseKeysList.Find(p => p.Changed);
+            var page = new TaskDialogPage()
+            {
+               Heading = "Uložit změny?",
+               Text = $"BaseKeys setname - {bk.SetName} má neuložený hodnoty.\n\nUložit před ukončením?"
+            };
+
+            page.Buttons.Add(TaskDialogButton.Yes);
+            page.Buttons.Add(TaskDialogButton.No);
+
+            TaskDialogButton result = TaskDialog.ShowDialog(page);
+
+            if (result == TaskDialogButton.Yes)
+            {
+               BaseKeys.showed.SaveBaseKeysToDB();
+            }
+         }
          trayIcon.Visible = false;
       }
 
@@ -768,6 +798,7 @@ namespace MouseXY
          if (BaseKeys.showed != null && BaseKeys.showed.Changed)
          {
             BaseKeys.showed.SaveBaseKeysToDB();
+            btnSaveBaseKeySet.Enabled = false;
          }
       }
 
@@ -881,7 +912,9 @@ namespace MouseXY
          }
       }
 
- 
+      /// <summary>
+      /// Keys to setname assignment
+      /// </summary>
       private void BaseKeysTextBoxes_KeyDown(object sender, KeyEventArgs e)
       {
          Dictionary<TextBox, MouseHandle.mouseActions> textBoxToMouseActionsDict = new Dictionary<TextBox, MouseHandle.mouseActions>
@@ -935,20 +968,23 @@ namespace MouseXY
 
          if (BaseKeys.showed == null) return;
 
-         if (e.KeyCode == Keys.Delete)
+         TextBox? tb = sender as TextBox;
+         if (e.KeyCode == Keys.Delete && tb != null && !string.IsNullOrWhiteSpace(tb.Text))
          {
-            Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), (sender as TextBox).Text, true);
-            (sender as TextBox).Text = ""; //Clear the TextBox when delete is pressed
+            Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), tb.Text, true);
+            tb.Text = ""; //clear the TextBox when delete is pressed
+            string actionType = BaseKeys.showed.KeysToActionDict[keyToRemove].ToString();
             BaseKeys.showed.KeysToActionDict.Remove(keyToRemove);
-            e.SuppressKeyPress = true; //Prevent the "ding" sound
+            BaseKeys.showed.ActionsToKeysDict.RemoveValueFromList(keyToRemove);
+            DBAccess.DeleteBaseKeyFromSetNameAndAction(BaseKeys.showed.SetName, actionType, keyToRemove);
+            e.SuppressKeyPress = true; //prevent the "ding" sound
             return;
          }
-         if (e.KeyCode == Keys.Tab || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu)
+         if (e.KeyCode == Keys.Delete || e.KeyCode == Keys.Tab || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu)
          {
             return; //ignore Tab, Shift, Ctrl, and Alt keys - basic
          }
 
-         TextBox? tb = sender as TextBox;
          if (tb != null) //current textbox
          {
             Keys pressedKey = e.KeyCode;
@@ -966,6 +1002,7 @@ namespace MouseXY
                   var confirm = MessageBox.Show($"Tato klávesa je již přiřazena k akci '{mouseActionsToNamesDict[existingAction]}'. Opravdu chcete změnit přiřazení?", "Potvrzení změny přiřazení", MessageBoxButtons.YesNo);
                   if (confirm != DialogResult.Yes) //If user selects No, do nothing
                   {
+                     tb.Clear();
                      return;
                   }
                   if (!string.IsNullOrWhiteSpace(tb.Text)) //something is in textbox
@@ -1078,6 +1115,9 @@ namespace MouseXY
          return tb == mainTb;
       }
 
+      /// <summary>
+      /// Fill textboxes with keybinds
+      /// </summary>
       private void FillKeybindTextBoxes()
       {
          if (BaseKeys.showed == null) return;
@@ -1122,13 +1162,53 @@ namespace MouseXY
 
       private void btnCreateBaseKeysSetname_Click(object sender, EventArgs e)
       {
+         string setName = tbBaseKeysSetName.Text.Trim();
          if (btnCreateBaseKeysSetname.Text == "create")
          {
-
+            BaseKeys bk = new BaseKeys(setName);
+            DBAccess.SaveBaseKeysSetNamesToDB();
+            tbBaseKeysSetName.Text = string.Empty;
+            cmbBaseKeysSets.Items.Add(setName);
+            cmbCreateSetFrom.Items.Add(setName);
+            cmbBaseKeysSets.SelectedItem = setName; //also changes BaseKeys.Showed in the event
+            if (cmbCreateSetFrom.SelectedItem != null && cmbCreateSetFrom.SelectedItem.ToString() != "none")
+            {
+               BaseKeys? createFromBaseKeys = BaseKeys.BaseKeysList.Find(x => x.SetName == cmbCreateSetFrom.SelectedItem.ToString());
+               if (createFromBaseKeys == null) return;
+               bk.ActionsToKeysDict = createFromBaseKeys.ActionsToKeysDict;
+               bk.KeysToActionDict = createFromBaseKeys.KeysToActionDict;
+               bk.KeyActionsEnabledDict = createFromBaseKeys.KeyActionsEnabledDict;
+               FillKeybindTextBoxes();
+               bk.SaveBaseKeysToDB();
+            }
          }
          else if (btnCreateBaseKeysSetname.Text == "edit")
          {
-            string newSetName = InputBox.Show($"Zadejte nový název pro {BaseKeys.showed.SetName}:", "Změnit název base keys setname", nullable: true);
+            string newSetName = InputBox.Show($"Zadejte nový název pro {setName}:", "Změnit název base keys setname", nullable: true);
+            if (newSetName.Equals("default", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(newSetName))
+            {
+               MessageBox.Show("Název setName nesmí být prázdný nebo 'default'.");
+               return;
+            }
+            if (BaseKeys.BaseKeysList.Any(p => p.SetName == newSetName))
+            {
+               MessageBox.Show($"Setname {newSetName} již existuje. Zvolte jiný název.");
+               return;
+            }
+            //změnit setname, změnit setname u všech hodnot v db, ... check tlačítko
+            int index = cmbBaseKeysSets.Items.IndexOf(setName);
+            if (index > 0)
+            {
+               cmbBaseKeysSets.Items[index] = newSetName;
+            }
+            index = cmbCreateSetFrom.Items.IndexOf(setName);
+            if (index > 0)
+            {
+               cmbCreateSetFrom.Items[index] = newSetName;
+            }
+            tbBaseKeysSetName.Clear();
+            btnCreateBaseKeysSetname.Text = "create"; 
+            BaseKeys.RenameBaseKeysSetName(setName, newSetName);
          }
       }
 
@@ -1155,22 +1235,53 @@ namespace MouseXY
          }
       }
 
+      private void tbBaseKeysSetName_KeyDown(object sender, KeyEventArgs e)
+      {
+         if (e.KeyCode == Keys.Enter && btnCreateBaseKeysSetname.Enabled)
+         {
+            e.SuppressKeyPress = true; //Zabráníme zvuku Enteru
+            btnCreateBaseKeysSetname.PerformClick(); //Simulujeme kliknutí na tlačítko pro přidání/úpravu setName
+         }
+      }
+
       private void btnDeleteBaseKeysSetname_Click(object sender, EventArgs e)
       {
-
-
+         string setName = BaseKeys.showed.SetName;
+         if (setName.Equals("default", StringComparison.OrdinalIgnoreCase))
+         {
+            MessageBox.Show("Setname 'default' nelze smazat.");
+            return;
+         }
+         var confirm = MessageBox.Show($"Opravdu chcete smazat setname '{setName}' se všemi jeho klávesovými zkratkami?", "Potvrzení smazání", MessageBoxButtons.YesNo);
+         if (confirm == DialogResult.Yes)
+         {
+            BaseKeys.BaseKeysList.Remove(BaseKeys.showed);
+            DBAccess.DeleteBaseKeysSetNameAndItsKeys(setName);
+            cmbBaseKeysSets.Items.Remove(setName);
+            cmbCreateSetFrom.Items.Remove(setName);
+            cmbBaseKeysSets.SelectedIndex = 0; //basic
+            cmbCreateSetFrom.SelectedIndex = 0; //basic
+         }
       }
 
       private void cmbBaseKeysSets_SelectedIndexChanged(object sender, EventArgs e)
       {
          string setName = cmbBaseKeysSets.SelectedItem?.ToString() ?? "default";
-         if (BaseKeys.showed != null && BaseKeys.showed.Changed)
+         if (BaseKeys.showed != null && BaseKeys.showed.Changed) //uložit změnu před změnou setu
          {
             BaseKeys.showed.SaveBaseKeysToDB();
+            btnSaveBaseKeySet.Enabled = false;
+         }
+         if (setName.Equals("default", StringComparison.OrdinalIgnoreCase))
+         {
+            btnDeleteBaseKeysSetname.Enabled = false;
+         }
+         else
+         {
+            btnDeleteBaseKeysSetname.Enabled = true;
          }
          BaseKeys.ChangeShowedBaseKeys(setName);
          ChangeBaseKeysSet();
-
       }
 
       private void ChangeBaseKeysSet()
@@ -1195,9 +1306,13 @@ namespace MouseXY
       {
          if (BaseKeys.showed == null) return;
          BaseKeys.showed.SaveBaseKeysToDB();
+         btnSaveBaseKeySet.Enabled = false;
       }
 
+
       #endregion
+
+   
 
    }
 }

@@ -1082,6 +1082,7 @@
          tbBaseKeysSetName.Size = new Size(160, 23);
          tbBaseKeysSetName.TabIndex = 139;
          tbBaseKeysSetName.TextChanged += tbBaseKeysSetName_TextChanged;
+         tbBaseKeysSetName.KeyDown += tbBaseKeysSetName_KeyDown;
          // 
          // cboxMiddleMouseWheelUp
          // 

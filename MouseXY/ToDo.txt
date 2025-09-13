@@ -1,0 +1,6 @@
+﻿//ok:
+delete from set - main/alt determine in sql //ok
+
+//todo:
+create set from - propojený
+save changed after deleted - out of range exception

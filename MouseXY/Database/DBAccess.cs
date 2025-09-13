@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System;
 
 namespace MouseXY
 {
@@ -38,8 +39,9 @@ namespace MouseXY
       {
          LoadKeysPositions();
          LoadSetNames();
-         LoadSettings();
          LoadBaseKeysFromDB();
+         //LoadBaseKeysSetNamesFromDB();
+         LoadSettings();
       }
 
       #region KeysPosTable
@@ -319,18 +321,19 @@ namespace MouseXY
                string sql = @"IF EXISTS (SELECT 1 FROM SettingsTable)
                   BEGIN
                       UPDATE SettingsTable
-                      SET DelayMs = @delay, ShowDgvAfterSetKeyPos = @showDgv, LatestSelectedSetName = @LatestSelectedSetName;
+                      SET DelayMs = @delay, ShowDgvAfterSetKeyPos = @showDgv, LatestSelectedSetName = @LatestSelectedSetName, LatestSelectedBaseKeysSetname = @LatestSelectedBaseKeysSetname;
                   END
                   ELSE
                   BEGIN
-                      INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos, LatestSelectedSetName)
-                      VALUES (@delay, @showDgv, @LatestSelectedSetName);
+                      INSERT INTO SettingsTable (DelayMs, ShowDgvAfterSetKeyPos, LatestSelectedSetName, LatestSelectedBaseKeysSetname)
+                      VALUES (@delay, @showDgv, @LatestSelectedSetName, @LatestSelectedBaseKeysSetname);
                   END";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {
                   command.Parameters.AddWithValue("@delay", Settings.delayMs);
                   command.Parameters.AddWithValue("@showDgv", Settings.showDgvAfterSetKeyPos);
                   command.Parameters.AddWithValue("@LatestSelectedSetName", KeyPos.selectedSetName);
+                  command.Parameters.AddWithValue("@LatestSelectedBaseKeysSetname", BaseKeys.selectedSetName);
                   command.ExecuteNonQuery();
                }
             }
@@ -347,7 +350,8 @@ namespace MouseXY
          {
             Settings.delayMs = LoadDelayMs();
             Settings.showDgvAfterSetKeyPos = LoadShowDgvAfterSetKeyPos();
-            LoadLatestSelectedSetName(); // načtení posledního vybraného setName z databáze
+            LoadLatestSelectedSetName(); //načtení posledního vybraného setName z databáze
+            LoadLatestSelectedBaseKeysSetName();
          }
          catch (Exception ex)
          {
@@ -370,6 +374,15 @@ namespace MouseXY
          string setName = GetValue("LatestSelectedSetName", "default");
          KeyPos.selectedSetName = setName;
          KeyPos.showedSetName = setName;
+      }
+
+      private static void LoadLatestSelectedBaseKeysSetName()
+      {
+         string setName = GetValue("LatestSelectedBaseKeysSetname", "default");
+         BaseKeys.selectedSetName = setName;
+         BaseKeys baseKeys = BaseKeys.BaseKeysList.Find(x => x.SetName == setName);
+         BaseKeys.selected = baseKeys;
+         BaseKeys.showed = baseKeys;
       }
 
       private static T GetValue<T>(string columnName, T defaultValue)
@@ -400,6 +413,128 @@ namespace MouseXY
       #endregion
 
       #region BaseKeysSettingsTable
+      public static void SaveBaseKeysSetNamesToDB()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               foreach (var baseKeys in BaseKeys.BaseKeysList)
+               {
+                  string sql = @"IF NOT EXISTS (SELECT 1 FROM BaseKeysTable WHERE SetName = @SetName)
+                  BEGIN
+                      INSERT INTO BaseKeysTable (SetName) VALUES (@SetName);
+                  END";
+                  using (SqlCommand command = new SqlCommand(sql, connection))
+                  {
+                     command.Parameters.AddWithValue("@SetName", baseKeys.SetName);
+                     command.ExecuteNonQuery();
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void DeleteBaseKeysSetNameAndItsKeys(string setName)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = @"DELETE FROM BaseKeysTable WHERE SetName = @SetName;";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@SetName", setName);
+                  command.ExecuteNonQuery();
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při mazání z databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void DeleteBaseKeyFromSetNameAndAction(string setName, string actionType, Keys keyToRemove)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            string query = @"
+            UPDATE BaseKeysTable
+            SET KeyValue = CASE WHEN KeyValue = @Key THEN NULL ELSE KeyValue END,
+                AltKeyValue = CASE WHEN AltKeyValue = @Key THEN NULL ELSE AltKeyValue END
+            WHERE SetName = @SetName AND ActionType = @ActionType;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+               command.Parameters.AddWithValue("@Key", keyToRemove.ToString());
+               command.Parameters.AddWithValue("@SetName", setName);
+               command.Parameters.AddWithValue("@ActionType", actionType);
+
+               connection.Open();
+               command.ExecuteNonQuery();
+            }
+         }
+      }
+
+      public static void ChangeBaseKeysSetName(string setName, string newSetName)
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = @"UPDATE BaseKeysTable SET SetName = @NewSetName WHERE SetName = @SetName;";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  command.Parameters.AddWithValue("@SetName", setName);
+                  command.Parameters.AddWithValue("@NewSetName", newSetName);
+                  command.ExecuteNonQuery();
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při ukládání do databáze: " + ex.Message);
+            }
+         }
+      }
+
+      public static void LoadBaseKeysSetNamesFromDB()
+      {
+         using (SqlConnection connection = new SqlConnection(connectionString))
+         {
+            try
+            {
+               connection.Open();
+               string sql = "SELECT DISTINCT SetName FROM BaseKeysTable WHERE SetName <> 'default'";
+               using (SqlCommand command = new SqlCommand(sql, connection))
+               {
+                  using (SqlDataReader reader = command.ExecuteReader())
+                  {
+                     while (reader.Read())
+                     {
+                        string setName = reader["SetName"].ToString();
+                        if (!BaseKeys.BaseKeysList.Any(bk => bk.SetName == setName)) //it is not exist with current set name - create new object
+                        {
+                           new BaseKeys(setName);
+                        }
+                     }
+                  }
+               }
+            }
+            catch (SqlException ex)
+            {
+               MessageBox.Show("Chyba při načítání z databáze: " + ex.Message);
+            }
+         }
+      }
+
       //Save - onExit, onPanelChange, onSaveSetButton
       public static void SaveBaseKeysToDB(string action, string keyValue, string altKeyValue, bool enabled, string setName)
       {
@@ -411,12 +546,13 @@ namespace MouseXY
                string sql = @"IF EXISTS (SELECT ActionType, SetName FROM BaseKeysTable WHERE ActionType = @ActionType AND SetName = @SetName)
                   BEGIN
                       UPDATE BaseKeysTable
-                      SET KeyValue = @KeyValue, AltKeyValue = @AltKeyValue, Enabled = @Enabled;
+                      SET KeyValue = @KeyValue, AltKeyValue = @AltKeyValue, Enabled = @Enabled
+                      WHERE SetName = @SetName AND ActionType = @ActionType
                   END
                   ELSE
                   BEGIN
                       INSERT INTO BaseKeysTable (ActionType, KeyValue, AltKeyValue, Enabled, SetName)
-                      VALUES (@ActionType, @KeyValue, @AltKeyValue, @Enabled, @SetName);
+                      VALUES (@ActionType, @KeyValue, @AltKeyValue, @Enabled, @SetName)
                   END";
                using (SqlCommand command = new SqlCommand(sql, connection))
                {

@@ -16,8 +16,8 @@ namespace MouseXY
       public static BaseKeys? selected; // the currently selected set of base keys
       public static BaseKeys? showed; // the currently showed set of base keys
       public static List<BaseKeys> BaseKeysList = new(); // for displaying data
-      public static string actualSelectedSetName = "default"; // for manipulation with keys - stores the name of the set of keys
-      public static string actualShowedSetName = "default";
+      public static string selectedSetName = "default"; // for manipulation with keys - stores the name of the set of keys
+
       public string SetName { get; set; }
 
       public bool Changed { get; set; } = false;
@@ -66,13 +66,14 @@ namespace MouseXY
 
       public static void ChangeSelectedBaseKeys(string setName)
       {
-         actualSelectedSetName = setName;
+         selectedSetName = setName;
          selected = BaseKeysList.Find(bk => bk.SetName == setName);
+         DBAccess.SaveSettings();
       }
 
       public static void ChangeShowedBaseKeys(string setName)
       {
-         actualShowedSetName = setName;
+         //actualShowedSetName = setName;
          showed = BaseKeysList.Find(bk => bk.SetName == setName);
       }
 
@@ -108,6 +109,13 @@ namespace MouseXY
                basekeys.KeyActionsEnabledDict[action] = DBAccess.LoadKeysActionsEnabledDict(basekeys.SetName, action.ToString());
             }
          }
+      }
+
+      public static void RenameBaseKeysSetName(string setName, string newSetName)
+      {
+         BaseKeys bk = BaseKeysList.Find(p => p.SetName == setName);
+         bk.SetName = newSetName; //check if BaseKeys.showed && BaseKeys.selected also changed
+         DBAccess.ChangeBaseKeysSetName(setName, newSetName);
       }
 
       public bool CheckAssignedKeyEnabled(Keys key)
