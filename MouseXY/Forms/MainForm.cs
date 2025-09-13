@@ -1082,7 +1082,14 @@ namespace MouseXY
                int primaryAltActionKey = mainTb ? 0 : 1; //0 = main, 1 = alt
                if (BaseKeys.showed.ActionsToKeysDict.ContainsKey(mouseAction))
                {
-                  BaseKeys.showed.ActionsToKeysDict[mouseAction][primaryAltActionKey] = pressedKey; //update ActionsToKeysDict
+                  if (BaseKeys.showed.ActionsToKeysDict[mouseAction].Count < 2 && primaryAltActionKey == 1)
+                  {
+                     BaseKeys.showed.ActionsToKeysDict[mouseAction].Add(pressedKey);
+                  }
+                  else
+                  {
+                     BaseKeys.showed.ActionsToKeysDict[mouseAction][primaryAltActionKey] = pressedKey; //update ActionsToKeysDict
+                  }
                }
                else
                {

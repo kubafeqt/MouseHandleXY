@@ -85,7 +85,7 @@ namespace MouseXY
             bk.KeyActionsEnabledDict = DefaultKeyActionsEnabledDict;
          }
          else //basic, then load from db
-         {             
+         {
             bk.KeysToActionDict = new Dictionary<Keys?, MouseHandle.mouseActions>();
             bk.KeyActionsEnabledDict = new Dictionary<MouseHandle.mouseActions, bool>();
             bk.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys?>>();
@@ -130,9 +130,10 @@ namespace MouseXY
       public void SaveBaseKeysToDB()
       {
          Changed = false;
-         foreach (var kvp in ActionsToKeysDict)
+         foreach (var kvp in ActionsToKeysDict.Where(p => p.Value != null))
          {
-           DBAccess.SaveBaseKeysToDB(kvp.Key.ToString(), kvp.Value[0].ToString(), kvp.Value[1].ToString(), KeyActionsEnabledDict[kvp.Key], SetName);
+            string secondValue = kvp.Value.Count > 1 ? kvp.Value[1].ToString() : string.Empty;
+            DBAccess.SaveBaseKeysToDB(kvp.Key.ToString(), kvp.Value[0].ToString(), secondValue, KeyActionsEnabledDict[kvp.Key], SetName);
          }
       }
 
