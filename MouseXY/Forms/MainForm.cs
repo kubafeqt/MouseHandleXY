@@ -968,8 +968,8 @@ namespace MouseXY
 
          if (BaseKeys.showed == null) return;
 
-         TextBox? tb = sender as TextBox;
-         if (e.KeyCode == Keys.Delete && tb != null && !string.IsNullOrWhiteSpace(tb.Text))
+         TextBox? tb = sender as TextBox; //delete or backspace to remove key:
+         if ((e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back) && tb != null && !string.IsNullOrWhiteSpace(tb.Text))
          {
             Keys keyToRemove = (Keys)Enum.Parse(typeof(Keys), tb.Text, true);
             tb.Text = ""; //clear the TextBox when delete is pressed
@@ -980,9 +980,17 @@ namespace MouseXY
             e.SuppressKeyPress = true; //prevent the "ding" sound
             return;
          }
-         if (e.KeyCode == Keys.Delete || e.KeyCode == Keys.Tab || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu)
+
+         if (e.KeyCode == Keys.Escape)
          {
-            return; //ignore Tab, Shift, Ctrl, and Alt keys - basic
+            ActiveControl = null; // delete focus
+            e.SuppressKeyPress = true;
+            return;
+         }
+         
+         if (MouseHandle.registeredKeys.Contains(e.KeyCode))
+         {
+            return; //ignore registered keys
          }
 
          if (tb != null) //current textbox
@@ -1329,8 +1337,6 @@ namespace MouseXY
 
 
       #endregion
-
-   
 
    }
 }
