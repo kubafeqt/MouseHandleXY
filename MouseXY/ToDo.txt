@@ -1,7 +1,7 @@
 ﻿//ok:
 delete from set - main/alt determine in sql
 save changed after deleted - out of range exception
+create set from - propojený -> new Dictionary
 
 //todo:
-create set from - propojený, než se restartne program
 trochu to dělá nepořádek v tabulce BaseKeysTable - hodně null nebo string.empty u actionType

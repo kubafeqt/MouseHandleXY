@@ -1027,7 +1027,14 @@ namespace MouseXY
                   int primaryAltActionKey = tb.Name.StartsWith("tbAlt", StringComparison.OrdinalIgnoreCase) ? 1 : 0; //1 = alt, 0 = main
 
                   BaseKeys.showed.KeysToActionDict[pressedKey] = textBoxToMouseActionsDict[tb];
-                  BaseKeys.showed.ActionsToKeysDict[existingAction][primaryAltActionKey] = pressedKey;
+                  if (BaseKeys.showed.ActionsToKeysDict.Count > 1)
+                  {
+                     BaseKeys.showed.ActionsToKeysDict[existingAction][primaryAltActionKey] = pressedKey;
+                  }
+                  else
+                  {
+                     BaseKeys.showed.ActionsToKeysDict[existingAction].Add(pressedKey);
+                  }
                   BaseKeys.showed.Changed = true;
                   tb.Text = pressedKey.ToString();
                }
@@ -1166,7 +1173,7 @@ namespace MouseXY
          string setName = tbBaseKeysSetName.Text.Trim();
          if (btnCreateBaseKeysSetname.Text == "create")
          {
-            BaseKeys bk = new BaseKeys(setName);
+            BaseKeys baseKeys = new BaseKeys(setName);
             DBAccess.SaveBaseKeysSetNamesToDB();
             tbBaseKeysSetName.Text = string.Empty;
             cmbBaseKeysSets.Items.Add(setName);
@@ -1176,11 +1183,11 @@ namespace MouseXY
             {
                BaseKeys? createFromBaseKeys = BaseKeys.BaseKeysList.Find(x => x.SetName == cmbCreateSetFrom.SelectedItem.ToString());
                if (createFromBaseKeys == null) return;
-               bk.ActionsToKeysDict = createFromBaseKeys.ActionsToKeysDict;
-               bk.KeysToActionDict = createFromBaseKeys.KeysToActionDict;
-               bk.KeyActionsEnabledDict = createFromBaseKeys.KeyActionsEnabledDict;
+               baseKeys.ActionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys?>>(createFromBaseKeys.ActionsToKeysDict);
+               baseKeys.KeysToActionDict = new Dictionary<Keys?, MouseHandle.mouseActions>(createFromBaseKeys.KeysToActionDict);
+               baseKeys.KeyActionsEnabledDict = new Dictionary<MouseHandle.mouseActions, bool>(createFromBaseKeys.KeyActionsEnabledDict);
                FillKeybindTextBoxes();
-               bk.SaveBaseKeysToDB();
+               baseKeys.SaveBaseKeysToDB();
             }
          }
          else if (btnCreateBaseKeysSetname.Text == "edit")
