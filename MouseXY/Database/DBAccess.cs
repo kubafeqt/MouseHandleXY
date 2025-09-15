@@ -535,8 +535,7 @@ namespace MouseXY
          }
       }
 
-      //Save - onExit, onPanelChange, onSaveSetButton
-      public static void SaveBaseKeysToDB(string action, string keyValue, string altKeyValue, bool enabled, string setName)
+      public static void SaveBaseKeysToDB(string action, string keyValue, string altKeyValue, bool enabled, string setName) ///Save - onExit, onPanelChange, onSaveSetButton
       {
          using (SqlConnection connection = new SqlConnection(connectionString))
          {

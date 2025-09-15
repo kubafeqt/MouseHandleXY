@@ -83,6 +83,7 @@ namespace MouseXY
          {
             bk.KeysToActionDict = DefaultKeysToActionDict;
             bk.KeyActionsEnabledDict = DefaultKeyActionsEnabledDict;
+            bk.ActionsToKeysDict = ConvertKeysToActions(bk.KeysToActionDict);
          }
          else //basic, then load from db
          {
@@ -110,6 +111,24 @@ namespace MouseXY
             }
          }
       }
+
+      public static Dictionary<MouseHandle.mouseActions, List<Keys?>> ConvertKeysToActions(Dictionary<Keys?, MouseHandle.mouseActions> keysToActionDict)
+      {
+         var actionsToKeysDict = new Dictionary<MouseHandle.mouseActions, List<Keys?>>();
+
+         foreach (var kvp in keysToActionDict)
+         {
+            if (!actionsToKeysDict.ContainsKey(kvp.Value))
+            {
+               actionsToKeysDict[kvp.Value] = new List<Keys?>();
+            }
+
+            actionsToKeysDict[kvp.Value].Add(kvp.Key);
+         }
+
+         return actionsToKeysDict;
+      }
+
 
       public static void RenameBaseKeysSetName(string setName, string newSetName)
       {

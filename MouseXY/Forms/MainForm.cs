@@ -1265,10 +1265,15 @@ namespace MouseXY
          {
             BaseKeys.BaseKeysList.Remove(BaseKeys.showed);
             DBAccess.DeleteBaseKeysSetNameAndItsKeys(setName);
+            int actualIndex = --cmbBaseKeysSets.SelectedIndex;
             cmbBaseKeysSets.Items.Remove(setName);
             cmbCreateSetFrom.Items.Remove(setName);
-            cmbBaseKeysSets.SelectedIndex = 0; //basic
+            cmbBaseKeysSets.SelectedIndex = actualIndex;
             cmbCreateSetFrom.SelectedIndex = 0; //basic
+            if (BaseKeys.selected.SetName == setName)
+            {
+               SelectBaseKeys(cmbBaseKeysSets.SelectedItem.ToString() ?? "default");
+            }
          }
       }
 
@@ -1306,6 +1311,11 @@ namespace MouseXY
       private void btnSelectBaseKeySet_Click(object sender, EventArgs e)
       {
          string setName = cmbBaseKeysSets.SelectedItem?.ToString() ?? "default";
+         SelectBaseKeys(setName);
+      }
+
+      private void SelectBaseKeys(string setName)
+      {
          lbSelectedBaseKeysSetname.Text = $"Selected setname: {setName}";
          BaseKeys.ChangeSelectedBaseKeys(setName);
       }
