@@ -50,6 +50,8 @@ Useful when your mouse or touchpad is malfunctioning.
 
 **Version 1.05** - Preview on exported files before import.
 
+**Version 1.06** - Now you can map your own sets of basic control keys and enable or disable any of basic control function.
+
 ## Planned Features and Innovations
 - Customizable settings and key mappings for basic functionality
 - Customizable RPA-like actions, with image recognition
