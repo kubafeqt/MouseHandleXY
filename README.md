@@ -14,7 +14,7 @@ Control your mouse entirely using your keyboard - helpful when your touchpad isn
 
 - Press **Left Control twice within 250 (or setted) milliseconds** to toggle keyboard mouse control on or off.
 
-## Controls
+## Default Controls
 
 - **Move cursor**: Hold arrow keys or **W / A / S / D**
 - **Left mouse click**: Hold and release **E** (simulates press and release)
@@ -50,10 +50,9 @@ Useful when your mouse or touchpad is malfunctioning.
 
 **Version 1.05** - Preview on exported files before import.
 
-**Version 1.06** - Now you can create your own sets to map basic control keys and enable or disable any of basic control function.
+**Version 1.06** - Now you can create your own sets to map basic control keys and enable or disable any of basic control function. (Customizable settings and key mappings for basic functionality)
 
 ## Planned Features and Innovations
-- Customizable settings and key mappings for basic functionality
 - Customizable RPA-like actions, with image recognition
 - Custom user-defined sounds
 - Multilingual support
