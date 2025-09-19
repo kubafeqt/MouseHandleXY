@@ -997,7 +997,7 @@ namespace MouseXY
             e.SuppressKeyPress = true;
             return;
          }
-         
+
          if (MouseHandle.registeredKeys.Contains(e.KeyCode))
          {
             return; //ignore registered keys
@@ -1348,7 +1348,6 @@ namespace MouseXY
 
       #endregion
 
-<<<<<<< HEAD
       #region Sounds Settings
       private void btnOpenSoundsFolder_Click(object sender, EventArgs e)
       {
@@ -1433,6 +1432,14 @@ namespace MouseXY
          double totalSecLeft = totalSec - (double)nmStartSecSound.Value;
          nmPlaySecSound.Maximum = totalSecLeft > (double)maxPlaySec ? maxPlaySec : (decimal)totalSecLeft;
          nmPlaySecSound.Value = (double)nmPlaySecSound.Value > (double)nmPlaySecSound.Maximum ? nmPlaySecSound.Maximum : nmPlaySecSound.Value;
+         skipOver = (double)nmStartSecSound.Value;
+         take = skipOver + (double)nmPlaySecSound.Value;
+      }
+
+      private void nmPlaySecSound_ValueChanged(object sender, EventArgs e)
+      {
+         skipOver = (double)nmStartSecSound.Value;
+         take = skipOver + (double)nmPlaySecSound.Value;
       }
 
       private AudioFileReader audioFile;
@@ -1469,7 +1476,20 @@ namespace MouseXY
       }
       private void btnSelectLboxSound_Click(object sender, EventArgs e)
       {
+         Dictionary<int, Sounds.soundTypes> cmbSelectedSoundIndexDict = new Dictionary<int, Sounds.soundTypes> //basic int -> or string (name)?
+         {
+            { 0, Sounds.soundTypes.selectedKeysOpen },
+            { 1, Sounds.soundTypes.selectedKeysClose }
+         };
 
+         //if existing, set sound to selected sound in listbox
+         if (lboxSounds.SelectedItem != null)
+         {
+            string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
+            Sounds.soundTypes typesDict = cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex];
+            Sounds.soundTypesNamesDict[typesDict] = lboxSounds.SelectedItem.ToString() ?? Sounds.soundTypesNamesDict[typesDict];
+            //DBAccess.SaveSettings();
+         }
       }
 
       private void StopPlayback()
@@ -1501,10 +1521,5 @@ namespace MouseXY
 
       #endregion
 
-
-
-
-=======
->>>>>>> c9bdb4ec71f294c032514ad9b9e6e92faed69571
    }
 }
