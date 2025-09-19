@@ -126,11 +126,8 @@ namespace MouseXY
 
       #region Mouse Cursor Control by keyboard and Key Positioning set
       public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
-      static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
+      public static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
       {
-         //Keys.Up, Keys.Down, Keys.Left, Keys.Right,
-         //Keys.W, Keys.A, Keys.S, Keys.D,
-         //Keys.E, Keys.Q, Keys.R, Keys.F, Keys.C,
          Keys.LControlKey, Keys.LShiftKey, Keys.LMenu,
          //control keys:
          Keys.LWin, Keys.RControlKey,
