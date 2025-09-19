@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -159,6 +162,9 @@ namespace MouseXY
          dgvShowKeysPositions_Preview.AllowUserToAddRows = false;
          dgvShowKeysPositions_Preview.AllowUserToDeleteRows = false;
          dgvShowKeysPositions_Preview.ReadOnly = true;
+
+         cmbSoundType.Items.AddRange(new string[] { "keysOpen", "keysClose" });
+         cmbSoundType.SelectedIndex = 0;
       }
 
       private void LoadComboBoxSetNames()
@@ -854,6 +860,10 @@ namespace MouseXY
             panel.Hide();
          }
          showPanel.Show();
+         if (showPanel.Name == panelSoundsSettings.Name)
+         {
+            LoadAudioFiles();
+         }
       }
 
       #endregion
@@ -1215,7 +1225,7 @@ namespace MouseXY
                cmbCreateSetFrom.Items[index] = newSetName;
             }
             tbBaseKeysSetName.Clear();
-            btnCreateBaseKeysSetname.Text = "create"; 
+            btnCreateBaseKeysSetname.Text = "create";
             BaseKeys.RenameBaseKeysSetName(setName, newSetName);
          }
       }
@@ -1330,7 +1340,160 @@ namespace MouseXY
 
       #endregion
 
-   
+      #region Sounds Settings
+      private void btnOpenSoundsFolder_Click(object sender, EventArgs e)
+      {
+         MakeSoundsPathDirectory(out string soundsPath);
+         var psi = new ProcessStartInfo
+         {
+            FileName = soundsPath,
+            UseShellExecute = true
+         };
+         Process.Start(psi);
+      }
+
+      private void btnRefreshSounds_Click(object sender, EventArgs e)
+      {
+         LoadAudioFiles();
+      }
+
+      private void LoadAudioFiles()
+      {
+         MakeSoundsPathDirectory(out string soundsPath);
+         string[] supportedExtensions = { ".wav", ".mp3", ".wma", ".aac", ".m4a", ".flac" };
+         var files = Directory.EnumerateFiles(soundsPath, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(file => supportedExtensions.Contains(Path.GetExtension(file).ToLower()))
+                .ToList();
+         lboxSounds.Items.Clear();
+         lboxSounds.Items.AddRange(files.Select(Path.GetFileName).ToArray());
+      }
+
+      private void MakeSoundsPathDirectory(out string soundsPath)
+      {
+         soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
+         if (!Directory.Exists(soundsPath))
+         {
+            Directory.CreateDirectory(soundsPath);
+         }
+      }
+
+      private void lboxSounds_DoubleClick(object sender, EventArgs e)
+      {
+         //opens VLC media player (if installed as default), otherwise default player
+         if (lboxSounds.SelectedItem != null)
+         {
+            string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
+            string soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
+            string fullPath = Path.Combine(soundsPath, selectedFile);
+            if (File.Exists(fullPath))
+            {
+               try
+               {
+                  var psi = new ProcessStartInfo
+                  {
+                     FileName = fullPath,
+                     UseShellExecute = true
+                  };
+                  Process.Start(psi);
+               }
+               catch (Exception ex)
+               {
+                  MessageBox.Show($"Nepodařilo se otevřít zvukový soubor. Chyba: {ex.Message}");
+               }
+            }
+         }
+      }
+
+      decimal maxPlaySec = 2.5M;
+      private void lboxSounds_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
+         string soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
+         string fullPath = Path.Combine(soundsPath, selectedFile);
+         audioFile = new AudioFileReader(fullPath);
+         double totalSec = Math.Round(audioFile.TotalTime.TotalSeconds, 1, MidpointRounding.AwayFromZero); //basic - it is good? - maybe math.floor for better sound functionality
+         nmStartSecSound.Value = (double)nmStartSecSound.Value >= totalSec ? 0 : nmStartSecSound.Value;
+         nmStartSecSound.Maximum = (decimal)(totalSec - 0.1); //basic
+         nmPlaySecSound.Maximum = (decimal)totalSec - nmStartSecSound.Value > maxPlaySec ? maxPlaySec : (decimal)totalSec - nmStartSecSound.Value; //math.round?
+         nmPlaySecSound.Value = (double)(nmStartSecSound.Value + nmPlaySecSound.Value) > totalSec ? 0 : nmPlaySecSound.Value;
+      }
+
+      private void nmStartSecSound_ValueChanged(object sender, EventArgs e)
+      {
+         double totalSec = Math.Round(audioFile.TotalTime.TotalSeconds, 1, MidpointRounding.AwayFromZero);
+         double totalSecLeft = totalSec - (double)nmStartSecSound.Value;
+         nmPlaySecSound.Maximum = totalSecLeft > (double)maxPlaySec ? maxPlaySec : (decimal)totalSecLeft;
+         nmPlaySecSound.Value = (double)nmPlaySecSound.Value > (double)nmPlaySecSound.Maximum ? nmPlaySecSound.Maximum : nmPlaySecSound.Value;
+      }
+
+      private AudioFileReader audioFile;
+      private WaveOutEvent outputDevice;
+      double skipOver;
+      double take;
+      private void btnPlayLboxSound_Click(object sender, EventArgs e)
+      {
+         //double volume = (double)nudSoundVolume.Value / 100;
+         double startSec = (double)nmStartSecSound.Value;
+         double lengthSec = (double)nmPlaySecSound.Value;
+
+         if (lboxSounds.SelectedItem != null)
+         {
+            StopPlayback(); //pokud už něco hraje, stopnout a zahodit
+            string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
+            string soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
+            string fullPath = Path.Combine(soundsPath, selectedFile);
+            audioFile = new AudioFileReader(fullPath);
+
+            skipOver = startSec;
+            take = startSec + lengthSec;
+            //offset provider: start a délka segmentu
+            var offsetProvider = new OffsetSampleProvider(audioFile.ToSampleProvider())
+            {
+               SkipOver = TimeSpan.FromSeconds(skipOver), //start
+               Take = TimeSpan.FromSeconds(take) //délka
+            };
+
+            outputDevice = new WaveOutEvent();
+            outputDevice.Init(offsetProvider);
+            outputDevice.Play();
+         }
+      }
+      private void btnSelectLboxSound_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void StopPlayback()
+      {
+         if (outputDevice != null)
+         {
+            outputDevice.Stop();
+            outputDevice.Dispose();
+            outputDevice = null;
+         }
+
+         if (audioFile != null)
+         {
+            audioFile.Dispose();
+            audioFile = null;
+         }
+      }
+
+      private void btnPlayDefaultSound_Click(object sender, EventArgs e)
+      {
+         bool open = cmbSoundType.SelectedItem != null && cmbSoundType.SelectedItem.ToString().Equals("keysOpen", StringComparison.OrdinalIgnoreCase) ? true : false;
+         Sounds.PlayDefSound(open);
+      }
+
+      private void btnResetToDefaultSound_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      #endregion
+
+
+
 
    }
 }

@@ -4,7 +4,7 @@ namespace MouseXY
 {
    class Sounds
    {
-      public static void PlaySound(bool open)
+      public static void PlayDefSound(bool open)
       {
          if (open)
          {
