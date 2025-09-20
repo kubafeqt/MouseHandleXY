@@ -297,7 +297,7 @@ namespace MouseXY
          if (DateTime.Now.Subtract(dateTime).TotalMilliseconds < Settings.delayMs)
          {
             mouseCursorHandle = !mouseCursorHandle;
-            Sounds.PlayDefSound(mouseCursorHandle);
+            Sounds.PlaySound(mouseCursorHandle);
          }
          dateTime = DateTime.Now;
       }

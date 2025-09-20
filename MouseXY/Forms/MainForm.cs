@@ -1387,7 +1387,7 @@ namespace MouseXY
 
       private void lboxSounds_DoubleClick(object sender, EventArgs e)
       {
-         //opens VLC media player (if installed as default), otherwise default player
+         //opens VLC media player (if installed as default), otherwise other default player
          if (lboxSounds.SelectedItem != null)
          {
             string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
@@ -1415,7 +1415,8 @@ namespace MouseXY
       decimal maxPlaySec = 2.5M;
       private void lboxSounds_SelectedIndexChanged(object sender, EventArgs e)
       {
-         string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
+         string selectedFile = lboxSounds.SelectedItem?.ToString() ?? "";
+         if (string.IsNullOrWhiteSpace(selectedFile)) return;
          string soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
          string fullPath = Path.Combine(soundsPath, selectedFile);
          audioFile = new AudioFileReader(fullPath);
@@ -1461,12 +1462,12 @@ namespace MouseXY
             audioFile = new AudioFileReader(fullPath);
 
             skipOver = startSec;
-            take = startSec + lengthSec;
+            take = lengthSec;
             //offset provider: start a délka segmentu
             var offsetProvider = new OffsetSampleProvider(audioFile.ToSampleProvider())
             {
                SkipOver = TimeSpan.FromSeconds(skipOver), //start
-               Take = TimeSpan.FromSeconds(take) //délka
+               Take = TimeSpan.FromSeconds(take) //length
             };
 
             outputDevice = new WaveOutEvent();
@@ -1474,6 +1475,7 @@ namespace MouseXY
             outputDevice.Play();
          }
       }
+
       private void btnSelectLboxSound_Click(object sender, EventArgs e)
       {
          Dictionary<int, Sounds.soundTypes> cmbSelectedSoundIndexDict = new Dictionary<int, Sounds.soundTypes> //basic int -> or string (name)?
@@ -1485,9 +1487,11 @@ namespace MouseXY
          //if existing, set sound to selected sound in listbox
          if (lboxSounds.SelectedItem != null)
          {
-            string selectedFile = lboxSounds.SelectedItem.ToString() ?? "";
             Sounds.soundTypes typesDict = cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex];
-            Sounds.soundTypesNamesDict[typesDict] = lboxSounds.SelectedItem.ToString() ?? Sounds.soundTypesNamesDict[typesDict];
+            string selectedFile = lboxSounds.SelectedItem.ToString() ?? Sounds.soundTypesNamesDict[typesDict];           
+            Sounds.soundTypesNamesDict[typesDict] = selectedFile;
+            Sounds.soundTypesTimesDict[typesDict] = ((double)nmStartSecSound.Value, (double)nmPlaySecSound.Value);
+            //save settings for each of imported sounds ... - to next settings
             //DBAccess.SaveSettings();
          }
       }
@@ -1511,7 +1515,7 @@ namespace MouseXY
       private void btnPlayDefaultSound_Click(object sender, EventArgs e)
       {
          bool open = cmbSoundType.SelectedItem != null && cmbSoundType.SelectedItem.ToString().Equals("keysOpen", StringComparison.OrdinalIgnoreCase) ? true : false;
-         Sounds.PlayDefSound(open);
+         Sounds.PlaySound(open, true);
       }
 
       private void btnResetToDefaultSound_Click(object sender, EventArgs e)
