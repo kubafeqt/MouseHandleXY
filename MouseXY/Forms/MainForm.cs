@@ -1415,6 +1415,7 @@ namespace MouseXY
       decimal maxPlaySec = 2.5M;
       private void lboxSounds_SelectedIndexChanged(object sender, EventArgs e)
       {
+         //todo: save latest sound settings to db ... 
          string selectedFile = lboxSounds.SelectedItem?.ToString() ?? "";
          if (string.IsNullOrWhiteSpace(selectedFile)) return;
          string soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
@@ -1476,21 +1477,23 @@ namespace MouseXY
          }
       }
 
-      private void btnSelectLboxSound_Click(object sender, EventArgs e)
-      {
-         Dictionary<int, Sounds.soundTypes> cmbSelectedSoundIndexDict = new Dictionary<int, Sounds.soundTypes> //basic int -> or string (name)?
+      Dictionary<int, Sounds.soundTypes> cmbSelectedSoundIndexDict = new Dictionary<int, Sounds.soundTypes> //basic int -> or string (name)?
          {
             { 0, Sounds.soundTypes.selectedKeysOpen },
             { 1, Sounds.soundTypes.selectedKeysClose }
          };
 
+      private void btnSelectLboxSound_Click(object sender, EventArgs e)
+      {
+
          //if existing, set sound to selected sound in listbox
          if (lboxSounds.SelectedItem != null)
          {
             Sounds.soundTypes typesDict = cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex];
-            string selectedFile = lboxSounds.SelectedItem.ToString() ?? Sounds.soundTypesNamesDict[typesDict];           
+            string selectedFile = lboxSounds.SelectedItem.ToString() ?? Sounds.soundTypesNamesDict[typesDict];
             Sounds.soundTypesNamesDict[typesDict] = selectedFile;
             Sounds.soundTypesTimesDict[typesDict] = ((double)nmStartSecSound.Value, (double)nmPlaySecSound.Value);
+            lbSoundName.Text = Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]];
             //save settings for each of imported sounds ... - to next settings
             //DBAccess.SaveSettings();
          }
@@ -1520,10 +1523,18 @@ namespace MouseXY
 
       private void btnResetToDefaultSound_Click(object sender, EventArgs e)
       {
+         Sounds.soundTypes typesDict = cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex];
+         Sounds.soundTypesNamesDict[typesDict] = "default";
+         lbSoundName.Text = Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]];
+      }
 
+      private void cmbSoundType_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         lbSoundName.Text = Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]];
       }
 
       #endregion
+
 
    }
 }

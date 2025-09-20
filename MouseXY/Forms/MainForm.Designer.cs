@@ -82,6 +82,7 @@
          lbCommentOtherSettings = new Label();
          lbOtherSettings = new Label();
          panelSoundsSettings = new Panel();
+         btnSaveSoundSettings = new Button();
          lbSoundName = new Label();
          btnRefreshSounds = new Button();
          btnOpenSoundsFolder = new Button();
@@ -821,6 +822,7 @@
          // 
          // panelSoundsSettings
          // 
+         panelSoundsSettings.Controls.Add(btnSaveSoundSettings);
          panelSoundsSettings.Controls.Add(lbSoundName);
          panelSoundsSettings.Controls.Add(btnRefreshSounds);
          panelSoundsSettings.Controls.Add(btnOpenSoundsFolder);
@@ -844,6 +846,15 @@
          panelSoundsSettings.TabIndex = 107;
          panelSoundsSettings.Tag = "settingsPanels";
          panelSoundsSettings.Visible = false;
+         // 
+         // btnSaveSoundSettings
+         // 
+         btnSaveSoundSettings.Location = new Point(444, 286);
+         btnSaveSoundSettings.Name = "btnSaveSoundSettings";
+         btnSaveSoundSettings.Size = new Size(75, 42);
+         btnSaveSoundSettings.TabIndex = 123;
+         btnSaveSoundSettings.Text = "save settings";
+         btnSaveSoundSettings.UseVisualStyleBackColor = true;
          // 
          // lbSoundName
          // 
@@ -973,6 +984,7 @@
          cmbSoundType.Name = "cmbSoundType";
          cmbSoundType.Size = new Size(158, 23);
          cmbSoundType.TabIndex = 111;
+         cmbSoundType.SelectedIndexChanged += cmbSoundType_SelectedIndexChanged;
          // 
          // btnSelectLboxSound
          // 
@@ -1825,5 +1837,6 @@
       private Button btnOpenSoundsFolder;
       private Button btnRefreshSounds;
       private Label lbSoundName;
+      private Button btnSaveSoundSettings;
    }
 }
