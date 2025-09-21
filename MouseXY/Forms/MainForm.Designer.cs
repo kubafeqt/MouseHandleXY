@@ -855,17 +855,18 @@
          btnSaveSoundSettings.TabIndex = 123;
          btnSaveSoundSettings.Text = "save settings";
          btnSaveSoundSettings.UseVisualStyleBackColor = true;
+         btnSaveSoundSettings.Click += btnSaveSoundSettings_Click;
          // 
          // lbSoundName
          // 
          lbSoundName.AutoSize = true;
          lbSoundName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbSoundName.Location = new Point(576, 207);
+         lbSoundName.Location = new Point(205, 32);
          lbSoundName.Name = "lbSoundName";
-         lbSoundName.Size = new Size(84, 17);
+         lbSoundName.Size = new Size(143, 17);
          lbSoundName.TabIndex = 122;
          lbSoundName.Tag = "";
-         lbSoundName.Text = "sound name";
+         lbSoundName.Text = "Selected sound name:";
          // 
          // btnRefreshSounds
          // 
@@ -902,7 +903,7 @@
          // 
          lbPlayStartSeconds.AutoSize = true;
          lbPlayStartSeconds.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPlayStartSeconds.Location = new Point(496, 207);
+         lbPlayStartSeconds.Location = new Point(501, 207);
          lbPlayStartSeconds.Name = "lbPlayStartSeconds";
          lbPlayStartSeconds.Size = new Size(57, 17);
          lbPlayStartSeconds.TabIndex = 118;
@@ -916,7 +917,7 @@
          nmStartSecSound.Location = new Point(446, 205);
          nmStartSecSound.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
          nmStartSecSound.Name = "nmStartSecSound";
-         nmStartSecSound.Size = new Size(44, 23);
+         nmStartSecSound.Size = new Size(49, 23);
          nmStartSecSound.TabIndex = 117;
          nmStartSecSound.Value = new decimal(new int[] { 5, 0, 0, 65536 });
          nmStartSecSound.ValueChanged += nmStartSecSound_ValueChanged;
@@ -925,7 +926,7 @@
          // 
          lbPlaySecSound.AutoSize = true;
          lbPlaySecSound.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-         lbPlaySecSound.Location = new Point(496, 161);
+         lbPlaySecSound.Location = new Point(501, 161);
          lbPlaySecSound.Name = "lbPlaySecSound";
          lbPlaySecSound.Size = new Size(57, 17);
          lbPlaySecSound.TabIndex = 116;
@@ -951,7 +952,7 @@
          nmPlaySecSound.Maximum = new decimal(new int[] { 25, 0, 0, 65536 });
          nmPlaySecSound.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
          nmPlaySecSound.Name = "nmPlaySecSound";
-         nmPlaySecSound.Size = new Size(44, 23);
+         nmPlaySecSound.Size = new Size(49, 23);
          nmPlaySecSound.TabIndex = 114;
          nmPlaySecSound.Value = new decimal(new int[] { 5, 0, 0, 65536 });
          nmPlaySecSound.ValueChanged += nmPlaySecSound_ValueChanged;

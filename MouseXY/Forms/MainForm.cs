@@ -1412,6 +1412,7 @@ namespace MouseXY
          }
       }
 
+      //TimeSpan soundFileDuration;
       decimal maxPlaySec = 2.5M;
       private void lboxSounds_SelectedIndexChanged(object sender, EventArgs e)
       {
@@ -1421,11 +1422,16 @@ namespace MouseXY
          string soundsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sounds");
          string fullPath = Path.Combine(soundsPath, selectedFile);
          audioFile = new AudioFileReader(fullPath);
-         double totalSec = Math.Round(audioFile.TotalTime.TotalSeconds, 1, MidpointRounding.AwayFromZero); //basic - it is good? - maybe math.floor for better sound functionality
-         nmStartSecSound.Value = (double)nmStartSecSound.Value >= totalSec ? 0 : nmStartSecSound.Value;
-         nmStartSecSound.Maximum = (decimal)(totalSec - 0.1); //basic
-         nmPlaySecSound.Maximum = (decimal)totalSec - nmStartSecSound.Value > maxPlaySec ? maxPlaySec : (decimal)totalSec - nmStartSecSound.Value; //math.round?
-         nmPlaySecSound.Value = (double)(nmStartSecSound.Value + nmPlaySecSound.Value) > totalSec ? 0 : nmPlaySecSound.Value;
+         double totalSecDuration = Math.Round(audioFile.TotalTime.TotalSeconds, 1, MidpointRounding.AwayFromZero);
+         //basic - it is good? - maybe math.floor for better sound functionality
+         //soundFileDuration = audioFile.TotalTime;
+
+         //then loaded .Value from db this:
+         nmStartSecSound.Value = (double)nmStartSecSound.Value >= totalSecDuration ? 0 : nmStartSecSound.Value;
+         nmStartSecSound.Maximum = (decimal)(totalSecDuration - 0.1); //basic
+         nmPlaySecSound.Maximum = (decimal)totalSecDuration - nmStartSecSound.Value > maxPlaySec ? maxPlaySec : (decimal)totalSecDuration - nmStartSecSound.Value; //math.round?
+         nmPlaySecSound.Value = (double)(nmStartSecSound.Value + nmPlaySecSound.Value) > totalSecDuration ? 0 : nmPlaySecSound.Value;
+
       }
 
       private void nmStartSecSound_ValueChanged(object sender, EventArgs e)
@@ -1493,7 +1499,7 @@ namespace MouseXY
             string selectedFile = lboxSounds.SelectedItem.ToString() ?? Sounds.soundTypesNamesDict[typesDict];
             Sounds.soundTypesNamesDict[typesDict] = selectedFile;
             Sounds.soundTypesTimesDict[typesDict] = ((double)nmStartSecSound.Value, (double)nmPlaySecSound.Value);
-            lbSoundName.Text = Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]];
+            lbSoundName.Text = $"Selected sound name: {Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]]}";
             //save settings for each of imported sounds ... - to next settings
             //DBAccess.SaveSettings();
          }
@@ -1515,6 +1521,11 @@ namespace MouseXY
          }
       }
 
+      private void btnSaveSoundSettings_Click(object sender, EventArgs e)
+      {
+
+      }
+
       private void btnPlayDefaultSound_Click(object sender, EventArgs e)
       {
          bool open = cmbSoundType.SelectedItem != null && cmbSoundType.SelectedItem.ToString().Equals("keysOpen", StringComparison.OrdinalIgnoreCase) ? true : false;
@@ -1525,15 +1536,16 @@ namespace MouseXY
       {
          Sounds.soundTypes typesDict = cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex];
          Sounds.soundTypesNamesDict[typesDict] = "default";
-         lbSoundName.Text = Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]];
+         lbSoundName.Text = $"Selected sound name: {Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]]}";
       }
 
       private void cmbSoundType_SelectedIndexChanged(object sender, EventArgs e)
       {
-         lbSoundName.Text = Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]];
+         lbSoundName.Text = $"Selected sound name: {Sounds.soundTypesNamesDict[cmbSelectedSoundIndexDict[cmbSoundType.SelectedIndex]]}";
       }
 
       #endregion
+
 
 
    }
