@@ -128,9 +128,10 @@ namespace MouseXY
       public static bool setKeyToPos = false; // nastaví, zda se má ukládat pozice klávesy - sets whether to save the key position
       public static List<Keys> registeredKeys = new() // list of registered keys which cannot be set to position of mouse cursor
       {
+         Keys.ShiftKey, Keys.ControlKey, Keys.Menu,
          Keys.LControlKey, Keys.LShiftKey, Keys.LMenu,
-         //control keys:
-         Keys.LWin, Keys.RControlKey,
+         Keys.RControlKey, Keys.RShiftKey, Keys.RMenu,
+         Keys.LWin, Keys.RWin,
          Keys.RShiftKey, Keys.RMenu, Keys.RWin,
          Keys.Space, Keys.Tab, Keys.Enter,
          Keys.Escape, Keys.Back, Keys.Delete,
